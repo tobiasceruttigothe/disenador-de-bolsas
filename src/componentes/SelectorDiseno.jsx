@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
 import Header from './Header';
+import pollo from "../assets/chickenCorner.jpg"
+import cafe from "../assets/cafeteria.jpg"
+import chipi from "../assets/chipiKopos.jpg"
 
 export default function SelectorDiseno({ usuarioNombre }) {
   const bolsas = [
-    { id: 1, nombre: "Bolsa fondo cuadrado N8", imagen: "https://via.placeholder.com/150/FF0000" },
-    { id: 2, nombre: "Bolsa fondo cuadrado N9", imagen: "https://via.placeholder.com/150/0000FF" },
-    { id: 3, nombre: "Bolsa fondo cuadrado N10", imagen: "https://via.placeholder.com/150/00FF00" },
+    { id: 1, nombre: "Chicken Corner", imagen: pollo },
+    { id: 2, nombre: "Bolsa fondo cuadrado N9", imagen: cafe },
+    { id: 3, nombre: "Bolsa fondo cuadrado N10", imagen: chipi },
   ];
 
   const [seleccionada, setSeleccionada] = useState(null);
