@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { initCanvas } from "./Lienzo.js";
+import { initCanvas } from "./lienzoCreacion.js";
 import plantillaprueba from "/plantillaprueba.png"; // esto deberia ser un fondo no una imagen
 
 export default function Lienzo() {

@@ -5,25 +5,26 @@ export function initCanvas(canvasElement, imageUrl) {
 
     const canvas = new fabric.Canvas(canvasElement, {
         width: 800,
-        height: 700,
+        height: 500,
     });
 
     // Texto de ejemplo
     const text = new fabric.Textbox("Hola!", { left: 50, top: 50, fill: "red" });
     canvas.add(text);
 
-    // Imagen
+    // Imagen de fondo
     const imgElement = new Image();
-    imgElement.src = imageUrl; // puede ser ruta desde public o import desde src/assets
+    imgElement.src = imageUrl;
     imgElement.onload = () => {
         const img = new fabric.Image(imgElement, {
-            left: 150,
-            top: 150,
-            scaleX: 0.5,
-            scaleY: 0.5,
+            left: 0,
+            top: 0,
+            originX: "left",
+            originY: "top",
         });
-        canvas.add(img);
+        canvas.backgroundImage = img;
+        canvas.requestRenderAll();;
     };
 
-    return canvas; // opcional, por si querés manipularlo afue
+    return canvas;
 }
