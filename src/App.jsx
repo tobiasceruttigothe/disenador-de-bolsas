@@ -4,6 +4,7 @@ import Log from './componentes/Log'
 import Inicio from './componentes/Inicio'
 import NuevoDiseno from './componentes/NuevoDiseno'
 import SelectorDiseno from './componentes/SelectorDiseno'
+import Lienzo from './componentes/Lienzo'
 
 function App() {
   const [estado, setEstado] = useState("PP")
@@ -14,6 +15,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/login' element={<Log></Log>}></Route>
+          <Route path='/lienzo' element={<Lienzo></Lienzo>}></Route>
           <Route path='/inicio' element={<Inicio></Inicio>}></Route>
           <Route path='/nuevoDiseno' element={<NuevoDiseno></NuevoDiseno>}></Route>
           <Route path='/selectorDiseno' element={<SelectorDiseno></SelectorDiseno>}></Route>
