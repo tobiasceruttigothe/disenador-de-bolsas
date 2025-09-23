@@ -1,11 +1,14 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
 import logo from '../assets/pack designer final.png';
+import Header from './Header';
 
 export default function Log() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
   return (
+    <>
+    <Header></Header>
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
       <form className="w-100 bg-white p-4 rounded shadow" style={{ maxWidth: '400px' }}>
         <div className="text-center mb-4">
@@ -45,5 +48,6 @@ export default function Log() {
         </button>
       </form>
     </div>
+    </>
   );
 }
