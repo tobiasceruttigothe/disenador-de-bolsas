@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Log from './componentes/Log'
-import Lienzo from "./componentes/Lienzo"
+import Inicio from './componentes/Inicio'
+import NuevoDiseno from './componentes/NuevoDiseno'
+import SelectorDiseno from './componentes/SelectorDiseno'
 
 function App() {
   const [estado, setEstado] = useState("PP")
@@ -12,7 +14,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/login' element={<Log></Log>}></Route>
-          <Route path="/" element ={<Lienzo></Lienzo>}></Route>
+          <Route path='/inicio' element={<Inicio></Inicio>}></Route>
+          <Route path='/nuevoDiseno' element={<NuevoDiseno></NuevoDiseno>}></Route>
+          <Route path='/selectorDiseno' element={<SelectorDiseno></SelectorDiseno>}></Route>
         </Routes>
       </BrowserRouter>
     </>
