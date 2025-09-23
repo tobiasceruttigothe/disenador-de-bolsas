@@ -11,8 +11,7 @@ import FormularioCliente from './componentes/FormularioCliente'
 
 function App() {
   const [inicioCliente, setInicioCliente] = useState("T")
-  const [log, setLog] = useState(false)
-  
+  const [bolsaSelec, setBolsaSelec] = useState(null)  
   return (
     <>
       <BrowserRouter>
