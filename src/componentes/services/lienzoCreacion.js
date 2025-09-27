@@ -1,39 +1,35 @@
-import * as fabric from "fabric";
-import cara from "/caraejemplo.jpeg"
+import * as fabric  from "fabric";
 
 export function initCanvas(canvasElement, imageUrl) {
-    const imgElement = new Image();
-    imgElement.src = imageUrl;
-    
-    if (!canvasElement) return;
+  const canvas = new fabric.Canvas(canvasElement, { width: 800, height: 600 });
 
-    const canvas = new fabric.Canvas(canvasElement, {
+  const imgElement = new Image();
+  imgElement.src = imageUrl;
+  imgElement.onload = () => {
+    const bg = new fabric.Image(imgElement, { selectable: false, evented: false });
+    canvas.setDimensions({
         width: imgElement.width,
-        height: imgElement.height,
-    });
+        height: imgElement.height
+    })
+    canvas.backgroundImage = bg 
+    canvas.renderAll.bind(canvas);
+  };
 
-    const text = new fabric.Textbox("Hola!", { left: 50, top: 50, fill: "red" });
-    canvas.add(text);
+  return canvas;
+}
 
-    const imagen = new Image();
-    imagen.src = cara
-    imagen.onload = () => {
-        const img = new fabric.Image(imagen, {
-            left: 0,
-            top: 0})
-        canvas.add(img)}
+export function agregarFoto(canvas, url) {
+  if (!canvas) return;
+  const img = new Image();
+  img.src = url;
+  img.onload = () => {
+    const fImg = new fabric.Image(img, { left: 50, top: 50, scaleX: 0.5, scaleY: 0.5 });
+    canvas.add(fImg);
+  };
+}
 
-    
-    imgElement.onload = () => {
-        const img = new fabric.Image(imgElement, {
-            left: 0,
-            top: 0,
-            originX: "left",
-            originY: "top",
-        });
-        canvas.backgroundImage = img;
-        canvas.requestRenderAll();
-    };
-
-    return canvas;
+export function agregarTexto(canvas, texto, color = "black", tamaño = 20, fuente = "Arial") {
+  if (!canvas) return;
+  const t = new fabric.Textbox(texto, { left: 100, top: 100, fill: color, fontSize: tamaño, fontFamily: fuente });
+  canvas.add(t);
 }
