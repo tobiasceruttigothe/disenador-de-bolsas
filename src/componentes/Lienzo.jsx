@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { initCanvas } from "./lienzoCreacion.js";
+import { initCanvas } from "./services/lienzoCreacion.js";
 import plantillaprueba from "/plantillaprueba.png";
 
 export default function Lienzo() {

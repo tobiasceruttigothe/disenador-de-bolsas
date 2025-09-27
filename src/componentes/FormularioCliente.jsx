@@ -10,7 +10,6 @@ export default function FormularioCliente() {
 
   return (
     <>
-    <Header></Header>
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
           <form className="w-100 bg-white p-4 rounded shadow" style={{ maxWidth: '400px' }}>
             <div className="text-center mb-4">

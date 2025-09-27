@@ -15,7 +15,6 @@ export default function SelectorDiseno({ usuarioNombre }) {
 
   return (
     <div>
-      <Header />
       <div className="container">
         <h2 className="mb-3">Selecciona una bolsa</h2>
         <div className="row">

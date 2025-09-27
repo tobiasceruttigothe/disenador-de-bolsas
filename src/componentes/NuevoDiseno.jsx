@@ -5,7 +5,6 @@ import Lienzo from './Lienzo'
 export default function NuevoDiseno() {
   return (
     <>
-        <Header></Header>
         <Lienzo></Lienzo>
     </>
   )
