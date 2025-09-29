@@ -15,6 +15,16 @@ export function initCanvas(canvasElement, imageUrl) {
     canvas.renderAll.bind(canvas);
   };
 
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Delete" || e.key === "Backspace") {
+      const active = canvas.getActiveObject();
+      if (active) {
+        canvas.remove(active);
+        canvas.requestRenderAll();
+      }
+    }
+  });
+
   return canvas;
 }
 
@@ -28,7 +38,7 @@ export function agregarFoto(canvas, url) {
   };
 }
 
-export function agregarTexto(canvas, texto, color = "black", tamaño = 20, fuente = "Arial") {
+export function agregarTexto(canvas, texto, color, tamaño, fuente) {
   if (!canvas) return;
   const t = new fabric.Textbox(texto, { left: 100, top: 100, fill: color, fontSize: tamaño, fontFamily: fuente });
   canvas.add(t);

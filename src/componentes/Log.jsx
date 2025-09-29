@@ -2,16 +2,22 @@ import React from 'react'
 import { useForm } from 'react-hook-form';
 import logo from '../assets/pack designer final.png';
 import Header from './Header';
-import { login } from './services/login.js';
+import { login } from '../services/login.js';
 
-export default function Log() {
+export default function Log({setLogeado, setTipoUsuario}) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
   const onSubmit = async(user) => {
     try {
-      const data = await login(user);
-      console.log("TOKENS", data)
+      //const data = await login(user);
+      //console.log("TOKENS", data)
+      //setLogeado(true);
+      //reset();
+      if (user.mail === "gaspi" && user.contraseña === "1234") {
+      setLogeado(true);
+      setTipoUsuario("cliente");
       reset();
+      }
     } catch (error) {
       alert(`Ha ocurrido un error ${error}`);
       reset();

@@ -1,29 +1,6 @@
-import React, { useRef, useEffect } from "react";
-import { initCanvas, agregarFoto, agregarTexto } from "./services/lienzoCreacion.js";
-import plantillaprueba from "/plantillaprueba.png";
-import caraejemplo from "/caraejemplo.jpeg";
-
-export default function Lienzo() {
-  const canvasRef = useRef(null);
-  const canvasInstance = useRef(null);
-
-  useEffect(() => {
-    canvasInstance.current = initCanvas(canvasRef.current, plantillaprueba);
-    return () => canvasInstance.current?.dispose();
-  }, []);
-
-  const handleAgregarFoto = () => {
-    agregarFoto(canvasInstance.current, caraejemplo);
-  };
-
-  const handleAgregarTexto = () => {
-    agregarTexto(canvasInstance.current, "Hola mundo!", "blue", 30, "Arial");
-  };
-
+export default function Lienzo({ canvasRef }) {
   return (
-    <div>
-      <button onClick={handleAgregarFoto}>Agregar Foto</button>
-      <button onClick={handleAgregarTexto}>Agregar Texto</button>
+    <div className="border rounded p-3 mt-3">
       <canvas ref={canvasRef} />
     </div>
   );
