@@ -1,0 +1,48 @@
+.log-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    background-color: #f5f5f5;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    font-family: 'PT Sans', sans-serif;
+}
+
+.log-back-button {
+    margin-right: 20px;
+    padding: 8px 14px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #016add;
+    color: white;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.log-back-button:hover {
+    background-color: #0056b3;
+}
+
+.log-title {
+    margin: 0;
+    font-weight: 700;
+    font-size: 1.8rem;
+    /* Hacemos el h1 más grande */
+}
+
+.log-forgot-link {
+    margin-left: auto;
+    color: #016add;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.log-forgot-link:hover {
+    color: #0056b3;
+}
