@@ -14,7 +14,7 @@ export default function SelectorDiseno({ usuarioNombre }) {
   const [seleccionada, setSeleccionada] = useState(null);
 
   return (
-    <div>
+    <div className='fondo'>
       <div className="container">
         <h2 className="mb-3">Selecciona una bolsa</h2>
         <div className="row">

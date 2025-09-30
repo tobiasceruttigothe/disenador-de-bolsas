@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 export default function InicioAdmin() {
   return (
     <>
-        <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+        <div className="d-flex justify-content-center align-items-center vh-100 bg-light fondo">
           <form className="w-100 bg-white p-4 rounded shadow" style={{ maxWidth: '400px' }}>
             <div className="text-center mb-4">
                       <img src={logo} alt="Logo" className="img-fluid" style={{ width: '80px', height: '80px' }} />
