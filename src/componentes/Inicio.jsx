@@ -7,8 +7,8 @@ export default function Inicio({ tipoUsuario }) {
     return (
         <div>
             {tipoUsuario === 'admin' && <InicioAdmin></InicioAdmin>}
+            {tipoUsuario === 'cliente' && <InicioCliente></InicioCliente>}
             {tipoUsuario === 'disenador' && <InicioDisenador></InicioDisenador>}
-            {tipoUsuario === 'cliente' && <SelectorDiseno></SelectorDiseno>}
         </div>
     )
 }
