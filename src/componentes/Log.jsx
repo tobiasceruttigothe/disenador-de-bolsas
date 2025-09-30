@@ -20,7 +20,7 @@ export default function Log({ setLogeado, setTipoUsuario }) {
       //reset();
       if (user.mail === "gaspi" && user.contraseña === "1234") {
         setLogeado(true);
-        setTipoUsuario("cliente");
+        setTipoUsuario("disenador");
         reset();
       }
     } catch (error) {
