@@ -48,3 +48,42 @@ button {
 .mi-navbar .navbar-brand:hover {
   color: #000000 !important;
 }
+
+/* index.css */
+.card-bolsa {
+  height: 250px; /* altura fija */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* separa imagen y botón */
+}
+
+.card-bolsa img {
+  height: 150px; /* altura de la imagen */
+  object-fit: cover; /* escala sin deformar */
+}
+
+/* Estilo para las cards de acciones */
+.card-accion {
+  height: 250px;              /* altura fija */
+  display: flex;
+  flex-direction: column;     /* columnas: imagen arriba, botón abajo */
+  justify-content: space-between; /* separa imagen y botón */
+  align-items: center;        /* centra horizontalmente */
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.card-accion img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-top: 10px;
+}
+
+.card-accion button {
+  width: 75%;
+  margin-bottom: 10px;
+  display: block;
+  align-self: center;
+}
+

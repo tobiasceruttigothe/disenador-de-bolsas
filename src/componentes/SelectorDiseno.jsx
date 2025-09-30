@@ -37,7 +37,7 @@ export default function SelectorDiseno({ usuarioNombre }) {
             {bolsas.map((bolsa) => (
               <div key={bolsa.id} className="col-sm-4 mb-3">
                 <div
-                  className={`card ${bolsa.id === seleccionada ? "border-warning" : ""}`}
+                  className={`card card-bolsa ${bolsa.id === seleccionada ? "border-warning" : ""}`}
                   onClick={() => handleClick(bolsa)}
                   style={{ cursor: "pointer" }}
                 >
@@ -49,7 +49,7 @@ export default function SelectorDiseno({ usuarioNombre }) {
                     )}
                     {bolsa.nombre === "Crear nueva" && (
                       <Link to={"/nuevoDiseno"}>
-                      <button className="btn btn-primary btn-sm" >Crear diseño</button>
+                      <button className="btn btn-primary btn-sm" >Nuevo diseño</button>
                       </Link>
                     )}
                   </div>
