@@ -28,3 +28,23 @@ button {
   font-family: 'PT Sans', sans-serif;
   font-weight: 700;
 }
+
+.mi-navbar {
+  background-color: #f5f5f5 !important;
+  z-index: 1000 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+  font-family: 'PT Sans', sans-serif !important;
+}
+
+/* Links y dropdowns */
+.mi-navbar .nav-link,
+.mi-navbar .dropdown-item,
+.mi-navbar .navbar-brand {
+  color: #016add !important;
+}
+
+.mi-navbar .nav-link:hover,
+.mi-navbar .dropdown-item:hover,
+.mi-navbar .navbar-brand:hover {
+  color: #000000 !important;
+}
