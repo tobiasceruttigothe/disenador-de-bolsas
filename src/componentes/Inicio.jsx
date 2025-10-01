@@ -1,7 +1,6 @@
 import React from 'react'
 import InicioAdmin from './InicioAdmin'
 import SelectorDiseno from './SelectorDiseno'
-//import InicioDisenador from './InicioDisenador'
 
 export default function Inicio({ tipoUsuario }) {
     return (

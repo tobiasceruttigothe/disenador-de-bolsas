@@ -1,5 +1,5 @@
 import axios from "axios";
-import Cookies from 'js-cookies';
+import Cookies from 'js-cookie';
 
 export async function login(user) {
     try {

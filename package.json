@@ -14,7 +14,7 @@
     "bootstrap": "^5.3.8",
     "express": "^5.1.0",
     "fabric": "^6.7.1",
-    "js-cookies": "^1.0.4",
+    "js-cookie": "^3.0.5",
     "nodemon": "^3.1.10",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",

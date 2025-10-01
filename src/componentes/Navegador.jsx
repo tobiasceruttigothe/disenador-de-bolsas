@@ -1,13 +1,13 @@
 import React from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
-import Cookies from 'js-cookies';
+import Cookies from 'js-cookie';
 import logo from '../assets/pack designer final.png';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 export default function Navegador() {
   const navigate = useNavigate();
-  const usuarioCorreo = Cookies.getItem('usuarioCorreo') || "usuario@ejemplo.com";
+  //const usuarioCorreo = Cookies.getItem('usuarioCorreo') || "usuario@ejemplo.com";
 
   const cerrarSesion = (e) => {
     e.preventDefault(); // prevenir comportamiento por defecto del link
@@ -41,7 +41,7 @@ export default function Navegador() {
               height="40"
               className="d-inline-block align-top me-2"
             />
-            {usuarioCorreo}
+            {/*usuarioCorreo*/}
           </Navbar.Brand>
 
           <NavDropdown align="end" title="" id="user-dropdown" className="d-flex align-items-center">

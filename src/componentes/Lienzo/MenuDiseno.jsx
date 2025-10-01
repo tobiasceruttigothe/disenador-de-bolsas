@@ -3,6 +3,7 @@ import MenuImagen from "./MenuImagen";
 import MenuTexto from "./MenuTexto";
 import MenuIA from "./MenuIA";
 import MenuFormas from "./MenuFormas";
+import MenuLogos from "./MenuLogos";
 
 export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida, plantillas, setPlantillaElegida }) {
   const [opcion, setOpcion] = useState("imagen");
@@ -37,7 +38,8 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
           <button className={`btn text-start mb-2 ${opcion === "imagen" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("imagen")}> Imagen </button>
           <button className={`btn text-start mb-2 ${opcion === "texto" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("texto")}> Texto </button>
           <button className={`btn text-start mb-2 ${opcion === "ia" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("ia")}> IA </button>
-          <button className={`btn text-start ${opcion === "formas" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("formas")}> Formas </button>
+          <button className={`btn text-start mb-2 ${opcion === "formas" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("formas")}> Formas </button>
+          <button className={`btn text-start  ${opcion === "formas" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("logo")}> Logos </button>
         </div>
 
         <div className="flex-grow-1" style={{
@@ -48,6 +50,7 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
           {opcion === "texto" && <MenuTexto agregarTexto={agregarTexto} />}
           {opcion === "ia" && <MenuIA></MenuIA>}
           {opcion === "formas" && <MenuFormas></MenuFormas>}
+          {opcion === "logo" && <MenuLogos></MenuLogos>}
         </div>
       </div>
     </div>
