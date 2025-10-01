@@ -14,15 +14,12 @@ export default function Log({ setLogeado, setTipoUsuario }) {
 
   const onSubmit = async (user) => {
     try {
-      //const data = await login(user);
-      //console.log("TOKENS", data)
-      //setLogeado(true);
-      //reset();
-      if (user.mail === "gaspi" && user.contraseña === "1234") {
-        setLogeado(true);
-        setTipoUsuario("admin");
-        reset();
-      }
+      const data = await login(user);
+      console.log("TOKENS", data) //OJO. Sacarlo dsp
+      setTipoUsuario("cliente") //ver de decodificar el jwt
+      setLogeado(true);
+      reset();
+
     } catch (error) {
       alert(`Ha ocurrido un error ${error}`);
       reset();
