@@ -20,11 +20,6 @@ export default function SelectorDiseno({ usuarioNombre }) {
   const handleClick = (bolsa) => {
     setSeleccionada(bolsa.id);
 
-    if (bolsa.nombre === "Crear nueva") {
-      // Lógica para crear una nueva bolsa
-      console.log("Redirigir a la página de nueva bolsa");
-      // por ejemplo: navigate('/inicio/nuevoDiseno');
-    }
   };
 
   return (
