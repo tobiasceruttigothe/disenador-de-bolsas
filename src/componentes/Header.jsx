@@ -5,17 +5,18 @@ import logo from '../assets/pack designer final.png';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-export default function Navegador({nombre, mail}) {
+export default function Navegador({nombre, mail, setLogeado}) {
   const navigate = useNavigate();
 
   const cerrarSesion = (e) => {
     e.preventDefault(); // prevenir comportamiento por defecto del link
-    Cookies.removeItem('access_token');
-    Cookies.removeItem('refresh_token');
-    Cookies.removeItem('rol');
-    Cookies.removeItem('nombre');
-    Cookies.removeItem('mail');
-    navigate('/login'); 
+    Cookies.remove('access_token');
+    Cookies.remove('refresh_token');
+    Cookies.remove('rol');
+    Cookies.remove('nombre');
+    Cookies.remove('mail');
+    //navigate('/login'); 
+    setLogeado(false);
   };
 
   return (

@@ -4,7 +4,7 @@ import logo from '../../assets/pack designer final.png';
 import { login } from "../../services/login";
 import "../../styles/log.css";
 
-export default function Log({ setLogeado, setTipoUsuario }) {
+export default function Log({ setLogeado, setTipoUsuario, setNombre, setMail }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
   const handleBack = () => {
