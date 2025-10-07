@@ -5,7 +5,7 @@ import logo from '../assets/pack designer final.png';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
-export default function Navegador({nombre, mail, setLogeado}) {
+export default function Navegador({nombre, mail, setLogeado, tipoUsuario}) {
   const navigate = useNavigate();
 
   const cerrarSesion = (e) => {
@@ -24,14 +24,14 @@ export default function Navegador({nombre, mail, setLogeado}) {
       <Container className="d-flex justify-content-between align-items-center">
         {/* IZQUIERDA: Acciones */}
         <Nav className="d-flex align-items-center me-auto">
-          <NavDropdown
+          {tipoUsuario == "cliente" && (<NavDropdown
             title={<span style={{ fontSize: '24px', cursor: 'pointer' }}>&#9776;</span>}
             id="nav-dropdown"
           >
             <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/inicio">Mis diseños</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
-          </NavDropdown>
+          </NavDropdown>)}
         </Nav>
 
         <h2>Bienvenido Usuario @Usuario</h2>

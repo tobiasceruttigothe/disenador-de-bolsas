@@ -39,7 +39,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {logeado && <Header nombre={nombre} mail={mail} setLogeado={setLogeado} />}
+      {logeado && <Header nombre={nombre} mail={mail} setLogeado={setLogeado} tipoUsuario={tipoUsuario}/>}
       <Routes>
         <Route path="/" element={logeado ? <Navigate to="/inicio" /> : <Navigate to="/login" />} />
         <Route path="/login" element={logeado ? <Navigate to="/" /> : <Log setLogeado={setLogeado} setTipoUsuario={setTipoUsuario} setNombre={setNombre} setMail={setMail} />} />
