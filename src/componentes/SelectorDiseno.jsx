@@ -25,7 +25,8 @@ export default function SelectorDiseno({ usuarioNombre }) {
     <>
       <div className='fondo'>
         <div className="container">
-          <h2 className="mb-3">Selecciona una bolsa</h2>
+          <br />
+          <h2 className="mb-3">Tus diseños</h2>
           <div className="row">
             {bolsas.map((bolsa) => (
               <div key={bolsa.id} className="col-sm-4 mb-3">

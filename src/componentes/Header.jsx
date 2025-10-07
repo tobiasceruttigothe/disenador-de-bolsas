@@ -28,9 +28,12 @@ export default function Navegador({nombre, mail}) {
             id="nav-dropdown"
           >
             <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/inicio">Mis diseños</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
           </NavDropdown>
         </Nav>
+
+        <h2>Bienvenido Usuario @Usuario</h2>
 
         {/* DERECHA: Usuario + Logo + Cerrar sesión */}
         <Nav className="d-flex align-items-center ms-auto">
