@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
+import * as jwt_decode from "jwt-decode";
 
 export async function login(user) {
     try {
@@ -17,12 +18,32 @@ export async function login(user) {
             }
         });
         
-        console.log("TOKENS", data)
+        const payload = jwt_decode(data.access_token);
+        const roles = payload.realm_access.roles;
 
-        Cookies.set('access_token', data.access_token, {expires:1});
-        Cookies.set('refresh_token', data.refresh_token, {expires:7});
+        let role = "cliente";
+        if (roles.includes("ADMIN")) {
+            role = "admin"}
+            else if (roles.includes("CLIENTE")) {
+                role = "cliente"} 
+            else if (roles.includes("DISENADOR")) {
+                role = "disenador"}
+                else if (roles.includes("INTERESADO")) {
+                    role = "interesado"};
 
-        return data;
+        Cookies.set('access_token', data.access_token, { expires: 1 });
+        Cookies.set('refresh_token', data.refresh_token, { expires: 7 });
+        Cookies.set('rol', role, { expires: 1 });
+        Cookies.set('mail', payload.preferred_username, { expires: 1 });
+        Cookies.set('nombre', payload.name, { expires: 1 });
+
+        return {
+            access_token: data.access_token,
+            refresh_token: data.refresh_token,
+            rol: role,
+            mail: payload.preferred_username,
+            nombre: payload.name
+        }
     } 
 
     catch (error) {

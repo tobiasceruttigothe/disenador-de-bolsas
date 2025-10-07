@@ -11,7 +11,7 @@ export default function MenuLogos() {
             border: "1px solid #00000013",
             borderleft: "none"
          }}>
-            <h2 className="mx-2 mb-3">Agregar Imagenes con Inteligencia Artificial</h2>
+            <h2 className="mx-2 mb-3">Agregar Imagenes de la empresa</h2>
             <div className="input-group m-1">
                 
             </div>

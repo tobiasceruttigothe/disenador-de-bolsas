@@ -3,7 +3,6 @@ import Header from './Header';
 import pollo from "../assets/chickenCorner.jpg";
 import cafe from "../assets/cafeteria.jpg";
 import chipi from "../assets/chipiKopos.jpg";
-import Navegador from './Navegador';
 import plusIcon from "../assets/pack designer final.png"; // ícono para la nueva bolsa
 import { Link } from 'react-router-dom';
 
@@ -24,7 +23,6 @@ export default function SelectorDiseno({ usuarioNombre }) {
 
   return (
     <>
-      <Navegador />
       <div className='fondo'>
         <div className="container">
           <h2 className="mb-3">Selecciona una bolsa</h2>

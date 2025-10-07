@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
-import plantillaprueba from "/plantillaprueba.png";
+import plantillaprueba from "../../assets/plantillaprueba.png";
 
 export default function NuevoDiseno() {
   const canvasRef = useRef(null);

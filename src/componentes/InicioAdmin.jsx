@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Navegador from './Navegador';
 import { Link } from 'react-router-dom';
 import user from "../assets/user.png";
 import bolsa from "../assets/pack designer final.png";
@@ -19,7 +18,6 @@ export default function InicioAdmin() {
 
   return (
     <>
-      <Navegador/>
       <div className="fondo py-5">
         <div className="container">
           <h2 className="mb-4 text-center">Selecciona una acción</h2>

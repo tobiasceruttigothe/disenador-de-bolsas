@@ -1,9 +1,8 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
-import logo from '../assets/pack designer final.png';
-import Header from './Header';
-import { login } from '../services/login.js';
-import "../styles/log.css";
+import logo from '../../assets/pack designer final.png';
+import { login } from "../../services/login";
+import "../../styles/log.css";
 
 export default function Log({ setLogeado, setTipoUsuario }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
@@ -15,8 +14,9 @@ export default function Log({ setLogeado, setTipoUsuario }) {
   const onSubmit = async (user) => {
     try {
       const data = await login(user);
-      console.log("TOKENS", data) //OJO. Sacarlo dsp
-      setTipoUsuario("cliente") //ver de decodificar el jwt
+      setTipoUsuario(data.rol);
+      setNombre(data.nombre);
+      setMail(data.mail);
       setLogeado(true);
       reset();
 
@@ -63,8 +63,12 @@ export default function Log({ setLogeado, setTipoUsuario }) {
             {errors.contraseña && <div className="invalid-feedback">{errors.contraseña.message}</div>}
           </div>
 
-          <a href="/recuperar-contraseña" className="log-forgot-link">
+          <a href="/recuperar-contraseña" style={{ display: "inline-block", marginBottom: '7px' }} className="log-forgot-link">
             Olvidé mi contraseña
+          </a>
+          <br/>
+          <a href="/crear-cuenta" style={{ display: "inline-block", marginBottom: '7px' }} className="log-signup-link">
+            Crear una cuenta nueva
           </a>
 
           <button
