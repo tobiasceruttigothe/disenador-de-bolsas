@@ -1,13 +1,16 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
-import * as jwt_decode from "jwt-decode";
+//import * as jwt_decode from "jwt-decode";
+//const jwt_decode = require("jwt-decode");
+import jwt_decode from "jwt-decode";
+
 
 export async function login(user) {
     try {
         const link = "http://localhost:8080/realms/tesina/protocol/openid-connect/token";
         const params = new URLSearchParams();
         params.append('client_id', 'backend-service');
-        params.append('client_secret', 'siZIjoNYryGmXBPAhafsYMTyW0WtnU6z'); 
+        params.append('client_secret', 'qL9zabLf/LtV48DrZsG6ivGm9/5C8TedHqawXXisvUA='); 
         params.append('grant_type', 'password');
         params.append('username', user.mail);
         params.append('password', user.contraseña);
@@ -17,7 +20,6 @@ export async function login(user) {
             'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
-        
         const payload = jwt_decode(data.access_token);
         const roles = payload.realm_access.roles;
 
