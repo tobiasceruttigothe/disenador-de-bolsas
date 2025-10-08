@@ -36,8 +36,8 @@ export async function login(user) {
         Cookies.set('access_token', data.access_token, { expires: 1 });
         Cookies.set('refresh_token', data.refresh_token, { expires: 7 });
         Cookies.set('rol', role, { expires: 1 });
-        Cookies.set('mail', payload.preferred_username, { expires: 1 });
-        Cookies.set('nombre', payload.name, { expires: 1 });
+        Cookies.set('nombre', payload.preferred_username, { expires: 1 });
+        Cookies.set('mail', payload.email, { expires: 1 });
 
         return {
             access_token: data.access_token,

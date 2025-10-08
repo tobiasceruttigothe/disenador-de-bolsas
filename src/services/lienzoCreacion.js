@@ -15,16 +15,27 @@ export function initCanvas(canvasElement, imageUrl) {
     canvas.renderAll.bind(canvas);
   };
 
-  document.addEventListener("keydown", (e) => {
+document.addEventListener("keydown", (e) => {
+    // Borrar objetos
     if (e.key === "Delete" || e.key === "Backspace") {
-      const active = canvas.getActiveObject();
-      if (active) {
-        canvas.remove(active);
+      const activeObjects = canvas.getActiveObjects();
+      if (!activeObjects || activeObjects.length === 0) return;
+      let borro = false;
+      activeObjects.forEach(obj => {
+        const esTexto = obj.type === "textbox" || obj.type === "text" || obj.type === "i-text";
+        const editandoTexto = esTexto && obj.isEditing;
+        if (!editandoTexto) {
+          borro = true;
+          canvas.remove(obj);
+        }
+      });
+      if (borro) {
+        e.preventDefault();
+        canvas.discardActiveObject();
         canvas.requestRenderAll();
       }
     }
-  });
-
+  })
   return canvas;
 }
 

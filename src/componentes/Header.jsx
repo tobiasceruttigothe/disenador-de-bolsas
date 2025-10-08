@@ -2,11 +2,10 @@ import React from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import logo from '../assets/pack designer final.png';
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 export default function Navegador({nombre, mail, setLogeado, tipoUsuario}) {
-  const navigate = useNavigate();
+
 
   const cerrarSesion = (e) => {
     e.preventDefault(); // prevenir comportamiento por defecto del link
@@ -15,7 +14,6 @@ export default function Navegador({nombre, mail, setLogeado, tipoUsuario}) {
     Cookies.remove('rol');
     Cookies.remove('nombre');
     Cookies.remove('mail');
-    //navigate('/login'); 
     setLogeado(false);
   };
 
@@ -34,7 +32,7 @@ export default function Navegador({nombre, mail, setLogeado, tipoUsuario}) {
           </NavDropdown>)}
         </Nav>
 
-        <h2>Bienvenido Usuario @Usuario</h2>
+        <h2>Bienvenido {nombre} </h2>
 
         {/* DERECHA: Usuario + Logo + Cerrar sesión */}
         <Nav className="d-flex align-items-center ms-auto">
