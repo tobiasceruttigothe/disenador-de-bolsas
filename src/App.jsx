@@ -10,6 +10,7 @@ import Header from './componentes/Header'
 import Footer from './componentes/Footer'
 import RecuperarCuenta from './componentes/Log/RecuperarCuenta'
 import AltaCuenta from './componentes/Log/AltaCuenta'
+import VerificarMail from './componentes/Log/VerificarMail'
 
 import Cookies from 'js-cookie'
 
@@ -25,12 +26,18 @@ function App() {
     const mailCookie = Cookies.get('mail');
     const token = Cookies.get('access_token');
 
+    setTipoUsuario(rol);
+    setNombre(nombreCookie);
+    setMail(mailCookie);
+
     if (token) {
       setLogeado(true);
       setTipoUsuario(rol);
       setNombre(nombreCookie);
       setMail(mailCookie);
     }
+
+    
   }, []);
 
   function RutaPrivada({ logeado, children }) {
@@ -39,7 +46,7 @@ function App() {
 
   return (
     <BrowserRouter>
-      {logeado && <Header nombre={nombre} mail={mail} setLogeado={setLogeado} tipoUsuario={tipoUsuario}/>}
+      {logeado && <Header nombre={nombre} mail={mail} setLogeado={setLogeado} tipoUsuario={tipoUsuario} />}
       <Routes>
         <Route path="/" element={logeado ? <Navigate to="/inicio" /> : <Navigate to="/login" />} />
         <Route path="/login" element={logeado ? <Navigate to="/" /> : <Log setLogeado={setLogeado} setTipoUsuario={setTipoUsuario} setNombre={setNombre} setMail={setMail} />} />
@@ -83,7 +90,7 @@ function App() {
         <Route
           path="/recuperar-contraseña"
           element={
-            <RecuperarCuenta/>
+            <RecuperarCuenta />
           }
         />
 
@@ -93,7 +100,14 @@ function App() {
             <AltaCuenta />
           }
         />
+
+        <Route
+          path="/verify-email"
+          element={<VerificarMail />}
+        />
+
       </Routes>
+
       {logeado && <Footer />}
     </BrowserRouter>
   )

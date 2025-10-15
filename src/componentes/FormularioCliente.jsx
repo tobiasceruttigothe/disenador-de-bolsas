@@ -1,36 +1,71 @@
-import React from 'react'
-import Header from './Header'
+import React, {useState} from 'react'
 import logo from '../assets/pack designer final.png';
+import axios from 'axios';
 import { useForm } from 'react-hook-form';
 
 export default function FormularioCliente() {
 
+      const [estado, setEstado] = useState(null)
       const { register, handleSubmit, formState: { errors }, reset } = useForm();
-    
+
+    const handleSubmitForm = async (data) => {
+      try{
+        const payload = {
+          username: data.nombre,
+          email: data.mail,          
+          razonSocial: data.razonSocial,
+          password: data.contraseña,  
+          enabled: true,
+          emailVerified: false
+        };
+        console.log(payload)
+        await axios.post("http://localhost:9090/api/usuarios/create", {params: payload})
+        reset();
+        setEstado("Exito");
+    }
+    catch(error){
+        console.error("Error al agregar el cliente:", error);
+        setEstado("Error");
+    }
+  }
 
   return (
     <>
     <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
-          <form className="w-100 bg-white p-4 rounded shadow" style={{ maxWidth: '400px' }}>
+          <form onSubmit={handleSubmit(handleSubmitForm)} className="w-100 bg-white p-4 rounded shadow" style={{ maxWidth: '400px' }}>
             <div className="text-center mb-4">
               <img src={logo} alt="Logo" className="img-fluid" style={{ width: '80px', height: '80px' }} />
             </div>
-    
+            <h2 className="text-center mb-4">Agregar Cliente</h2>
             <div className="mb-3">
-              <label htmlFor="mail" className="form-label">IdCliente</label>
+              <label htmlFor="nombre" className="form-label">Nombre</label>
               <input
-                id="idCliente"
+                id="nombre" 
+                placeholder="Ingrese un nombre de usuario"
                 type="text"
-                className={`form-control ${errors.idcliente ? 'is-invalid' : ''}`}
-                {...register("idCliente")}
+                className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
+                {...register("nombre", { required: "El nombre es obligatorio" })}
               />
-              {errors.idcliente && <div className="invalid-feedback">{errors.idCliente.message}</div>}
+              {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="contraseña" className="form-label">Contraseña</label>
+              <input
+                id="contraseña"
+                placeholder="Ingrese una contraseña provisoria"
+                type="text"
+                className={`form-control ${errors.contraseña ? 'is-invalid' : ''}`}
+                {...register("contraseña", { required: "La contraseña es obligatoria" })}
+              />
+              {errors.contraseña && <div className="invalid-feedback">{errors.contraseña.message}</div>}
             </div>
 
             <div className="mb-3">
               <label htmlFor="mail" className="form-label">Razon social</label>
               <input
                 id="razonSocial"
+                placeholder="Ingrese una razon social"
                 type="text"
                 className={`form-control ${errors.razonSocial ? 'is-invalid' : ''}`}
                 {...register("razonSocial", { required: "La razon social es obligatoria" })}
@@ -43,33 +78,31 @@ export default function FormularioCliente() {
               <input
                 id="mail"
                 type="text"
-                placeholder="agustinperez@gmail.com"
+                placeholder="Ingrese un mail"
                 className={`form-control ${errors.mail ? 'is-invalid' : ''}`}
                 {...register("mail", { required: "El mail es obligatorio" })}
               />
               {errors.mail && <div className="invalid-feedback">{errors.mail.message}</div>}
             </div>
     
-            <div className="mb-3">
-              <label htmlFor="contraseña" className="form-label">Contraseña</label>
-              <input
-                id="contraseña"
-                type="password"
-                placeholder="*******"
-                className={`form-control ${errors.contraseña ? 'is-invalid' : ''}`}
-                {...register("contraseña", { required: "La contraseña es obligatoria" })}
-              />
-              {errors.contraseña && <div className="invalid-feedback">{errors.contraseña.message}</div>}
-            </div>
-    
             <button
-              type="submit"
               className="btn w-100 text-white"
               style={{ backgroundColor: '#016add' }}
             >
               Ingresar
             </button>
           </form>
+
+          {estado === "Exito" && (
+            <div className="alert alert-success position-absolute bottom-0 start-50 translate-middle-x mb-4" role="alert">
+              Cliente agregado con éxito
+            </div>
+          )}
+          {estado === "Error" && (
+            <div className="alert alert-danger position-absolute bottom-0 start-50 translate-middle-x mb-4" role="alert">
+              Ocurrió un error al agregar el cliente
+            </div>
+          )}
         </div>
     </>
   )
