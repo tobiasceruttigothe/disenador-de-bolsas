@@ -1,12 +1,15 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import logo from '../assets/pack designer final.png';
 import { Link } from 'react-router-dom';
 
-export default function Navegador({nombre, mail, setLogeado, tipoUsuario}) {
+export default function Navegador({nombre, setNombre, setLogeado, tipoUsuario}) {
 
-
+  useEffect(() => {
+    setNombre(Cookies.get('nombre') || "");
+  }
+  , [nombre]);
   const cerrarSesion = (e) => {
     e.preventDefault(); // prevenir comportamiento por defecto del link
     Cookies.remove('access_token');
@@ -32,7 +35,7 @@ export default function Navegador({nombre, mail, setLogeado, tipoUsuario}) {
           </NavDropdown>)}
         </Nav>
 
-        <h2>Bienvenido {nombre} </h2>
+        {nombre && <h2>Bienvenido {nombre} </h2>}
 
         {/* DERECHA: Usuario + Logo + Cerrar sesión */}
         <Nav className="d-flex align-items-center ms-auto">

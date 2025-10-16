@@ -26,7 +26,7 @@ export default function MenuImagen({ agregarFoto }) {
     };
 
     return (
-        <div className="p-3 mt-2" style={{ height: "650px",
+        <div className="p-3 mt-2 bg-light" style={{ height: "650px",
             borderTopRightRadius: "8px",
             borderBottomRightRadius: "8px",
             border: "1px solid #00000013",

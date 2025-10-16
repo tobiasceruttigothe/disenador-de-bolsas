@@ -5,6 +5,7 @@ import cafe from "../assets/cafeteria.jpg";
 import chipi from "../assets/chipiKopos.jpg";
 import plusIcon from "../assets/pack designer final.png"; // ícono para la nueva bolsa
 import { Link } from 'react-router-dom';
+import "../index.css"
 
 export default function SelectorDiseno({ usuarioNombre }) {
   const bolsas = [

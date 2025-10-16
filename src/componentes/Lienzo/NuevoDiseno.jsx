@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from "react";
 import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
 import plantillaprueba from "../../assets/plantillaprueba.png";
+import Cookies from "js-cookie";
+import "../../index.css"
 
 export default function NuevoDiseno() {
   const canvasRef = useRef(null);
@@ -38,8 +40,28 @@ export default function NuevoDiseno() {
     });
   };
 
+  const handleGuardarDiseno = () => {
+    import("../../services/lienzoCreacion.js").then(({ guardarDiseno, guardarElementos }) => {
+      try {
+        const dataURL = guardarDiseno(canvasInstance.current)
+        const elementos = guardarElementos(canvasInstance.current, plantillaElegida);
+        const usuarioId = Cookies.get("usuarioId");
+        const fechaActual = new Date().toISOString();
+        const diseno = {
+          usuarioId: usuarioId,
+          fechaCreacion: fechaActual,
+          imagen: dataURL,
+          elementos: elementos
+        };
+        console.log("Diseño guardado:", diseno);
+
+        } catch (error) {
+          console.error("Error al guardar el diseño:", error)
+          };
+    });
+  };
   return (
-    <div className="container-fluid bg-light">
+    <div className="container-fluid fondo">
       <div className="row">
         <div className="col-4 border-end">
           <MenuDiseno agregarFoto={agregarFoto} plantillaElegida={plantillaElegida} agregarTexto={agregarTexto} plantillas={plantillas} setPlantillaElegida={setPlantillaElegida} />
@@ -48,6 +70,8 @@ export default function NuevoDiseno() {
           <Lienzo canvasRef={canvasRef} />
         </div>
       </div>
+      <button style={{color: "#fff", backgroundColor: "#016add", border: "none", borderRadius: "5px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"}} 
+      onClick={handleGuardarDiseno}>Guardar diseño</button>
     </div>
   );
 }

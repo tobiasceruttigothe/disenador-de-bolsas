@@ -9,36 +9,16 @@ import FormularioCliente from './componentes/FormularioCliente'
 import Header from './componentes/Header'
 import Footer from './componentes/Footer'
 import RecuperarCuenta from './componentes/Log/RecuperarCuenta'
-import AltaCuenta from './componentes/Log/AltaCuenta'
 import VerificarMail from './componentes/Log/VerificarMail'
 
 import Cookies from 'js-cookie'
 
 function App() {
-  const [tipoUsuario, setTipoUsuario] = useState(null)
-  const [logeado, setLogeado] = useState(false)
-  const [nombre, setNombre] = useState("");
-  const [mail, setMail] = useState("");
+  const [tipoUsuario, setTipoUsuario] = useState(() => Cookies.get('rol') || null)
+  const [nombre, setNombre] = useState(() => Cookies.get('nombre') || "")
+  const [mail, setMail] = useState(() => Cookies.get('mail') || "")
+  const [logeado, setLogeado] = useState(() => !!Cookies.get('access_token'))
 
-  useEffect(() => {
-    const rol = Cookies.get('rol');
-    const nombreCookie = Cookies.get('nombre');
-    const mailCookie = Cookies.get('mail');
-    const token = Cookies.get('access_token');
-
-    setTipoUsuario(rol);
-    setNombre(nombreCookie);
-    setMail(mailCookie);
-
-    if (token) {
-      setLogeado(true);
-      setTipoUsuario(rol);
-      setNombre(nombreCookie);
-      setMail(mailCookie);
-    }
-
-    
-  }, []);
 
   function RutaPrivada({ logeado, children }) {
     return logeado ? children : <Navigate to="/login" />;
@@ -46,7 +26,8 @@ function App() {
 
   return (
     <BrowserRouter>
-      {logeado && <Header nombre={nombre} mail={mail} setLogeado={setLogeado} tipoUsuario={tipoUsuario} />}
+
+      {logeado && <Header nombre={nombre} setNombre={setNombre} setLogeado={setLogeado} tipoUsuario={tipoUsuario} />}
       <Routes>
         <Route path="/" element={logeado ? <Navigate to="/inicio" /> : <Navigate to="/login" />} />
         <Route path="/login" element={logeado ? <Navigate to="/" /> : <Log setLogeado={setLogeado} setTipoUsuario={setTipoUsuario} setNombre={setNombre} setMail={setMail} />} />
@@ -94,12 +75,6 @@ function App() {
           }
         />
 
-        <Route
-          path="/crear-cuenta"
-          element={
-            <AltaCuenta />
-          }
-        />
 
         <Route
           path="/verify-email"

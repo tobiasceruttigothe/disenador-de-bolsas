@@ -67,10 +67,7 @@ export default function Log({ setLogeado, setTipoUsuario, setNombre, setMail }) 
             Olvidé mi contraseña
           </a>
           <br/>
-          <a href="/crear-cuenta" style={{ display: "inline-block", marginBottom: '7px' }} className="log-signup-link">
-            Crear una cuenta nueva
-          </a>
-
+          
           <button
             type="submit"
             className="btn w-100 text-white"

@@ -38,6 +38,7 @@ export async function login(user) {
         Cookies.set('rol', role, { expires: 1 });
         Cookies.set('nombre', payload.preferred_username, { expires: 1 });
         Cookies.set('mail', payload.email, { expires: 1 });
+        Cookies.set('usuarioId', payload.sub, { expires: 7 });
 
         return {
             access_token: data.access_token,

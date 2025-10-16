@@ -25,7 +25,7 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
       </select>
       <div className="d-flex">
         <div
-          className="d-flex flex-column border p-3 mt-2 ml-1"
+          className="d-flex flex-column border p-3 mt-2 ml-1 bg-light"
           style={{
             width: "108px",
             height: "650px",
