@@ -10,6 +10,7 @@ import Header from './componentes/Header'
 import Footer from './componentes/Footer'
 import RecuperarCuenta from './componentes/Log/RecuperarCuenta'
 import VerificarMail from './componentes/Log/VerificarMail'
+import FormularioDisenador from './componentes/FormularioDisenador'
 
 import Cookies from 'js-cookie'
 
@@ -69,6 +70,14 @@ function App() {
         />
 
         <Route
+          path="/formularoDisenador"
+          element={
+            <RutaPrivada logeado={logeado}>
+              <FormularioDisenador />
+            </RutaPrivada>
+          }
+        />
+        <Route
           path="/recuperar-contraseña"
           element={
             <RecuperarCuenta />
@@ -80,7 +89,6 @@ function App() {
           path="/verify-email"
           element={<VerificarMail />}
         />
-
       </Routes>
 
       {logeado && <Footer />}

@@ -6,7 +6,7 @@ import bolsa from "../assets/pack designer final.png";
 
 export default function InicioAdmin() {
   const acciones = [
-    { id: 1, nombre: "Administrar diseñadores", ruta: "/formularioCliente", imagen: user },
+    { id: 1, nombre: "Administrar diseñadores", ruta: "/formularioDisenador", imagen: user },
     { id: 2, nombre: "Administrar clientes", ruta: "/formularioCliente", imagen: user },
     { id: 3, nombre: "Administrar productos", ruta: "/nuevoDiseno", imagen: bolsa },
   ];

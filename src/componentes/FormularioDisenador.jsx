@@ -13,19 +13,18 @@ export default function FormularioCliente() {
         const payload = {
           username: data.nombre,
           email: data.mail,          
-          razonSocial: data.razonSocial,
+          razonSocial: "PAPERSRL",
           password: data.contraseña,  
           enabled: true,
           emailVerified: false,
-          rol: "CLIENTE"
+          rol: "DISENADOR"
         };
-        console.log(payload)
         await axios.post("http://localhost:8080/api/usuarios/create", {params: payload})
         reset();
         setEstado("Exito");
     }
     catch(error){
-        console.error("Error al agregar el cliente:", error);
+        console.error("Error al agregar el diseñador:", error);
         setEstado("Error");
     }
   }
@@ -62,17 +61,6 @@ export default function FormularioCliente() {
               {errors.contraseña && <div className="invalid-feedback">{errors.contraseña.message}</div>}
             </div>
 
-            <div className="mb-3">
-              <label htmlFor="mail" className="form-label">Razon social</label>
-              <input
-                id="razonSocial"
-                placeholder="Ingrese una razon social"
-                type="text"
-                className={`form-control ${errors.razonSocial ? 'is-invalid' : ''}`}
-                {...register("razonSocial", { required: "La razon social es obligatoria" })}
-              />
-              {errors.razonSocial && <div className="invalid-feedback">{errors.razonSocial.message}</div>}
-            </div>
 
             <div className="mb-3">
               <label htmlFor="mail" className="form-label">Mail</label>
@@ -96,12 +84,12 @@ export default function FormularioCliente() {
 
           {estado === "Exito" && (
             <div className="alert alert-success position-absolute bottom-0 start-50 translate-middle-x mb-4" role="alert">
-              Cliente agregado con éxito
+              Diseñador agregado con éxito
             </div>
           )}
           {estado === "Error" && (
             <div className="alert alert-danger position-absolute bottom-0 start-50 translate-middle-x mb-4" role="alert">
-              Ocurrió un error al agregar el cliente
+              Ocurrió un error al agregar el diseñador
             </div>
           )}
         </div>
