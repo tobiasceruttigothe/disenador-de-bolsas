@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import estrellaIcon from "../../assets/estrellaForma.webp"
-import lineaIcon from "../../assets/rectaForma.webp"
-import rectanguloIcon from "../../assets/rectanguloForma.svg"
-import circuloIcon from "../../assets/circuloForma.png"
-import trianguloIcon from "../../assets/trianguloForma.webp"
-import cuadradoIcon from "../../assets/cuadradoForma.webp"
+import estrellaIcon from "../../assets/formas/estrellaForma.webp"
+import lineaIcon from "../../assets/formas/rectaForma.webp"
+import rectanguloIcon from "../../assets/formas/rectanguloForma.svg"
+import circuloIcon from "../../assets/formas/circuloForma.png"
+import trianguloIcon from "../../assets/formas/trianguloForma.webp"
+import cuadradoIcon from "../../assets/formas/cuadradoForma.webp"
 
 export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTriangulo, agregarRectangulo, agregarEstrella, agregarLinea }) {
   const [color, setColor] = useState("#000000");

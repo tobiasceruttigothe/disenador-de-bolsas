@@ -40,7 +40,7 @@ export default function FormularioCliente() {
             </div>
             <h2 className="text-center mb-4">Agregar Cliente</h2>
             <div className="mb-3">
-              <label htmlFor="nombre" className="form-label">Nombre</label>
+              <label htmlFor="nombre" className="form-label">Nombre de usuario</label>
               <input
                 id="nombre" 
                 placeholder="Ingrese un nombre de usuario"
