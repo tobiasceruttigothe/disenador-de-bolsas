@@ -80,3 +80,101 @@ export function cargarDiseno(canvas, json) {
     canvas.loadFromJSON(canvasJson, () => canvas.renderAll());
   });
 }
+
+export function agregarRectangulo(canvas, color) {
+  if (!canvas) return;
+  const rect = new fabric.Rect({
+    left: 100,
+    top: 100,
+    fill: color,
+    width: 100,
+    height: 100,
+    selectable: true,
+    hasControls: true,
+    lockScalingFlip: true
+  });
+  canvas.add(rect);
+}
+
+export function agregarCirculo(canvas, color) {
+  if (!canvas) return;
+  const circle = new fabric.Circle({
+    left: 100,
+    top: 100,
+    fill: color,
+    radius: 50,
+    selectable: true,
+    hasControls: true,
+    lockScalingFlip: true
+  });
+  canvas.add(circle);
+}
+
+export function agregarTriangulo(canvas, color) {
+  if (!canvas) return;
+  const triangle = new fabric.Triangle({ 
+    left: 100,
+    top: 100,
+    fill: color,
+    width: 100,
+    height: 100,
+    selectable: true,
+    hasControls: true,
+    lockScalingFlip: true
+  });
+  canvas.add(triangle);
+}
+
+export function agregarCuadrado(canvas, color) {
+  if (!canvas) return;
+  const square = new fabric.Rect({
+    left: 100,
+    top: 100,
+    fill: color,
+    width: 100,
+    height: 100,
+    selectable: true,
+    hasControls: true,
+    lockScalingFlip: true
+  });
+  canvas.add(square);
+}
+
+export function agregarLinea(canvas, color) {
+  if (!canvas) return;
+  const line = new fabric.Line([50, 100, 200, 100], {
+    left: 100,
+    top: 100,
+    stroke: color,
+    strokeWidth: 5,
+    selectable: true,
+    hasControls: true,
+    lockScalingFlip: true
+  });
+  canvas.add(line);
+}
+
+export function agregarEstrella(canvas, color) {
+  if (!canvas) return;
+  const star = new fabric.Polygon([
+    { x: 100, y: 0 },
+    { x: 120, y: 70 },
+    { x: 190, y: 70 },
+    { x: 130, y: 110 },
+    { x: 150, y: 180 },
+    { x: 100, y: 140 },
+    { x: 50, y: 180 },
+    { x: 70, y: 110 },
+    { x: 10, y: 70 },
+    { x: 80, y: 70 }
+  ], {
+    left: 100,
+    top: 100,
+    fill: color,
+    selectable: true,
+    hasControls: true,
+    lockScalingFlip: true
+  });
+  canvas.add(star);
+}
+

@@ -70,7 +70,7 @@ function App() {
         />
 
         <Route
-          path="/formularoDisenador"
+          path="/formularioDisenador"
           element={
             <RutaPrivada logeado={logeado}>
               <FormularioDisenador />

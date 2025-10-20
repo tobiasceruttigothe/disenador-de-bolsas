@@ -34,6 +34,42 @@ export default function NuevoDiseno() {
     });
   };
 
+  const agregarRectangulo = (color) => {
+    import("../../services/lienzoCreacion.js").then(({ agregarRectangulo }) => {
+      agregarRectangulo(canvasInstance.current, color);
+    });
+  };
+
+  const agregarCirculo = (color) => {
+    import("../../services/lienzoCreacion.js").then(({ agregarCirculo }) => {
+      agregarCirculo(canvasInstance.current, color);
+    });
+  };
+
+  const agregarCuadrado = (color) => {
+    import("../../services/lienzoCreacion.js").then(({ agregarCuadrado }) => {
+      agregarCuadrado(canvasInstance.current, color);
+    });
+  };
+
+  const agregarTriangulo = (color) => {
+    import("../../services/lienzoCreacion.js").then(({ agregarTriangulo }) => {
+      agregarTriangulo(canvasInstance.current, color);
+    });
+  };
+
+  const agregarLinea = (color) => {
+    import("../../services/lienzoCreacion.js").then(({ agregarLinea }) => {
+      agregarLinea(canvasInstance.current, color);
+    } );
+  };
+
+  const agregarEstrella = (color) => {
+    import("../../services/lienzoCreacion.js").then(({ agregarEstrella }) => {
+      agregarEstrella(canvasInstance.current, color);
+    });
+  };
+
   const agregarTexto = (texto, color, tamaño, fuente) => {
     import("../../services/lienzoCreacion.js").then(({ agregarTexto }) => {
       agregarTexto(canvasInstance.current, texto, color, tamaño, fuente);
@@ -64,7 +100,9 @@ export default function NuevoDiseno() {
     <div className="container-fluid fondo">
       <div className="row">
         <div className="col-4 border-end">
-          <MenuDiseno agregarFoto={agregarFoto} plantillaElegida={plantillaElegida} agregarTexto={agregarTexto} plantillas={plantillas} setPlantillaElegida={setPlantillaElegida} />
+          <MenuDiseno agregarFoto={agregarFoto} plantillaElegida={plantillaElegida} agregarTexto={agregarTexto} plantillas={plantillas} setPlantillaElegida={setPlantillaElegida} 
+          agregarCuadrado={agregarCuadrado} agregarRectangulo={agregarRectangulo} agregarCirculo={agregarCirculo} agregarEstrella={agregarEstrella} agregarLinea={agregarLinea}
+          agregarTriangulo={agregarTriangulo}/>
         </div>
         <div className="col-8">
           <Lienzo canvasRef={canvasRef} />
