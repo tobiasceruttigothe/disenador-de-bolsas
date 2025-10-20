@@ -13,6 +13,9 @@ import VerificarMail from './componentes/Log/VerificarMail'
 import FormularioDisenador from './componentes/FormularioDisenador'
 
 import Cookies from 'js-cookie'
+import TablaDisenadores from './componentes/TablaDisenadores'
+import TablaClientes from './componentes/TablaClientes'
+import TablaProductos from './componentes/TablaProductos'
 
 function App() {
   const [tipoUsuario, setTipoUsuario] = useState(() => Cookies.get('rol') || null)
@@ -61,10 +64,28 @@ function App() {
         />
 
         <Route
+          path="/tablaClientes"
+          element={
+            <RutaPrivada logeado={logeado}>
+              <TablaClientes />
+            </RutaPrivada>
+          }
+        />
+
+        <Route
           path="/formularioCliente"
           element={
             <RutaPrivada logeado={logeado}>
               <FormularioCliente />
+            </RutaPrivada>
+          }
+        />
+
+        <Route
+          path="/tablaDisenadores"
+          element={
+            <RutaPrivada logeado={logeado}>
+              <TablaDisenadores />
             </RutaPrivada>
           }
         />
@@ -77,13 +98,22 @@ function App() {
             </RutaPrivada>
           }
         />
+
+        <Route
+          path="/tablaProductos"
+          element={
+            <RutaPrivada logeado={logeado}>
+              <TablaProductos />
+            </RutaPrivada>
+          }
+        />
+
         <Route
           path="/recuperar-contraseña"
           element={
             <RecuperarCuenta />
           }
         />
-
 
         <Route
           path="/verify-email"
