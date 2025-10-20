@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import logo from '../assets/pack designer final.png';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
+import "../index.css";
 
 export default function FormularioCliente() {
 
@@ -20,7 +21,7 @@ export default function FormularioCliente() {
           rol: "CLIENTE"
         };
         console.log(payload)
-        await axios.post("http://localhost:8080/api/usuarios/create", {params: payload})
+        await axios.post("http://localhost:9090/api/usuarios/create", payload)
         reset();
         setEstado("Exito");
     }
@@ -32,7 +33,7 @@ export default function FormularioCliente() {
 
   return (
     <>
-    <div className="d-flex justify-content-center align-items-center vh-100 bg-light">
+    <div className="d-flex justify-content-center align-items-center vh-100 fondo">
           <form onSubmit={handleSubmit(handleSubmitForm)} className="w-100 bg-white p-4 rounded shadow" style={{ maxWidth: '400px' }}>
             <div className="text-center mb-4">
               <img src={logo} alt="Logo" className="img-fluid" style={{ width: '80px', height: '80px' }} />

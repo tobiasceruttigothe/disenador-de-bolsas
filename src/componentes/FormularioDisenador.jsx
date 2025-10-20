@@ -17,9 +17,9 @@ export default function FormularioCliente() {
           password: data.contraseña,  
           enabled: true,
           emailVerified: false,
-          rol: "DISENADOR"
+          rol: "DISEÑADOR"
         };
-        await axios.post("http://localhost:8080/api/usuarios/create", {params: payload})
+        await axios.post("http://localhost:9090/api/usuarios/create", {params: payload})
         reset();
         setEstado("Exito");
     }

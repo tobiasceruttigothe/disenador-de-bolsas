@@ -10,7 +10,7 @@ export default function VerificarMail() {
         const token = params.get('token');
 
         if (token) {
-            axios.post(`http://localhost:8080/api/auth/verify-email?token=${token}`)
+            axios.post(`http://localhost:9090/api/auth/verify-email?token=${token}`)
                 .then(response => {
                     navigate('/login');
                 })
