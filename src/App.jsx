@@ -11,6 +11,7 @@ import Footer from './componentes/Footer'
 import RecuperarCuenta from './componentes/Log/RecuperarCuenta'
 import VerificarMail from './componentes/Log/VerificarMail'
 import FormularioDisenador from './componentes/FormularioDisenador'
+import ResetPassword from './componentes/Log/ResetPassword'
 
 import Cookies from 'js-cookie'
 import TablaDisenadores from './componentes/TablaDisenadores'
@@ -119,6 +120,9 @@ function App() {
           path="/verify-email"
           element={<VerificarMail />}
         />
+
+        <Route path="/reset-password" element={<ResetPassword/>} />
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
 
       {logeado && <Footer />}
