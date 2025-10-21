@@ -10,6 +10,7 @@ export default function FormularioCliente() {
 
     const handleSubmitForm = async (data) => {
       try{
+        const token = Cookies.get('access_token')
         const payload = {
           username: data.nombre,
           email: data.mail,          
@@ -19,7 +20,14 @@ export default function FormularioCliente() {
           emailVerified: false,
           rol: "DISEÑADOR"
         };
-        await axios.post("http://localhost:9090/api/usuarios/create", {params: payload})
+        await axios.post("http://localhost:9090/api/usuarios/create", payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        }
+      )
         reset();
         setEstado("Exito");
     }
