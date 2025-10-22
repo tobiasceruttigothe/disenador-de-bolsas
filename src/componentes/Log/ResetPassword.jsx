@@ -7,6 +7,7 @@ import "../../index.css";
 export default function ResetPassword() {
     const navigate = useNavigate();
     const [contraseñaReset, setContraseñaReset] = useState("");
+    const [contraseñaReset2, setContraseñaReset2] = useState("");
     const [exito, setExito] = useState(null);
 
     const params = new URLSearchParams(window.location.search);
@@ -14,13 +15,22 @@ export default function ResetPassword() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Validar que ambas contraseñas coincidan
+        if (contraseñaReset !== contraseñaReset2) {
+            setExito("noCoinciden");
+            return;
+        }
+
         try {
             await axios.post("http://localhost:9090/api/auth/reset-password", {
                 token: token,
                 newPassword: contraseñaReset
             });
-            setExito(true);
-            setTimeout(() => navigate("/login"), 2000); 
+
+            setExito("true");
+            setTimeout(() => navigate("/login"), 2000);
+
         } catch (error) {
             if (error.response) {
                 console.error("Error data:", error.response.data);
@@ -28,14 +38,13 @@ export default function ResetPassword() {
             } else {
                 console.error("Error:", error.message);
             }
-            setExito(false);
+            setExito("false");
         }
-
     };
 
     return (
         <>
-            <div className="d-flex justify-content-center align-items-center vh-100 bg-light fondo">
+            <div className="d-flex justify-content-center align-items-center vh-100 fondo">
                 <form
                     onSubmit={handleSubmit}
                     className="w-100 bg-white p-4 rounded shadow"
@@ -66,17 +75,18 @@ export default function ResetPassword() {
                             required
                         />
                     </div>
+
                     <div className="mb-3">
-                        <label htmlFor="newPassword" className="form-label">
+                        <label htmlFor="newPassword2" className="form-label">
                             Repita la nueva contraseña
                         </label>
                         <input
-                            id="newPassword"
+                            id="newPassword2"
                             type="password"
-                            placeholder="Ingrese su nueva contraseña"
+                            placeholder="Repita su nueva contraseña"
                             className="form-control"
-                            value={contraseñaReset}
-                            onChange={(e) => setContraseñaReset(e.target.value)}
+                            value={contraseñaReset2}
+                            onChange={(e) => setContraseñaReset2(e.target.value)}
                             required
                         />
                     </div>
@@ -91,7 +101,7 @@ export default function ResetPassword() {
                 </form>
             </div>
 
-            {exito === true && (
+            {exito === "true" && (
                 <div
                     className="alert alert-success position-fixed bottom-0 start-50 translate-middle-x mb-4"
                     role="alert"
@@ -101,13 +111,23 @@ export default function ResetPassword() {
                 </div>
             )}
 
-            {exito === false && (
+            {exito === "false" && (
                 <div
                     className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
                     role="alert"
                     style={{ zIndex: 9999 }}
                 >
                     No se pudo restablecer la contraseña. El token puede ser inválido o haber expirado.
+                </div>
+            )}
+
+            {exito === "noCoinciden" && (
+                <div
+                    className="alert alert-warning position-fixed bottom-0 start-50 translate-middle-x mb-4"
+                    role="alert"
+                    style={{ zIndex: 9999 }}
+                >
+                    Las contraseñas no coinciden. Por favor, revisá e intentá nuevamente.
                 </div>
             )}
         </>
