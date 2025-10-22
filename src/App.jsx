@@ -14,9 +14,13 @@ import FormularioDisenador from './componentes/FormularioDisenador'
 import ResetPassword from './componentes/Log/ResetPassword'
 
 import Cookies from 'js-cookie'
+
 import TablaDisenadores from './componentes/TablaDisenadores'
 import TablaClientes from './componentes/TablaClientes'
 import TablaProductos from './componentes/TablaProductos'
+import TablaAdmins from "./componentes/TablaAdmins"
+
+import FormularioAdmin from "./componentes/FormularioAdmin"
 
 function App() {
   const [tipoUsuario, setTipoUsuario] = useState(() => Cookies.get('rol') || null)
@@ -83,10 +87,28 @@ function App() {
         />
 
         <Route
+          path="/formularioAdmin"
+          element={
+            <RutaPrivada logeado={logeado}>
+              <FormularioAdmin/>
+            </RutaPrivada>
+          }
+        />
+
+        <Route
           path="/tablaDisenadores"
           element={
             <RutaPrivada logeado={logeado}>
               <TablaDisenadores />
+            </RutaPrivada>
+          }
+        />
+
+        <Route
+          path="/tablaAdmins"
+          element={
+            <RutaPrivada logeado={logeado}>
+              <TablaAdmins/>
             </RutaPrivada>
           }
         />

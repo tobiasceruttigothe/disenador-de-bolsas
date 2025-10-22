@@ -5,7 +5,7 @@ import Cookies from "js-cookie"
 
 export default function TablaClientes() {
   const navigate = useNavigate();
-  const [clientes, setClientes] = useState([])
+  const [admins, setAdmins] = useState([])
   const [estado, setEstado] = useState(undefined)
 
   useEffect(() => {
@@ -16,13 +16,13 @@ export default function TablaClientes() {
   const fetchClientes = async () => {
     const token = Cookies.get("access_token");
     try {
-      const cl = await axios.get("http://localhost:9090/api/usuarios/list/users/clients", {
+      const cl = await axios.get("http://localhost:9090/api/usuarios/list/users/admins", {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`,
         },
       });
-      setClientes(cl.data);
+      setAdmins(cl.data);
     } catch (e) {
       setEstado("errorCarga")
     }
@@ -35,7 +35,7 @@ export default function TablaClientes() {
     const filtrados = clientes.filter((c) =>
       c.nombre.toLowerCase().includes(filtro.toLowerCase())
     );
-    setClientes(filtrados);
+    setAdmins(filtrados);
   };
 
   const eliminar = async (nombre) => {
@@ -51,7 +51,7 @@ export default function TablaClientes() {
           },
         )
         setEstado("eliminado")
-        setClientes(prevClientes => prevClientes.filter(c => c.username !== nombre));
+        setAdmins(prevClientes => prevClientes.filter(c => c.username !== nombre));
       } catch (error) {
         setEstado("erroreliminar")
       };
@@ -59,7 +59,7 @@ export default function TablaClientes() {
   };
 
   const irAOtroComponente = () => {
-    navigate("/formularioCliente");
+    navigate("/formularioAdmin");
   };
 
   return (
@@ -69,14 +69,11 @@ export default function TablaClientes() {
           <div className="col-12 col-md-10 col-lg-8">
             {/* FILTRO */}
             <div className="mb-4">
-              <label htmlFor="nombreFiltro" className="form-label">
-                Ingrese nombre para buscar
-              </label>
               <input
                 type="text"
                 className="form-control mb-2"
                 id="nombreFiltro"
-                placeholder="Ej: Carlos"
+                placeholder="Ingrese nombre para buscar"
                 value={filtro}
                 onChange={(e) => setFiltro(e.target.value)}
               />
@@ -84,7 +81,7 @@ export default function TablaClientes() {
                 Buscar
               </button>
               <button className="btn btn-primary" onClick={irAOtroComponente}>
-                Nuevo cliente
+                Nuevo administrador
               </button>
             </div>
 
@@ -95,12 +92,11 @@ export default function TablaClientes() {
                   <tr>
                     <th>Nombre de Usuario</th>
                     <th>Mail</th>
-                    <th>Razon Social</th>
                     <th></th>
                   </tr>
                 </thead>
-                {clientes.length > 0 ? (
-                  clientes.map((c, index) => (
+                {admins.length > 0 ? (
+                  admins.map((c, index) => (
                     <tr key={index}>
                       <td>{c.username}</td>
                       <td>{c.email}</td>
@@ -165,7 +161,7 @@ export default function TablaClientes() {
                 ) : (
                   <tr>
                     <td colSpan="4" className="text-center">
-                      No hay clientes para mostrar
+                      No hay admins para mostrar
                     </td>
                   </tr>
                 )}
@@ -179,7 +175,7 @@ export default function TablaClientes() {
             role="alert"
             style={{ zIndex: 9999 }}
           >
-            Cliente eliminado exitosamente
+            Admin eliminado exitosamente
           </div>
         )}
         {estado == "errorEliminar" && (
@@ -188,7 +184,7 @@ export default function TablaClientes() {
             role="alert"
             style={{ zIndex: 9999 }}
           >
-            Cliente no pudo ser eliminado.
+            Admin no pudo ser eliminado.
           </div>
         )}
         {estado == "errorCarga" && (
@@ -197,7 +193,7 @@ export default function TablaClientes() {
             role="alert"
             style={{ zIndex: 9999 }}
           >
-            No se pudieron cargar los clientes. Intente nuevamente más tarde
+            No se pudieron cargar los adminisitradores. Intente nuevamente más tarde
           </div>
         )}
         {estado == "eliminado" && (
@@ -206,10 +202,11 @@ export default function TablaClientes() {
             role="alert"
             style={{ zIndex: 9999 }}
           >
-            Cliente eliminado exitosamente.
+            Administrador eliminado exitosamente.
           </div>
         )}
       </div>
     </>
   );
 }
+

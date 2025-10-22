@@ -5,7 +5,7 @@ import "../../index.css";
 
 export default function RecuperarCuenta() {
   const [mail, setMail] = useState("");
-  const [exito, setExito] = useState(null); // <-- inicia en null
+  const [exito, setExito] = useState(null); 
 
   const reset = () => setMail("");
 

@@ -1,7 +1,5 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
-//import * as jwt_decode from "jwt-decode";
-//const jwt_decode = require("jwt-decode");
 import jwt_decode from "jwt-decode";
 
 

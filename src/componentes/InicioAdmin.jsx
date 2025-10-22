@@ -8,7 +8,8 @@ export default function InicioAdmin() {
   const acciones = [
     { id: 1, nombre: "Administrar diseñadores", ruta: "/tablaDisenadores", imagen: user },
     { id: 2, nombre: "Administrar clientes", ruta: "/tablaClientes", imagen: user },
-    { id: 3, nombre: "Administrar productos", ruta: "/tablaProductos", imagen: bolsa },
+    { id: 3, nombre: "Administrar administradores", ruta: "/tablaAdmins", imagen: user },
+    { id: 4, nombre: "Administrar productos", ruta: "/tablaProductos", imagen: bolsa },
   ];
 
   const [seleccionada, setSeleccionada] = useState(null);

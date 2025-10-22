@@ -1,14 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-export default function TablaDisenadores({ setEstado, setModo }) {
+export default function TablaDisenadores() {
   const navigate = useNavigate();
+  const [disenadores, setDisenadores] = useState([]);
+  const [estado, setEstado] = useState(undefined);
 
-  const [disenadores, setDisenadores] = useState([
-    { nombre: "Camila Torres", mail: "camila@studio.com" },
-    { nombre: "Julian Rivas", mail: "julian@creativos.com" },
-    { nombre: "Lucia Blanco", mail: "lucia@designhub.com" },
-  ]);
+  useEffect(() => {
+    fetchDisenadores();
+  }, []);
+
+  const fetchDisenadores = async () => {
+    const token = Cookies.get("access_token");
+    try {
+      const res = await axios.get("http://localhost:9090/api/usuarios/list/users/disenadores", {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+      setDisenadores(res.data);
+    } catch (e) {
+      setEstado("errorCarga");
+    }
+  };
 
   const [filtro, setFiltro] = useState("");
 
@@ -20,15 +37,21 @@ export default function TablaDisenadores({ setEstado, setModo }) {
     setDisenadores(filtrados);
   };
 
-  const modificar = (nombre) => {
-    setEstado("M");
-    setModo("M");
-    alert(`Modificar diseñador: ${nombre}`);
-  };
-
-  const eliminar = (nombre) => {
+  const eliminar = async (nombre) => {
     if (window.confirm(`¿Seguro que desea eliminar a ${nombre}?`)) {
-      setDisenadores(disenadores.filter((d) => d.nombre !== nombre));
+      const token = Cookies.get("access_token");
+      try {
+        await axios.delete(`http://localhost:9090/api/usuarios/eliminate/${nombre}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        setEstado("eliminado");
+        setDisenadores((prev) => prev.filter((d) => d.username !== nombre));
+      } catch (error) {
+        setEstado("errorEliminar");
+      }
     }
   };
 
@@ -67,37 +90,114 @@ export default function TablaDisenadores({ setEstado, setModo }) {
               <table className="table table-bordered table-striped table-hover">
                 <thead className="table-light">
                   <tr>
-                    <th>Nombre</th>
+                    <th>Nombre de Usuario</th>
                     <th>Mail</th>
-                    <th>Acciones</th>
+                    <th></th>
                   </tr>
                 </thead>
-                <tbody>
-                  {disenadores.map((d, index) => (
+                {disenadores.length > 0 ? (
+                  disenadores.map((d, index) => (
                     <tr key={index}>
-                      <td>{d.nombre}</td>
-                      <td>{d.mail}</td>
+                      <td>{d.username}</td>
+                      <td>{d.email}</td>
+                      <td>{d.razonSocial}</td>
                       <td>
                         <button
-                          className="btn btn-warning m-1"
-                          onClick={() => modificar(d.nombre)}
+                          className="btn m-1"
+                          style={{
+                            border: "2px solid #016add",
+                            backgroundColor: "transparent",
+                            color: "#016add",
+                            fontWeight: "500",
+                            padding: "0.375rem 0.75rem",
+                            borderRadius: "0.375rem",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "#016add";
+                            e.currentTarget.style.color = "#fff";
+                            e.currentTarget.style.transform = "scale(1.05)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "transparent";
+                            e.currentTarget.style.color = "#016add";
+                            e.currentTarget.style.transform = "scale(1)";
+                          }}
+                          onClick={() => alert(`Modificar diseñador: ${d.username}`)}
                         >
                           Modificar
                         </button>
+
                         <button
-                          className="btn btn-danger m-1"
-                          onClick={() => eliminar(d.nombre)}
+                          className="btn m-1"
+                          style={{
+                            backgroundColor: "#016add",
+                            color: "#fff",
+                            border: "2px solid #016add",
+                            fontWeight: "500",
+                            padding: "0.375rem 0.75rem",
+                            borderRadius: "0.375rem",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "#014bb5";
+                            e.currentTarget.style.borderColor = "#014bb5";
+                            e.currentTarget.style.transform = "scale(1.05)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "#016add";
+                            e.currentTarget.style.borderColor = "#016add";
+                            e.currentTarget.style.transform = "scale(1)";
+                          }}
+                          onClick={() => eliminar(d.username)}
                         >
                           Eliminar
                         </button>
                       </td>
                     </tr>
-                  ))}
-                </tbody>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="4" className="text-center">
+                      No hay diseñadores para mostrar
+                    </td>
+                  </tr>
+                )}
               </table>
             </div>
           </div>
         </div>
+
+        {/* ALERTAS */}
+        {estado === "eliminado" && (
+          <div
+            className="alert alert-success position-fixed bottom-0 start-50 translate-middle-x mb-4"
+            role="alert"
+            style={{ zIndex: 9999 }}
+          >
+            Diseñador eliminado exitosamente.
+          </div>
+        )}
+        {estado === "errorEliminar" && (
+          <div
+            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
+            role="alert"
+            style={{ zIndex: 9999 }}
+          >
+            No se pudo eliminar el diseñador.
+          </div>
+        )}
+        {estado === "errorCarga" && (
+          <div
+            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
+            role="alert"
+            style={{ zIndex: 9999 }}
+          >
+            No se pudieron cargar los diseñadores. Intente nuevamente más tarde.
+          </div>
+        )}
       </div>
     </>
   );
