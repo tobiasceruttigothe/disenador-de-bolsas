@@ -204,7 +204,7 @@ export default function TablaClientes() {
           >
             Administrador eliminado exitosamente.
           </div>
-        )}
+        )}   
       </div>
     </>
   );
