@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useForm } from 'react-hook-form';
 import logo from '../../assets/pack designer final.png';
 import { login } from "../../services/login";
@@ -6,6 +6,7 @@ import "../../styles/log.css";
 
 export default function Log({ setLogeado, setTipoUsuario, setNombre, setMail }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const [error, setError] = useState(undefined)
 
   const handleBack = () => {
     window.location.href = "https://www.papersrl.com.ar";
@@ -21,7 +22,7 @@ export default function Log({ setLogeado, setTipoUsuario, setNombre, setMail }) 
       reset();
 
     } catch (error) {
-      alert(`Ha ocurrido un error ${error}`);
+      setError("error")
       reset();
     }
   };
@@ -77,6 +78,15 @@ export default function Log({ setLogeado, setTipoUsuario, setNombre, setMail }) 
           </button>
         </form>
       </div>
+      {error=="error" && (
+                <div
+                    className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
+                    role="alert"
+                    style={{ zIndex: 9999 }}
+                >
+                    El usuario o la contraseña es incorrecto, intente nuevamente.
+                </div>
+            )}
     </>
   );
 }

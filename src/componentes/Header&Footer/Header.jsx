@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Cookies from 'js-cookie';
-import logo from '../assets/pack designer final.png';
+import logo from '../../assets/pack designer final.png';
 import { Link } from 'react-router-dom';
 
 export default function Navegador({nombre, setNombre, setLogeado, tipoUsuario}) {
@@ -11,7 +11,7 @@ export default function Navegador({nombre, setNombre, setLogeado, tipoUsuario}) 
   }
   , [nombre]);
   const cerrarSesion = (e) => {
-    e.preventDefault(); // prevenir comportamiento por defecto del link
+    e.preventDefault();
     Cookies.remove('access_token');
     Cookies.remove('refresh_token');
     Cookies.remove('rol');
@@ -29,8 +29,29 @@ export default function Navegador({nombre, setNombre, setLogeado, tipoUsuario}) 
             title={<span style={{ fontSize: '24px', cursor: 'pointer' }}>&#9776;</span>}
             id="nav-dropdown"
           >
+            <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/inicio">Mis diseños</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
+          </NavDropdown>)}
+          {tipoUsuario == "diseñador" && (<NavDropdown
+            title={<span style={{ fontSize: '24px', cursor: 'pointer' }}>&#9776;</span>}
+            id="nav-dropdown"
+          >
+            <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/verClientes">Consultar Clientes</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo Diseño</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
+          </NavDropdown>)}
+          {tipoUsuario == "admin" && (<NavDropdown
+            title={<span style={{ fontSize: '24px', cursor: 'pointer' }}>&#9776;</span>}
+            id="nav-dropdown"
+          >
+            <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/tablaDisenadores">Administrar diseñadores</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/tablaClientes">Administrar clientes</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/tablaAdmins">Administrar administradores gerenciales</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/tablaProductos">Administrar productos</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
           </NavDropdown>)}
         </Nav>
@@ -58,17 +79,3 @@ export default function Navegador({nombre, setNombre, setLogeado, tipoUsuario}) 
     </Navbar>
   );
 }
-
-/*header anterior: 
-export default function Header() {
-  return (
-    <header style={{ padding: '0.5rem' , backgroundColor: '#016add'}}>
-      <div className="flex items-center">
-            <h2 className="text-2xl font-boldml-4 text-white">
-            Pack Designer
-            </h2>
-      </div>
-    </header>
-  )
-}
-*/

@@ -16,7 +16,6 @@ export default function ResetPassword() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Validar que ambas contraseñas coincidan
         if (contraseñaReset !== contraseñaReset2) {
             setExito("noCoinciden");
             return;

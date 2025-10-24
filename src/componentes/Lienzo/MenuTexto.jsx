@@ -38,7 +38,6 @@ export default function MenuTexto({ agregarTexto }) {
             <div>
                 <p className="m-1">Selecciona el color</p>
                 <input type="color" onChange={(e) => { setColor(e.target.value) }}></input>
-
             </div>
 
             <hr></hr>

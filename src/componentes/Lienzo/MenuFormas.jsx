@@ -34,8 +34,8 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
 
       <div style={{
         display: "grid",
-        gridTemplateColumns: "repeat(2, 1fr)", // 2 columnas
-        gridTemplateRows: "repeat(3, 1fr)",    // 3 filas
+        gridTemplateColumns: "repeat(2, 1fr)", 
+        gridTemplateRows: "repeat(3, 1fr)",    
         gap: "15px",
         justifyItems: "center",
         alignItems: "center",

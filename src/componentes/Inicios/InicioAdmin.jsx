@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import user from "../assets/user.png";
-import bolsa from "../assets/pack designer final.png";
+import user from "../../assets/user.png";
+import bolsa from "../../assets/pack designer final.png";
 
 export default function InicioAdmin() {
   const acciones = [

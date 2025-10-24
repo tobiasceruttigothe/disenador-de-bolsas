@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState } from "react";
 import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
 import plantillaprueba from "../../assets/plantillaprueba.png";
-import Cookies from "js-cookie";
 import Modal from "./ModalConfirmacion.jsx"
 import MenuGuardado from "./MenuGuardado.jsx"
 import "../../index.css"
@@ -36,6 +35,13 @@ export default function NuevoDiseno() {
     });
   };
 
+  const activarModoDibujo = (opciones) => {
+    import("../../services/lienzoCreacion.js").then(({ activarModoDibujo: activar }) => {
+      activar(canvasInstance.current, opciones);
+    });
+  };
+
+
   const handleGuardarDiseno = () => setModalAbierto(true);
 
   const confirmarGuardado = async () => {
@@ -66,6 +72,7 @@ export default function NuevoDiseno() {
             agregarEstrella={(color) => agregarFigura("agregarEstrella", color)}
             agregarLinea={(color) => agregarFigura("agregarLinea", color)}
             agregarTriangulo={(color) => agregarFigura("agregarTriangulo", color)}
+            activarModoDibujo={activarModoDibujo}
           />
         </div>
         <div className="col-8">

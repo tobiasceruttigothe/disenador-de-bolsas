@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
-import Header from './Header';
-import pollo from "../assets/chickenCorner.jpg";
-import cafe from "../assets/cafeteria.jpg";
-import chipi from "../assets/chipiKopos.jpg";
-import plusIcon from "../assets/pack designer final.png"; // ícono para la nueva bolsa
+import pollo from "../../assets/chickenCorner.jpg";
+import cafe from "../../assets/cafeteria.jpg";
+import chipi from "../../assets/chipiKopos.jpg";
+import plusIcon from "../../assets/pack designer final.png"; 
 import { Link } from 'react-router-dom';
-import "../index.css"
+import "../../index.css"
 
 export default function SelectorDiseno({ usuarioNombre }) {
   const bolsas = [

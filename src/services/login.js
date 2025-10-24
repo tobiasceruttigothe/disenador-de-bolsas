@@ -26,10 +26,9 @@ export async function login(user) {
             role = "admin"}
             else if (roles.includes("CLIENTE")) {
                 role = "cliente"} 
-            else if (roles.includes("DISENADOR")) {
+            else if (roles.includes("DISEÑADOR")) {
                 role = "disenador"}
-                else if (roles.includes("INTERESADO")) {
-                    role = "interesado"};
+
 
         Cookies.set('access_token', data.access_token, { expires: 1 });
         Cookies.set('refresh_token', data.refresh_token, { expires: 7 });
@@ -48,6 +47,5 @@ export async function login(user) {
     } 
 
     catch (error) {
-        alert(`Ha ocurrido un error ${error}`);
         throw error;
         }}

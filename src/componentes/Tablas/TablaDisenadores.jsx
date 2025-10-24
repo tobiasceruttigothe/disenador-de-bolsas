@@ -73,7 +73,7 @@ export default function TablaDisenadores() {
                 type="text"
                 className="form-control mb-2"
                 id="nombreFiltro"
-                placeholder="Ej: Camila"
+                placeholder="Ingrese nombre de usuario para buscar..."
                 value={filtro}
                 onChange={(e) => setFiltro(e.target.value)}
               />
