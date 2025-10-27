@@ -1,10 +1,13 @@
 import axios from "axios"
 import Cookies from "js-cookie"
 import {useState, useEffect} from "react"
+import { useNavigate } from "react-router-dom";
 
 export default function ConsultaClientes() {
   const [clientes, setClientes] = useState([])
   const [estado, setEstado] = useState(undefined)
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchClientes();
@@ -26,6 +29,10 @@ export default function ConsultaClientes() {
     }
   };
 
+  const handleClick = (id) => () => {
+   console.log("Ver diseños del cliente con ID:", id);
+  }
+
   const [filtro, setFiltro] = useState("");
 
   const handleFiltrar = () => {
@@ -36,24 +43,8 @@ export default function ConsultaClientes() {
     setClientes(filtrados);
   };
 
-  const eliminar = async (nombre) => {
-    if (window.confirm(`¿Seguro que desea eliminar a ${nombre}?`)) {
-      const token = Cookies.get("access_token");
-      try {
-        await axios.delete(`http://localhost:9090/api/usuarios/eliminate/${nombre}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            }
-          },
-        )
-        setEstado("eliminado")
-        setClientes(prevClientes => prevClientes.filter(c => c.username !== nombre));
-      } catch (error) {
-        setEstado("erroreliminar")
-      };
-    }
+  const plantillas = (nombre, id) => {
+    navigate(`/verClientes/plantillas?id=${id}&user=${nombre}`);
   };
 
   return (
@@ -61,7 +52,7 @@ export default function ConsultaClientes() {
       <div className="container-fluid min-vh-100 py-4 bg-light fondo">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
-            {/* FILTRO */}
+            <h2 className="mb-4">Consulta de Clientes</h2>
             <div className="mb-4">
               <input
                 type="text"
@@ -120,6 +111,33 @@ export default function ConsultaClientes() {
                           onClick={handleClick(c.id)}
                         >
                           Ver diseños del cliente
+                        </button>
+
+                        <button
+                          className="btn m-1"
+                          style={{
+                            border: "2px solid #016add",
+                            backgroundColor: "transparent",
+                            color: "#016add",
+                            fontWeight: "500",
+                            padding: "0.375rem 0.75rem",
+                            borderRadius: "0.375rem",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease"
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "#016add";
+                            e.currentTarget.style.color = "#fff";
+                            e.currentTarget.style.transform = "scale(1.05)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "transparent";
+                            e.currentTarget.style.color = "#016add";
+                            e.currentTarget.style.transform = "scale(1)";
+                          }}
+                          onClick={() => plantillas(c.username, c.id)}
+                        >
+                          Administrar sus plantillas
                         </button>
                       </td>
                     </tr>

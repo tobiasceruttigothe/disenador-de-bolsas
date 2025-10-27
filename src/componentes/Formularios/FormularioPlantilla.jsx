@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
 
 export default function FormularioCliente() {
-  const [estado, setEstado] = useState(null); // "Cargando", "Exito", "Error" o null
+  const [estado, setEstado] = useState(null); 
   const [mensaje, setMensaje] = useState(""); 
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
@@ -22,7 +22,6 @@ export default function FormularioCliente() {
     };
 
     try {
-      // Mostrar "Cargando..." antes del POST
       setEstado("Cargando");
       setMensaje("Cargando...");
 
@@ -66,7 +65,7 @@ export default function FormularioCliente() {
             style={{ width: '80px', height: '80px' }}
           />
         </div>
-        <h2 className="text-center mb-4">Agregar Cliente</h2>
+        <h2 className="text-center mb-4">Agregar una nueva plantilla</h2>
 
         {/* Nombre */}
         <div className="mb-3">

@@ -9,11 +9,15 @@ import SelectorDiseno from "./componentes/Lienzo/SelectorDiseno";
 import FormularioCliente from "./componentes/Formularios/FormularioCliente.jsx";
 import FormularioDisenador from "./componentes/Formularios/FormularioDisenador.jsx";
 import FormularioAdmin from "./componentes/Formularios/FormularioAdmin.jsx";
+import FormularioPlantilla from "./componentes/Formularios/FormularioPlantilla.jsx";
+
 import TablaClientes from "./componentes/Tablas/TablaClientes";
 import TablaDisenadores from "./componentes/Tablas/TablaDisenadores";
 import TablaAdmins from "./componentes/Tablas/TablaAdmins";
 import TablaProductos from "./componentes/Tablas/TablaProductos";
+import TablaPlantillas from "./componentes/Tablas/TablaPlantillas.jsx";
 import ConsultaCliente from "./componentes/Tablas/ConsultaClientes.jsx";
+import AdministrarPlantillas from "./componentes/Tablas/AdministrarPlantillas.jsx";
 
 import RecuperarCuenta from "./componentes/Log/RecuperarCuenta";
 import VerificarMail from "./componentes/Log/VerificarMail";
@@ -23,23 +27,21 @@ import Header from "./componentes/Header&Footer/Header.jsx";
 import Footer from "./componentes/Header&Footer/Footer.jsx";
 
 function App() {
-  // --- Estado global del usuario ---
+
   const [tipoUsuario, setTipoUsuario] = useState(() => Cookies.get("rol") || null);
   const [nombre, setNombre] = useState(() => Cookies.get("nombre") || "");
   const [mail, setMail] = useState(() => Cookies.get("mail") || "");
   const [logeado, setLogeado] = useState(() => !!Cookies.get("access_token"));
 
-  // --- Componente de protección de rutas ---
   function RutaPrivada({ logeado, children }) {
     return logeado ? children : <Navigate to="/login" />;
   }
 
-  // --- Componente con control de roles ---
   function RutaPrivadaConRol({ logeado, tipoUsuario, rolesPermitidos = [], children }) {
     if (!logeado) return <Navigate to="/login" />;
 
     if (rolesPermitidos.length > 0 && !rolesPermitidos.includes(tipoUsuario)) {
-      return <Navigate to="/inicio" replace />; // Denegado → redirige al inicio
+      return <Navigate to="/inicio" replace />;
     }
 
     return children;
@@ -57,7 +59,7 @@ function App() {
       )}
 
       <Routes>
-        {/* --- Autenticación --- */}
+
         <Route path="/" element={logeado ? <Navigate to="/inicio" /> : <Navigate to="/login" />} />
         <Route
           path="/login"
@@ -104,7 +106,7 @@ function App() {
         />
 
         <Route
-          path="/formularioCliente"
+          path="/clientes/nuevo"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <FormularioCliente />
@@ -113,7 +115,7 @@ function App() {
         />
 
         <Route
-          path="/formularioDisenador"
+          path="/disenadores/nuevo"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <FormularioDisenador />
@@ -122,7 +124,7 @@ function App() {
         />
 
         <Route
-          path="/formularioAdmin"
+          path="/admins/nuevo"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <FormularioAdmin />
@@ -131,7 +133,7 @@ function App() {
         />
 
         <Route
-          path="/tablaClientes"
+          path="/clientes"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <TablaClientes />
@@ -140,7 +142,7 @@ function App() {
         />
 
         <Route
-          path="/tablaDisenadores"
+          path="/disenadores"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <TablaDisenadores />
@@ -149,7 +151,7 @@ function App() {
         />
 
         <Route
-          path="/tablaAdmins"
+          path="/admins"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <TablaAdmins />
@@ -158,7 +160,7 @@ function App() {
         />
 
         <Route
-          path="/tablaProductos"
+          path="/productos"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <TablaProductos />
@@ -175,6 +177,32 @@ function App() {
           }
         />
 
+        <Route
+          path="/verClientes/plantillas"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["disenador"]}>
+              <AdministrarPlantillas />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+          path="/productos/plantillas"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
+              <TablaPlantillas />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+          path="/productos/plantillas/nuevo"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
+              <FormularioPlantilla />
+            </RutaPrivadaConRol>
+          }
+        />
         {/* --- Recuperación de cuenta y verificación --- */}
         <Route path="/recuperar-contraseña" element={<RecuperarCuenta />} />
         <Route path="/verify-email" element={<VerificarMail />} />

@@ -48,10 +48,10 @@ export default function Navegador({nombre, setNombre, setLogeado, tipoUsuario}) 
             id="nav-dropdown"
           >
             <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/tablaDisenadores">Administrar diseñadores</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/tablaClientes">Administrar clientes</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/tablaAdmins">Administrar administradores gerenciales</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/tablaProductos">Administrar productos</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/disenadores">Administrar diseñadores</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/clientes">Administrar clientes</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/admins">Administrar administradores gerenciales</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/productos">Administrar productos</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
           </NavDropdown>)}
         </Nav>

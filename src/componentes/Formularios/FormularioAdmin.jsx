@@ -102,8 +102,8 @@ export default function FormularioAdmin() {
             {...register("contraseña", {
               required: "La contraseña es obligatoria",
               minLength: {
-                value: 5,
-                message: "La contraseña debe tener al menos 5 caracteres"
+                value: 8,
+                message: "La contraseña debe tener al menos 8 caracteres"
               },
               maxLength: {
                 value: 50,
@@ -128,6 +128,10 @@ export default function FormularioAdmin() {
               pattern: {
                 value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
                 message: "Ingrese un mail válido"
+              },
+              maxLength: {
+                value: 100,
+                message: "El mail debe tener menos de 100 caracteres"
               }
             })}
             disabled={estado === "Cargando"}
