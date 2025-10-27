@@ -22,7 +22,6 @@ export default function FormularioCliente() {
     };
 
     try {
-      // Mostrar "Cargando..." antes del POST
       setEstado("Cargando");
       setMensaje("Cargando...");
 

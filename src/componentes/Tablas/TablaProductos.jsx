@@ -6,7 +6,7 @@ export default function TablaProductos({ }) {
   const acciones = [
     { id: 1, nombre: "Administrar materiales", ruta: "/productos/materiales", imagen: bolsa },
     { id: 2, nombre: "Administrar plantillas", ruta: "/productos/plantillas", imagen: bolsa },
-    { id: 3, nombre: "Administrar tipos de bolsa", ruta: "/productos/tipobolsa", imagen: bolsa },
+    { id: 3, nombre: "Administrar tipos de bolsa", ruta: "/productos/tiposbolsa", imagen: bolsa },
   ];
 
   return (

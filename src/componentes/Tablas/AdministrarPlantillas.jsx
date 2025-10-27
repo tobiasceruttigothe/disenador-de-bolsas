@@ -11,31 +11,30 @@ export default function AdministrarPlantillas({nombre}) {
     const [modalAbierto, setModalAbierto] = useState(false);
 
     const params = new URLSearchParams(window.location.search);
-    const id = params.get('id');
     const username = params.get('user');
+    const id = params.get('id');
 
     const handleClick = (id) => () => {
         console.log("Agregar plantilla al cliente con ID:", id);
         setModalAbierto(true)
     }
-    useEffect((id) => {
+    useEffect(() => {
         const fetchPlantillas = async (id) => {
             try {
-                const token = Cookies.getCookies("access_token");
+                const token = Cookies.get("access_token");
 
-                console.log(id, token)
-                /*plantillas = await axios.get(`http://localhost:9090/api/plantillas/cliente/${id}`, {
+                plantillas = await axios.get(`http://localhost:9090/api/plantillas/usuario/${id}/habilitadas`, {
                     headers: {
                       "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`,
                     },
                   });
-                  setPlantillasUsuario(plantillas.data);*/
+                  setPlantillasUsuario(plantillas.data.data || []);
             } catch (e) {
-                console.log("Error al cargar las plantillas del cliente");
+                console.log("Error al cargar las plantillas del cliente", e);
             }
         }
-
+        const id = params.get('id');
         fetchPlantillas(id);
     }, [])
 

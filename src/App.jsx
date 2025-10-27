@@ -6,16 +6,22 @@ import Log from "./componentes/Log/Log";
 import Inicio from "./componentes/Inicios/Inicio";
 import NuevoDiseno from "./componentes/Lienzo/NuevoDiseno";
 import SelectorDiseno from "./componentes/Lienzo/SelectorDiseno";
+
 import FormularioCliente from "./componentes/Formularios/FormularioCliente.jsx";
 import FormularioDisenador from "./componentes/Formularios/FormularioDisenador.jsx";
 import FormularioAdmin from "./componentes/Formularios/FormularioAdmin.jsx";
 import FormularioPlantilla from "./componentes/Formularios/FormularioPlantilla.jsx";
+import FormularioMaterial from "./componentes/Formularios/FormularioMaterial.jsx";
+import FormularioTipoBolsa from "./componentes/Formularios/FormularioTipoBolsa.jsx";
 
 import TablaClientes from "./componentes/Tablas/TablaClientes";
 import TablaDisenadores from "./componentes/Tablas/TablaDisenadores";
 import TablaAdmins from "./componentes/Tablas/TablaAdmins";
 import TablaProductos from "./componentes/Tablas/TablaProductos";
 import TablaPlantillas from "./componentes/Tablas/TablaPlantillas.jsx";
+import TablaMateriales from "./componentes/Tablas/TablaMateriales.jsx";
+import TablaTiposBolsa from "./componentes/Tablas/TablaTiposBolsa.jsx";
+
 import ConsultaCliente from "./componentes/Tablas/ConsultaClientes.jsx";
 import AdministrarPlantillas from "./componentes/Tablas/AdministrarPlantillas.jsx";
 
@@ -46,6 +52,7 @@ function App() {
 
     return children;
   }
+  
 
   return (
     <BrowserRouter>
@@ -200,6 +207,42 @@ function App() {
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <FormularioPlantilla />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+          path="/productos/materiales/nuevo"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
+              <FormularioMaterial />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+          path="/productos/tiposbolsa/nuevo"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
+              <FormularioTipoBolsa />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+          path="/productos/tiposbolsa"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
+              <TablaTiposBolsa />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+          path="/productos/materiales"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
+              <TablaMateriales />
             </RutaPrivadaConRol>
           }
         />

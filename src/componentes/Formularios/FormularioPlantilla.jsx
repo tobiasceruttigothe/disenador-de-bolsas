@@ -1,31 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../../assets/pack designer final.png';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
 
 export default function FormularioCliente() {
-  const [estado, setEstado] = useState(null); 
-  const [mensaje, setMensaje] = useState(""); 
+  const [estado, setEstado] = useState(null);
+  const [mensaje, setMensaje] = useState("");
+  const [base64Plantilla, setBase64Plantilla] = useState(""); // guardamos el archivo convertido
+
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
+
+  const [materiales, setMateriales] = useState([]);
+  const [tiposBolsa, setTiposBolsa] = useState([]);
+
+  useEffect(() => {
+    const fetchMateriales = async () => {
+      try {
+        const token = Cookies.get('access_token');
+        const response = await axios.get("http://localhost:9090/api/materiales", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        setMateriales(response.data.data);
+      } catch (error) {
+        console.error("Error al obtener los materiales:", error);
+      }
+    };
+    const fetchTiposBolsa = async () => {
+      try {
+        const token = Cookies.get('access_token');
+        const response = await axios.get("http://localhost:9090/api/tipos-bolsa", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        });
+        setTiposBolsa(response.data.data);
+      } catch (error) {
+        console.error("Error al obtener los tipos de bolsa:", error);
+      }
+    };
+
+    fetchMateriales();
+    fetchTiposBolsa();
+    console.log(tiposBolsa, materiales)
+  }, []);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result.split(',')[1];
+      setBase64Plantilla(base64String);
+    };
+    reader.readAsDataURL(file);
+  };
 
   const handleSubmitForm = async (data) => {
     const token = Cookies.get('access_token');
+
+    if (!base64Plantilla) {
+      setMensaje("Debe seleccionar un archivo de plantilla");
+      setEstado("Error");
+      return;
+    }
+
     const payload = {
-      username: data.nombre,
-      email: data.mail,
-      razonSocial: data.razonSocial,
-      password: data.contraseña,
-      enabled: true,
-      emailVerified: false,
-      rol: "CLIENTE"
+      nombre: data.nombre,
+      materialId: parseInt(data.materialId),
+      tipoBolsaId: parseInt(data.tipoBolsaId),
+      base64Plantilla: base64Plantilla,
+      ancho: parseInt(data.ancho),
+      alto: parseInt(data.alto),
+      profundidad: parseInt(data.profundidad)
     };
+
+    console.log("Payload a enviar:", payload);
 
     try {
       setEstado("Cargando");
       setMensaje("Cargando...");
 
-      await axios.post("http://localhost:9090/api/usuarios/create", payload, {
+      await axios.post("http://localhost:9090/api/plantilla", payload, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
@@ -33,19 +94,12 @@ export default function FormularioCliente() {
       });
 
       reset();
+      setBase64Plantilla("");
       setEstado("Exito");
-      setMensaje("Cliente agregado con éxito");
+      setMensaje("Plantilla agregada con éxito");
     } catch (error) {
-      console.error("Error al agregar el cliente:", error);
-
-      if (error.response && error.response.status === 409) {
-        setMensaje("Nombre de usuario ya registrado");
-      } else if (error.response && error.response.status === 502) {
-        setMensaje("Mail ya registrado");
-      } else {
-        setMensaje("Ocurrió un error al agregar el cliente");
-      }
-
+      console.error("Error al agregar la plantilla:", error);
+      setMensaje("Ocurrió un error al agregar la plantilla");
       setEstado("Error");
     }
   };
@@ -55,7 +109,7 @@ export default function FormularioCliente() {
       <form
         onSubmit={handleSubmit(handleSubmitForm)}
         className="w-100 bg-white p-4 rounded shadow"
-        style={{ maxWidth: '400px' }}
+        style={{ maxWidth: '450px' }}
       >
         <div className="text-center mb-4">
           <img
@@ -65,100 +119,135 @@ export default function FormularioCliente() {
             style={{ width: '80px', height: '80px' }}
           />
         </div>
-        <h2 className="text-center mb-4">Agregar una nueva plantilla</h2>
+        <h2 className="text-center mb-4">Agregar plantilla</h2>
 
         {/* Nombre */}
         <div className="mb-3">
-          <label htmlFor="nombre" className="form-label">Nombre de usuario</label>
+          <label htmlFor="nombre" className="form-label">Nombre de la plantilla</label>
           <input
             id="nombre"
-            placeholder="Ingrese un nombre de usuario"
             type="text"
+            placeholder="Ingrese un nombre de plantilla"
             className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-            {...register("nombre", {
-              required: "El nombre es obligatorio",
-              minLength: {
-                value: 5,
-                message: "El nombre de usuario debe tener al menos 5 caracteres"
-              },
-              maxLength: {
-                value: 50,
-                message: "El nombre de usuario debe tener menos de 50 caracteres"
-              }
-            })}
+            {...register("nombre", { required: "El nombre es obligatorio" })}
           />
           {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
         </div>
 
-        {/* Contraseña */}
+
+
         <div className="mb-3">
-          <label htmlFor="contraseña" className="form-label">Contraseña</label>
-          <input
-            id="contraseña"
-            placeholder="Ingrese una contraseña provisoria"
-            type="text"
-            className={`form-control ${errors.contraseña ? 'is-invalid' : ''}`}
-            {...register("contraseña", {
-              required: "La contraseña es obligatoria",
-              minLength: {
-                value: 8,
-                message: "La contraseña debe tener al menos 8 caracteres"
-              },
-              maxLength: {
-                value: 50,
-                message: "La contraseña debe tener menos de 50 caracteres"
-              }
-            })}
-          />
-          {errors.contraseña && <div className="invalid-feedback">{errors.contraseña.message}</div>}
+          <label htmlFor="materialId" className="form-label">Material</label>
+          {materiales.length > 0 ? (
+            materiales.map((material) => (
+              <div key={material.id} className="form-check">
+                <input
+                  id={`material-${material.id}`}
+                  type="radio"
+                  value={material.id}
+                  className={`form-check-input ${errors.materialId ? 'is-invalid' : ''}`}
+                  {...register("materialId", { required: "El material es obligatorio" })}
+                />
+                <label htmlFor={`material-${material.id}`} className="form-check-label">
+                  {material.nombre}
+                </label>
+              </div>
+            ))
+          ) : (<p>Cargando materiales...</p>)}
+          {errors.materialId && <div className="invalid-feedback">{errors.materialId.message}</div>}
         </div>
 
-        {/* Razón Social */}
+        {/* Tipo de Bolsa ID */}
         <div className="mb-3">
-          <label htmlFor="razonSocial" className="form-label">Razón social</label>
+          <label htmlFor="tipoBolsaId" className="form-label">Tipo de Bolsa</label>
+          {tiposBolsa.length > 0 ? (
+            tiposBolsa.map((tipo) => (
+              <div key={tipo.id} className="form-check">
+                <input
+                  id={`tipoBolsa-${tipo.id}`}
+                  type="radio"
+                  value={tipo.id}
+                  className={`form-check-input ${errors.tipoBolsaId ? 'is-invalid' : ''}`}
+                  {...register("tipoBolsaId", { required: "El tipo de bolsa es obligatorio" })}
+                />
+                <label htmlFor={`tipoBolsa-${tipo.id}`} className="form-check-label">
+                  {tipo.nombre}
+                </label>
+              </div>
+            ))
+          ) : (<p>Cargando tipos de bolsa...</p>)}
+          {errors.tipoBolsaId && <div className="invalid-feedback">{errors.tipoBolsaId.message}</div>}
+        </div>
+        {/* Archivo -> Base64 */}
+        <div className="mb-3">
+          <label htmlFor="base64Plantilla" className="form-label">Archivo de Plantilla</label>
           <input
-            id="razonSocial"
-            placeholder="Ingrese una razón social"
-            type="text"
-            className={`form-control ${errors.razonSocial ? 'is-invalid' : ''}`}
-            {...register("razonSocial", {
-              required: "La razón social es obligatoria",
-              maxLength: {
-                value: 100,
-                message: "La razón social debe tener menos de 100 caracteres"
-              }
-            })}
+            id="base64Plantilla"
+            type="file"
+            accept=".jpg,.png,.pdf,.svg"
+            className={`form-control ${!base64Plantilla && estado === "Error" ? 'is-invalid' : ''}`}
+            onChange={handleFileChange}
           />
-          {errors.razonSocial && <div className="invalid-feedback">{errors.razonSocial.message}</div>}
+          {!base64Plantilla && estado === "Error" && (
+            <div className="invalid-feedback">Debe seleccionar un archivo</div>
+          )}
         </div>
 
-        {/* Mail */}
+        {/* Ancho */}
         <div className="mb-3">
-          <label htmlFor="mail" className="form-label">Mail</label>
+          <label htmlFor="ancho" className="form-label">Ancho (cm)</label>
           <input
-            id="mail"
-            type="text"
-            placeholder="Ingrese un mail"
-            className={`form-control ${errors.mail ? 'is-invalid' : ''}`}
-            {...register("mail", {
-              required: "El mail es obligatorio",
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Ingrese un mail válido"
-              },
-              maxLength: {
-                value: 100,
-                message: "El mail debe tener menos de 100 caracteres"
-              }
+            id="ancho"
+            type="number"
+            step="0.01"
+            placeholder="Ingrese el ancho"
+            className={`form-control ${errors.ancho ? 'is-invalid' : ''}`}
+            {...register("ancho", {
+              required: "El ancho es obligatorio",
+              min: { value: 0, message: "Debe ser positivo" }
             })}
           />
-          {errors.mail && <div className="invalid-feedback">{errors.mail.message}</div>}
+          {errors.ancho && <div className="invalid-feedback">{errors.ancho.message}</div>}
+        </div>
+
+        {/* Alto */}
+        <div className="mb-3">
+          <label htmlFor="alto" className="form-label">Alto (cm)</label>
+          <input
+            id="alto"
+            type="number"
+            step="0.01"
+            placeholder="Ingrese el alto"
+            className={`form-control ${errors.alto ? 'is-invalid' : ''}`}
+            {...register("alto", {
+              required: "El alto es obligatorio",
+              min: { value: 0, message: "Debe ser positivo" }
+            })}
+          />
+          {errors.alto && <div className="invalid-feedback">{errors.alto.message}</div>}
+        </div>
+
+        {/* Profundidad */}
+        <div className="mb-3">
+          <label htmlFor="profundidad" className="form-label">Profundidad (cm)</label>
+          <input
+            id="profundidad"
+            type="number"
+            step="0.01"
+            placeholder="Ingrese la profundidad"
+            className={`form-control ${errors.profundidad ? 'is-invalid' : ''}`}
+            {...register("profundidad", {
+              required: "La profundidad es obligatoria",
+              min: { value: 0, message: "Debe ser positivo" }
+            })}
+          />
+          {errors.profundidad && <div className="invalid-feedback">{errors.profundidad.message}</div>}
         </div>
 
         <button
           className="btn w-100 text-white"
           style={{ backgroundColor: '#016add' }}
-          disabled={estado === "Cargando"} // bloquea el botón mientras carga
+          disabled={estado === "Cargando"}
         >
           {estado === "Cargando" ? "Enviando..." : "Ingresar"}
         </button>
@@ -167,13 +256,12 @@ export default function FormularioCliente() {
       {/* Alertas dinámicas */}
       {estado && (
         <div
-          className={`alert ${
-            estado === "Exito"
-              ? "alert-success"
-              : estado === "Error"
+          className={`alert ${estado === "Exito"
+            ? "alert-success"
+            : estado === "Error"
               ? "alert-danger"
               : "alert-info"
-          } position-absolute bottom-0 start-50 translate-middle-x mb-4`}
+            } position-absolute bottom-0 start-50 translate-middle-x mb-4`}
           role="alert"
         >
           {mensaje}
@@ -182,3 +270,7 @@ export default function FormularioCliente() {
     </div>
   );
 }
+
+
+
+

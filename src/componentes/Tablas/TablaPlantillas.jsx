@@ -7,22 +7,22 @@ export default function TablaPlantillas({ setEstado, setModo }) {
 
   //agregar errores!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   const navigate = useNavigate();
-  const [productos, setProductos] = useState([]);
-  const [productosFiltrados, setProductosFiltrados] = useState([]);
+  const [plantillas, setPlantillas] = useState([]);
+  const [plantillasFiltradas, setPlantillasFiltradas] = useState([]);
   const [filtro, setFiltro] = useState("");
 
   useEffect(() => {
     const fetchProductos = async () => {
       try {
         const token = Cookies.get("access_token");
-        const res = await axios.get("http://localhost:8080/productos", {
+        const res = await axios.get("http://localhost:9090/api/plantillas", {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           }
         });
-        setProductos(res.data);
-        setProductosFiltrados(res.data);
+        setPlantillas(res.data.data || []); 
+setPlantillasFiltradas(res.data.data || []);
       } catch (error) {
         console.error("Error al obtener los productos:", error);
       }
@@ -32,12 +32,12 @@ export default function TablaPlantillas({ setEstado, setModo }) {
   }, []);
 
   useEffect(() => {
-    setProductosFiltrados(
-      productos.filter((p) =>
+    setPlantillasFiltradas(
+      plantillas.filter((p) =>
         p.nombre.toLowerCase().includes(filtro.toLowerCase())
       )
     );
-  }, [filtro, productos]);
+  }, [filtro, plantillas]);
 
   const handleClick = () => {
     navigate("/productos/plantillas/nuevo");
@@ -51,8 +51,8 @@ export default function TablaPlantillas({ setEstado, setModo }) {
 
   const eliminar = (nombre) => {
     if (window.confirm(`¿Seguro que desea eliminar el producto ${nombre}?`)) {
-      setProductos((prev) => prev.filter((p) => p.nombre !== nombre));
-      setProductosFiltrados((prev) => prev.filter((p) => p.nombre !== nombre));
+      setPlantillas((prev) => prev.filter((p) => p.nombre !== nombre));
+      setPlantillasFiltradas((prev) => prev.filter((p) => p.nombre !== nombre));
     }
   };
 
@@ -87,8 +87,8 @@ export default function TablaPlantillas({ setEstado, setModo }) {
                 </tr>
               </thead>
               <tbody>
-                {productosFiltrados.length > 0 ? (
-                  productosFiltrados.map((p, index) => (
+                {plantillasFiltradas.length > 0 ? (
+                  plantillasFiltradas.map((p, index) => (
                     <tr key={index}>
                       <td>{p.nombre}</td>
                       <td>{p.mail}</td>

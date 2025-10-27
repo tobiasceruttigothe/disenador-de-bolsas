@@ -34,7 +34,7 @@ export default function Navegador({nombre, setNombre, setLogeado, tipoUsuario}) 
             <NavDropdown.Item as={Link} to="/inicio">Mis diseños</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
           </NavDropdown>)}
-          {tipoUsuario == "diseñador" && (<NavDropdown
+          {tipoUsuario == "disenador" && (<NavDropdown
             title={<span style={{ fontSize: '24px', cursor: 'pointer' }}>&#9776;</span>}
             id="nav-dropdown"
           >
