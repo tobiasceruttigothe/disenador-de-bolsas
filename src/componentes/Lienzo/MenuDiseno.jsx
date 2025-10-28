@@ -16,15 +16,26 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
       <h3>Menú de Diseño</h3>
       <hr />
       <label>Seleccione una plantilla</label>
-      <select
-        className="form-select mb-3"
-        value={plantillaElegida}
-        onChange={(e) => setPlantillaElegida(e.target.value)}
-      >
-        {plantillas.map((p, index) => (
-          <option key={index} value={p.valor}>{p.nombre}</option>
-        ))}
-      </select>
+      {plantillas.length > 0 ? (
+        <select
+          className="form-select mb-3"
+          value={plantillaElegida ? plantillaElegida.id : ""}
+          onChange={(e) => {
+            const plantillaSeleccionada = plantillas.find(p => p.id === parseInt(e.target.value));
+            setPlantillaElegida(plantillaSeleccionada);
+          }}
+        >
+          <option value="" disabled>-- Seleccione una plantilla --</option>
+          {plantillas.map((plantilla) => (
+            <option key={plantilla.id} value={plantilla.id}>
+              {plantilla.nombre}
+            </option>
+          ))}
+        </select>
+      ) : (
+        <p>No hay plantillas disponibles. Contáctese con un Diseñador.</p>
+      )
+          }
       <div className="d-flex">
         <div
           className="d-flex flex-column border p-3 mt-2 ml-1 bg-light"

@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState } from "react";
 import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
-import plantillaprueba from "../../assets/plantillaprueba.png";
 import Modal from "./ModalConfirmacion.jsx"
 import MenuGuardado from "./MenuGuardado.jsx"
+import Cookies from "js-cookie";
+import axios from "axios";
 import "../../index.css"
 
 export default function NuevoDiseno() {
@@ -11,15 +12,25 @@ export default function NuevoDiseno() {
   const canvasInstance = useRef(null);
 
   const [plantillas, setPlantillas] = useState([]);
-  const [plantillaElegida, setPlantillaElegida] = useState(plantillaprueba);
+  const [plantillaElegida, setPlantillaElegida] = useState();
   const [modalAbierto, setModalAbierto] = useState(false);
 
   useEffect(() => {
-    setPlantillas([
-      { nombre: "Plantilla 1", valor: "plantilla1" },
-      { nombre: "Plantilla 2", valor: "plantilla2" },
-      { nombre: "Plantilla 3", valor: "plantilla3" },
-    ]);
+    const fetchPlantillas = async () => {
+      try {
+        const id = Cookies.get("usuarioId");
+        const res = await axios.get(`http://localhost:9090/api/plantillas/usuario/${id}/habilitadas`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        setPlantillas(res.data.data);
+      } catch (e) {
+        console.error("Error al cargar las plantillas", e);
+      }
+    };    
+    fetchPlantillas();
+
   }, []);
 
   useEffect(() => {
