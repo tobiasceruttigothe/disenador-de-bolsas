@@ -86,7 +86,7 @@ export default function FormularioCliente() {
       setEstado("Cargando");
       setMensaje("Cargando...");
 
-      await axios.post("http://localhost:9090/api/plantilla", payload, {
+      await axios.post("http://localhost:9090/api/plantillas", payload, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
