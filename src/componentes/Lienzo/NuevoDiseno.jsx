@@ -28,15 +28,36 @@ export default function NuevoDiseno() {
       } catch (e) {
         console.error("Error al cargar las plantillas", e);
       }
-    };    
+    };
     fetchPlantillas();
 
   }, []);
 
   useEffect(() => {
-    import("../../services/lienzoCreacion.js").then(({ initCanvas }) => {
-      canvasInstance.current = initCanvas(canvasRef.current, plantillaElegida);
-    });
+    const cargarPlantilla = async () => {
+      if (!plantillaElegida) return;
+
+      try {
+        const token = Cookies.get("access_token");
+        const res = await axios.get(`http://localhost:9090/api/plantillas/${plantillaElegida.id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
+        const base64 = res.data.data.base64Plantilla;
+        const { initCanvas } = await import("../../services/lienzoCreacion.js");
+
+        canvasInstance.current = initCanvas(canvasRef.current, `data:image/png;base64,${base64}`);
+
+      } catch (error) {
+        console.error("Error al cargar la plantilla:", error);
+      }
+    };
+
+    cargarPlantilla();
+
     return () => canvasInstance.current?.dispose();
   }, [plantillaElegida]);
 

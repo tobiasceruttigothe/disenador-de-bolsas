@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import Cookies from 'js-cookie';
 import Modal from "../Lienzo/ModalConfirmacion.jsx"
-import MenuPlantillas from './MenuPlantillas.jsx';
+import ModalPlantillas from './ModalPlantillas.jsx';
 import "../../index.css";
 
 export default function AdministrarPlantillas() {
   const [plantillasUsuario, setPlantillasUsuario] = useState([]);
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [imagenesBase64, setImagenesBase64] = useState({});
 
   const params = new URLSearchParams(window.location.search);
   const username = params.get('user');
@@ -28,14 +29,40 @@ export default function AdministrarPlantillas() {
             },
           }
         );
-        setPlantillasUsuario(res.data.data);
+
+        const plantillas = res.data.data;
+        setPlantillasUsuario(plantillas);
+
+        const imagenes = {};
+        for (const p of plantillas) {
+          const img = await buscarImagenBase64(p.id);
+          imagenes[p.id] = img;
+        }
+        setImagenesBase64(imagenes);
+
       } catch (e) {
         console.log("Error al cargar las plantillas del cliente", e);
       }
     };
+
     if (id) fetchPlantillas();
   }, [id]);
 
+  const buscarImagenBase64 = async (p) => {
+    try {
+      const token = Cookies.get("access_token");
+      const res = await axios.get(`http://localhost:9090/api/plantillas/${p}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+      return res.data.data.base64Plantilla
+    } catch (e) {
+      console.log("Error al cargar la imagen de la plantilla", e);
+      return "";
+    }
+  }
   return (
     <div className="container-fluid min-vh-100 py-4 fondo">
       <div className="row justify-content-center">
@@ -43,7 +70,7 @@ export default function AdministrarPlantillas() {
           <h2 className="mb-4">Administrar Plantillas de {username}</h2>
 
           <div className="table-responsive mb-4">
-            <table className="table table-bordered table-striped table-hover">
+            <table className="table table-bordered table-hover">
               <thead className="table-light">
                 <tr>
                   <th>Nombre de la Plantilla</th>
@@ -54,13 +81,48 @@ export default function AdministrarPlantillas() {
                 {plantillasUsuario.length > 0 ? (
                   plantillasUsuario.map((p) => (
                     <tr key={p.id}>
-                      <td>{p.nombre}</td>
-                      <td>
-                        <img
-                          src={`data:image/png;base64,${p.base64Plantilla}`}
-                          alt={p.nombre}
-                          style={{ width: '100px' }}
-                        />
+                      <td style={{
+                        verticalAlign: 'middle',
+                        fontSize: '20px',
+                        fontWeight: '500',
+                        textAlign: 'center',
+                        padding: '12px',
+                      }}>{p.nombre}</td>
+                      <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
+                        {imagenesBase64[p.id] ? (
+                          <img
+                            src={`data:image/png;base64,${imagenesBase64[p.id]}`}
+                            alt={p.nombre}
+                            style={{
+                              width: '100px',
+                              height: 'auto',
+                              display: "block",
+                              margin: "10px auto",
+                              objectFit: "contain",
+                              borderRadius: "8px",
+                              padding: "4px",
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: "100px",
+                              height: "100px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              backgroundColor: "#f2f2f2",
+                              border: "1px solid #ccc",
+                              borderRadius: "8px",
+                              color: "#666",
+                              fontSize: "14px",
+                              fontStyle: "italic",
+                              margin: "10px auto",
+                            }}
+                          >
+                            Cargando...
+                          </div>
+                        )}
                       </td>
                     </tr>
                   ))
@@ -103,10 +165,11 @@ export default function AdministrarPlantillas() {
           </button>
 
           <Modal isVisible={modalAbierto} onClose={() => setModalAbierto(false)}>
-            <MenuPlantillas
+            <ModalPlantillas
               setModalAbierto={setModalAbierto}
               idCliente={id}
               userName={username}
+              setPlantillasUsuario={setPlantillasUsuario}
             />
           </Modal>
         </div>

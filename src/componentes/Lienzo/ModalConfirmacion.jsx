@@ -11,11 +11,11 @@ const Modal = ({ isVisible, onClose, children }) => {
         left: 0,
         width: '100%',
         height: '100%',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // Fondo semi-transparente
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 1000, // Asegura que el modal esté por encima de otros elementos
+        zIndex: 1000,
       }}
       onClick={onClose}
     >
@@ -26,8 +26,10 @@ const Modal = ({ isVisible, onClose, children }) => {
           borderRadius: '8px',
           minWidth: '300px',
           maxWidth: '80%',
+          maxHeight: '90vh',      
+          overflowY: 'auto', 
         }}
-        onClick={(e) => e.stopPropagation()} // Evita que el clic en el contenido cierre el modal
+        onClick={(e) => e.stopPropagation()}
       >
         {children}
       </div>
