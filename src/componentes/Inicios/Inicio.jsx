@@ -1,13 +1,13 @@
 import React from 'react'
 import InicioAdmin from './InicioAdmin'
 import InicioDisenador from './InicioDisenador'
-import SelectorDiseno from '../Lienzo/SelectorDiseno'
+import InicioCliente from './InicioCliente'
 
 export default function Inicio({ tipoUsuario }) {
     return (
         <div>
             {tipoUsuario === 'admin' && <InicioAdmin></InicioAdmin>}
-            {tipoUsuario === 'cliente' && <SelectorDiseno></SelectorDiseno>}
+            {tipoUsuario === 'cliente' && <InicioCliente></InicioCliente>}
             {tipoUsuario === 'disenador' && <InicioDisenador></InicioDisenador>}
             
         </div>

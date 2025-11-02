@@ -246,6 +246,16 @@ function App() {
             </RutaPrivadaConRol>
           }
         />
+
+        <Route 
+          path="/disenos"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
+              <SelectorDiseno />
+            </RutaPrivadaConRol>
+          }
+        />
+        
         {/* --- Recuperación de cuenta y verificación --- */}
         <Route path="/recuperar-contraseña" element={<RecuperarCuenta />} />
         <Route path="/verify-email" element={<VerificarMail />} />

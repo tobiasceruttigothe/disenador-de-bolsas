@@ -3,6 +3,7 @@ import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
 import Modal from "./ModalConfirmacion.jsx"
 import MenuGuardado from "./MenuGuardado.jsx"
+import MenuSelectorPlantilla from "./MenuSelectorPlantilla.jsx"
 import Cookies from "js-cookie";
 import axios from "axios";
 import "../../index.css"
@@ -14,6 +15,8 @@ export default function NuevoDiseno() {
   const [plantillas, setPlantillas] = useState([]);
   const [plantillaElegida, setPlantillaElegida] = useState();
   const [modalAbierto, setModalAbierto] = useState(false);
+
+  const [plantillaBool, setPlantillaBool] = useState(false);
 
   useEffect(() => {
     const fetchPlantillas = async () => {
@@ -76,13 +79,29 @@ export default function NuevoDiseno() {
 
   const handleGuardarDiseno = () => setModalAbierto(true);
 
-  const confirmarGuardado = async () => {
+  const confirmarGuardado = async (nombre, descripcion) => {
     setModalAbierto(false);
     try {
       const { guardarDiseno, guardarElementos } = await import("../../services/lienzoCreacion.js");
       const dataURL = guardarDiseno(canvasInstance.current);
-      const elementos = guardarElementos(canvasInstance.current, plantillaElegida);
-      console.log("Diseño guardado:", { dataURL, elementos });
+      const elementos = guardarElementos(canvasInstance.current);
+      const payload = {
+        usuarioId: Cookies.get("usuarioId"),
+        plantillaId: plantillaElegida.id,
+        nombre: nombre,
+        descripcion: descripcion,
+        base64Diseno: elementos,
+      };
+      console.log(elementos);
+      const token = Cookies.get("access_token");
+      console.log(payload)
+      const res = await axios.post("http://localhost:9090/api/disenos", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      console.log(res.data)
     } catch (error) {
       console.error("Error al guardar el diseño:", error);
     }
@@ -96,8 +115,6 @@ export default function NuevoDiseno() {
             agregarFoto={(foto) => agregarFigura("agregarFoto", foto)}
             plantillaElegida={plantillaElegida}
             agregarTexto={(texto, color, tamaño, fuente) => agregarFigura("agregarTexto", texto, color, tamaño, fuente)}
-            plantillas={plantillas}
-            setPlantillaElegida={setPlantillaElegida}
             agregarCuadrado={(color) => agregarFigura("agregarCuadrado", color)}
             agregarRectangulo={(color) => agregarFigura("agregarRectangulo", color)}
             agregarCirculo={(color) => agregarFigura("agregarCirculo", color)}
@@ -120,7 +137,10 @@ export default function NuevoDiseno() {
       </button>
 
       <Modal isVisible={modalAbierto} onClose={() => setModalAbierto(false)}>
-        <MenuGuardado></MenuGuardado>
+        <MenuGuardado confirmarGuardado={confirmarGuardado}></MenuGuardado>
+      </Modal>
+      <Modal isVisible={!plantillaBool} onClose={() => setPlantillaBool(false)}>
+        <MenuSelectorPlantilla plantillas={plantillas} setPlantillaElegida={setPlantillaElegida} setPlantillaBool={setPlantillaBool}></MenuSelectorPlantilla>
       </Modal>
     </div>
   );

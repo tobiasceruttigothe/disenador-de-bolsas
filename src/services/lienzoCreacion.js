@@ -69,10 +69,10 @@ export function guardarDiseno(canvas) {
   return base64.split(',')[1];
 }
 
-export function guardarElementos(canvas, templateId) {
+export function guardarElementos(canvas) {
   if (!canvas) return null;
   const canvasJson = canvas.toJSON();
-  canvasJson.templateId = templateId;
+  canvasJson.base64diseno = guardarDiseno(canvas);
   return canvasJson;
 }
 

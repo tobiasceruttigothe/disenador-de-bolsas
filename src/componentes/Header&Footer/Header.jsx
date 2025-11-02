@@ -31,7 +31,7 @@ export default function Navegador({nombre, setNombre, setLogeado, tipoUsuario}) 
           >
             <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/inicio">Mis diseños</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/disenos">Mis diseños</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
           </NavDropdown>)}
           {tipoUsuario == "disenador" && (<NavDropdown

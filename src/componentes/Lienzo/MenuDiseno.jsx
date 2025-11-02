@@ -6,7 +6,7 @@ import MenuFormas from "./MenuFormas";
 import MenuLogos from "./MenuLogos";
 import MenuPincel from "./MenuPincel"
 
-export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida, plantillas, setPlantillaElegida, agregarCuadrado, agregarRectangulo, agregarCirculo, agregarEstrella, agregarLinea,
+export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida, agregarCuadrado, agregarRectangulo, agregarCirculo, agregarEstrella, agregarLinea,
           agregarTriangulo, activarModoDibujo}) {
   const [opcion, setOpcion] = useState("imagen");
 
@@ -15,27 +15,6 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
     <div className="border rounded p-3 mt-3">
       <h3>Menú de Diseño</h3>
       <hr />
-      <label>Seleccione una plantilla</label>
-      {plantillas.length > 0 ? (
-        <select
-          className="form-select mb-3"
-          value={plantillaElegida ? plantillaElegida.id : ""}
-          onChange={(e) => {
-            const plantillaSeleccionada = plantillas.find(p => p.id === parseInt(e.target.value));
-            setPlantillaElegida(plantillaSeleccionada);
-          }}
-        >
-          <option value="" disabled>-- Seleccione una plantilla --</option>
-          {plantillas.map((plantilla) => (
-            <option key={plantilla.id} value={plantilla.id}>
-              {plantilla.nombre}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <p>No hay plantillas disponibles. Contáctese con un Diseñador.</p>
-      )
-          }
       <div className="d-flex">
         <div
           className="d-flex flex-column border p-3 mt-2 ml-1 bg-light"
