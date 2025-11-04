@@ -1,13 +1,14 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import user from "../../assets/user.png";
+import paper from "../../assets/papersrl.png";
 import bolsa from "../../assets/pack designer final.png";
 
 export default function InicioCliente() {
   const acciones = [
     { id: 1, nombre: "Mis diseños", ruta: "/disenos", imagen: bolsa },
     { id: 2, nombre: "Crear diseño", ruta: "/nuevoDiseno", imagen: bolsa },
+    { id: 3, nombre: "Mis Logos", ruta: "/logos", imagen: paper}
   ];
 
   const [seleccionada, setSeleccionada] = useState(null);

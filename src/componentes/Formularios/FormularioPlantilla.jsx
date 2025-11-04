@@ -47,7 +47,7 @@ export default function FormularioCliente() {
 
     fetchMateriales();
     fetchTiposBolsa();
-    console.log(tiposBolsa, materiales)
+
   }, []);
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -80,7 +80,7 @@ export default function FormularioCliente() {
       profundidad: parseInt(data.profundidad)
     };
 
-    console.log("Payload a enviar:", payload);
+
 
     try {
       setEstado("Cargando");

@@ -13,6 +13,7 @@ import FormularioAdmin from "./componentes/Formularios/FormularioAdmin.jsx";
 import FormularioPlantilla from "./componentes/Formularios/FormularioPlantilla.jsx";
 import FormularioMaterial from "./componentes/Formularios/FormularioMaterial.jsx";
 import FormularioTipoBolsa from "./componentes/Formularios/FormularioTipoBolsa.jsx";
+import FormularioLogos from "./componentes/Formularios/FormularioLogos.jsx";
 
 import TablaClientes from "./componentes/Tablas/TablaClientes";
 import TablaDisenadores from "./componentes/Tablas/TablaDisenadores";
@@ -21,6 +22,8 @@ import TablaProductos from "./componentes/Tablas/TablaProductos";
 import TablaPlantillas from "./componentes/Tablas/TablaPlantillas.jsx";
 import TablaMateriales from "./componentes/Tablas/TablaMateriales.jsx";
 import TablaTiposBolsa from "./componentes/Tablas/TablaTiposBolsa.jsx";
+import TablaLogos from "./componentes/Tablas/TablaLogos.jsx";
+import Perfil from "./componentes/Tablas/Perfil.jsx";
 
 import ConsultaCliente from "./componentes/Tablas/ConsultaClientes.jsx";
 import AdministrarPlantillas from "./componentes/Tablas/AdministrarPlantillas.jsx";
@@ -28,6 +31,7 @@ import AdministrarPlantillas from "./componentes/Tablas/AdministrarPlantillas.js
 import RecuperarCuenta from "./componentes/Log/RecuperarCuenta";
 import VerificarMail from "./componentes/Log/VerificarMail";
 import ResetPassword from "./componentes/Log/ResetPassword";
+import CambiarContraseña from "./componentes/Log/CambiarContraseña";
 
 import Header from "./componentes/Header&Footer/Header.jsx";
 import Footer from "./componentes/Header&Footer/Footer.jsx";
@@ -256,10 +260,44 @@ function App() {
           }
         />
         
+        <Route 
+          path= "/logos"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
+              <TablaLogos />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+         path="/logos/nuevo"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
+              <FormularioLogos />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+          path="/perfil"
+          element={
+            <RutaPrivada logeado={logeado}>
+              <Perfil />
+            </RutaPrivada>
+          }
+        />
+
+        <Route path="/cambiarContraseña" element={
+          <RutaPrivada logeado={logeado}>
+            <CambiarContraseña cambiarContraseña={true} mail={mail} />
+          </RutaPrivada>
+        } />
+
         {/* --- Recuperación de cuenta y verificación --- */}
         <Route path="/recuperar-contraseña" element={<RecuperarCuenta />} />
         <Route path="/verify-email" element={<VerificarMail />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        
 
         {/* --- Ruta por defecto --- */}
         <Route path="*" element={<Navigate to="/" />} />
