@@ -23,7 +23,7 @@ export default function TablaLogos() {
           'Authorization': `Bearer ${token}`
         }
       });
-      setLogos(response.data);
+      setLogos(response.data.data);
     } catch (error) {
       console.error('Error fetching logos:', error);
     }
@@ -45,11 +45,11 @@ export default function TablaLogos() {
                 className={`col-md-4 mb-4`}
               >
                 <div className="card h-100">
-                  <img src={logo} className="card-img-top" alt={diseno.nombre} />
+                  <img src={logo.base64Logo} className="card-img-top" alt={logo.nombre} />
                   <hr />
                   <div className="card-body">
-                    <h5 className="card-title">{diseno.nombre}</h5>
-                    <p className="card-text">{diseno.descripcion}</p>
+                    <h5 className="card-title">{logo.nombre}</h5>
+                    {/* <p className="card-text">{logo.descripcion}</p> */}
                   </div>
                 </div>
               </div>
