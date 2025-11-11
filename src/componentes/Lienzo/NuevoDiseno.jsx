@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { useNavigate} from "react-router-dom" 
 import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
 import Modal from "./ModalConfirmacion.jsx"
@@ -17,6 +18,8 @@ export default function NuevoDiseno() {
   const [modalAbierto, setModalAbierto] = useState(false);
 
   const [plantillaBool, setPlantillaBool] = useState(false);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchPlantillas = async () => {
@@ -84,24 +87,23 @@ export default function NuevoDiseno() {
     try {
       const { guardarDiseno, guardarElementos } = await import("../../services/lienzoCreacion.js");
       const dataURL = guardarDiseno(canvasInstance.current);
-      const elementos = guardarElementos(canvasInstance.current);
+      const elementos = JSON.stringify(guardarElementos(canvasInstance.current));
       const payload = {
         usuarioId: Cookies.get("usuarioId"),
         plantillaId: plantillaElegida.id,
         nombre: nombre,
         descripcion: descripcion,
-        base64Diseno: elementos,
+        base64Diseno: dataURL,
       };
-      console.log(elementos);
       const token = Cookies.get("access_token");
-      console.log(payload)
       const res = await axios.post("http://localhost:9090/api/disenos", payload, {
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         }
       });
-      console.log(res.data)
+      alert("Diseño guardado correctamente.")
+      navigate("/disenos")
     } catch (error) {
       console.error("Error al guardar el diseño:", error);
     }

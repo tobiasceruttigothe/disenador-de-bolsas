@@ -75,9 +75,9 @@ export default function FormularioCliente() {
       materialId: parseInt(data.materialId),
       tipoBolsaId: parseInt(data.tipoBolsaId),
       base64Plantilla: base64Plantilla,
-      ancho: parseInt(data.ancho),
-      alto: parseInt(data.alto),
-      profundidad: parseInt(data.profundidad)
+      ancho: parseFloat(data.ancho),
+      alto: parseFloat(data.alto),
+      profundidad: parseFloat(data.profundidad)
     };
 
 
@@ -180,7 +180,7 @@ export default function FormularioCliente() {
         </div>
         {/* Archivo -> Base64 */}
         <div className="mb-3">
-          <label htmlFor="base64Plantilla" className="form-label">Archivo de Plantilla</label>
+          <label htmlFor="base64Plantilla" className="form-label">Archivo de Plantilla (Máximo 10Mb)</label>
           <input
             id="base64Plantilla"
             type="file"

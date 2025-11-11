@@ -87,9 +87,15 @@ export function cargarDiseno(canvas, json) {
 }
 
 // --- Figuras ---
-export function agregarRectangulo(canvas, color) {
+export function agregarCuadrado(canvas, color) {
   if (!canvas) return;
   const rect = new fabric.Rect({ left: 100, top: 100, fill: color, width: 100, height: 100, selectable: true, hasControls: true, lockScalingFlip: true });
+  canvas.add(rect);
+}
+
+export function agregarRectangulo(canvas, color) {
+  if (!canvas) return;
+  const rect = new fabric.Rect({ left: 100, top: 100, fill: color, width: 250, height: 100, selectable: true, hasControls: true, lockScalingFlip: true });
   canvas.add(rect);
 }
 

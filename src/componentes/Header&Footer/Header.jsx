@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Cookies from 'js-cookie';
-import logo from '../../assets/pack designer final.png';
+import logo from '../../assets/pack designer blanco.png';
 import { Link } from 'react-router-dom';
 import { FiLogOut, FiUser, FiMenu } from 'react-icons/fi';
 
@@ -27,8 +27,9 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
         return (
           <>
             <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/disenos">Mis diseños</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/logos">Mis logos</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
           </>
         );
@@ -36,7 +37,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
         return (
           <>
             <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/verClientes">Consultar clientes</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/verClientes">Clientes</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
           </>
@@ -47,7 +48,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
             <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/disenadores">Diseñadores</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/clientes">Clientes</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/admins">Administradores</NavDropdown.Item>
+            <NavDropdown.Item as={Link} to="/admins">Adm. Gerenciales</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/productos">Productos</NavDropdown.Item>
             <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
           </>
@@ -62,7 +63,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
       expand="lg"
       className="shadow-sm"
       style={{
-        background: "#016bddc9",
+        background: "#016bddff",
         padding: "0.8rem 1.2rem"
       }}
     >

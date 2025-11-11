@@ -15,7 +15,6 @@ export default function TablaPlantillas() {
   }, []);
 
   useEffect(() => {
-    // Filtra las plantillas en tiempo real
     setPlantillasFiltradas(
       plantillas.filter((p) =>
         p.nombre.toLowerCase().includes(filtro.toLowerCase())
@@ -220,7 +219,7 @@ export default function TablaPlantillas() {
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="3" className="text-center">
+                      <td colSpan="7" className="text-center">
                         No hay plantillas para mostrar
                       </td>
                     </tr>

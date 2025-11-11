@@ -6,6 +6,7 @@ import Log from "./componentes/Log/Log";
 import Inicio from "./componentes/Inicios/Inicio";
 import NuevoDiseno from "./componentes/Lienzo/NuevoDiseno";
 import SelectorDiseno from "./componentes/Lienzo/SelectorDiseno";
+import CargarDiseno from "./componentes/Lienzo/CargarDiseno.jsx";
 
 import FormularioCliente from "./componentes/Formularios/FormularioCliente.jsx";
 import FormularioDisenador from "./componentes/Formularios/FormularioDisenador.jsx";
@@ -256,6 +257,15 @@ function App() {
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
               <SelectorDiseno />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route 
+          path="/disenos/:id"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
+              <CargarDiseno/>
             </RutaPrivadaConRol>
           }
         />

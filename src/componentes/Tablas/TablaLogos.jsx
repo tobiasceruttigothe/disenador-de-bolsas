@@ -37,7 +37,7 @@ export default function TablaLogos() {
       <div className='fondo'>
         <div className="container">
           <br />
-          <h2 className="mb-3">Tus diseños</h2>
+          <h2 className="mb-3">Tus logos</h2>
           <div className="row">
             {logos.length > 0 ? (logos.map((logo) => (
               <div
@@ -45,7 +45,7 @@ export default function TablaLogos() {
                 className={`col-md-4 mb-4`}
               >
                 <div className="card h-100">
-                  <img src={logo.base64Logo} className="card-img-top" alt={logo.nombre} />
+                  <img src={`data:image/png;base64,${logo.base64Logo}`} className="card-img-top" alt={logo.nombre} />
                   <hr />
                   <div className="card-body">
                     <h5 className="card-title">{logo.nombre}</h5>

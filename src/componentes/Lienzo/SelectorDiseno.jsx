@@ -4,16 +4,17 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import bolsa from '../../assets/pack designer final.png';
 import "../../index.css"
+import { useNavigate } from 'react-router-dom';
 
 export default function SelectorDiseno({ }) {
   const [disenos, setDisenos] = useState([])
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchDisenos = async () => {
       try {
         const token = Cookies.get("access_token");
         const id = Cookies.get("usuarioId");
-        console.log(id)
         const res = await axios.get(`http://localhost:9090/api/disenos/usuario/${id}`, {
           headers: {
             "Content-Type": "application/json",
@@ -30,12 +31,9 @@ export default function SelectorDiseno({ }) {
 
 
   const handleClick = (diseno) => {
-    console.log("Diseño seleccionado:", diseno);
+    navigate(`/disenos/${diseno.id}`);
   }
 
-  const handleNuevoDiseno = () => {
-    console.log("Nuevo diseño seleccionado");
-  }
 
   return (
     <>
@@ -50,9 +48,9 @@ export default function SelectorDiseno({ }) {
                 className={`col-md-4 mb-4`}
                 onClick={() => handleClick(diseno)}
               >
-                <Link to={`/lienzo/${diseno.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <Link to={`/disenos/${diseno.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div className="card h-100">
-                    <img src={diseno.base64Diseno} className="card-img-top" alt={diseno.nombre} />
+                    <img src={`data:image/png;base64, ${diseno.base64Diseno}`} className="card-img-top" alt={diseno.nombre} />
                     <hr />
                     <div className="card-body">
                       <h5 className="card-title">{diseno.nombre}</h5>
@@ -68,7 +66,6 @@ export default function SelectorDiseno({ }) {
             <div
                 key={"nuevoDiseno"}
                 className={`col-md-4 mb-4`}
-                onClick={() => handleNuevoDiseno()}
               >
                 <Link to={`/nuevoDiseno`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div className="card h-100">

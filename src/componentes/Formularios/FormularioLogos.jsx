@@ -101,7 +101,7 @@ export default function FormularioLogos() {
 
                 {/* Archivo -> Base64 */}
                 <div className="mb-3">
-                    <label htmlFor="base64Logo" className="form-label">Archivo del logo (Maximo 5Mb)</label>
+                    <label htmlFor="base64Logo" className="form-label">Archivo del logo (Máximo 5Mb)</label>
                     <input
                         id="base64Logo"
                         type="file"

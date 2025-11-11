@@ -60,7 +60,6 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
             });
             
             await Promise.all(promises);
-            alert("Plantillas agregadas correctamente");
             setPlantillasUsuario(plantillasCliente);
             setModalAbierto(false);
         } catch (e) {
@@ -92,7 +91,7 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
         if (todasLasPlantillas.length > 0) fetchBase64Images();
     }, [todasLasPlantillas]);
 
-    // 🔹 Nueva función para eliminar relación de plantilla-usuario
+
     const deshabilitarPlantilla = async (idPlantilla) => {
         try {
             const token = Cookies.get("access_token");

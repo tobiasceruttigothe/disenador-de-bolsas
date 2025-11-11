@@ -45,7 +45,7 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
           {opcion === "ia" && <MenuIA></MenuIA>}
           {opcion === "formas" && <MenuFormas agregarCuadrado={agregarCuadrado} agregarRectangulo={agregarRectangulo} agregarCirculo={agregarCirculo} 
                                     agregarEstrella={agregarEstrella} agregarLinea={agregarLinea} agregarTriangulo={agregarTriangulo}></MenuFormas>}
-          {opcion === "logo" && <MenuLogos></MenuLogos>}
+          {opcion === "logo" && <MenuLogos agregarFoto={agregarFoto}></MenuLogos>}
         </div>
       </div>
     </div>
