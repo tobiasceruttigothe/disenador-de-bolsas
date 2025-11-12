@@ -2,6 +2,9 @@ import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Cookies from "js-cookie";
 
+import ActivateAccount from "./componentes/Log/ActivateAccount";
+import ResendActivation from "./componentes/Log/ResendActivation";
+
 import Log from "./componentes/Log/Log";
 import Inicio from "./componentes/Inicios/Inicio";
 import NuevoDiseno from "./componentes/Lienzo/NuevoDiseno";
@@ -307,6 +310,12 @@ function App() {
         <Route path="/recuperar-contraseña" element={<RecuperarCuenta />} />
         <Route path="/verify-email" element={<VerificarMail />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+
+        {/* REVISA ESTOS GASPI, DEBERIAS ELIMINAR EL DE VERIFY-EMAIL*/}
+        {/* ✅ NUEVA RUTA: Activar cuenta */}
+        <Route path="/activate-account" element={<ActivateAccount />} />
+        {/* ✅ NUEVA RUTA: Reenviar activación */}
+        <Route path="/resend-activation" element={<ResendActivation />} />
         
 
         {/* --- Ruta por defecto --- */}
