@@ -2,10 +2,12 @@ import React, { useEffect } from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import logo from '../../assets/pack designer blanco.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiLogOut, FiUser, FiMenu } from 'react-icons/fi';
 
+
 export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }) {
+  const navigate = useNavigate()
 
   useEffect(() => {
     setNombre(Cookies.get('nombre') || "");
@@ -79,7 +81,9 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
           </NavDropdown>
         </Nav>
 
-        <div className="text-center flex-grow-1 d-flex align-items-center justify-content-center">
+        <div style={{
+          cursor: "pointer",
+        }} onClick={() => navigate("/inicio")} className="text-center flex-grow-1 d-flex align-items-center justify-content-center">
           <img
             src={logo}
             alt="Logo"

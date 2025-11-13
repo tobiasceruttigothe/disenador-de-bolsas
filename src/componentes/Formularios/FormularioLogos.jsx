@@ -41,7 +41,7 @@ export default function FormularioLogos() {
             base64Logo: base64Logo,
         };
 
-        console.log(payload);
+
         try {
             setEstado("Cargando");
             setMensaje("Cargando...");

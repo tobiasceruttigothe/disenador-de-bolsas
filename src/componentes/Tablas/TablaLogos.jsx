@@ -29,6 +29,22 @@ export default function TablaLogos() {
     }
   };
 
+  const eliminarLogo = async (idEl) => {
+    if (window.confirm("¿Estás seguro que deseas eliminar el logo?")) {
+      try {
+        const token = Cookies.get('access_token');
+        await axios.delete(`http://localhost:9090/api/logos/${idEl}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        setLogos((prev) => prev.filter((c) => c.id !== idEl));
+      } catch (error) {
+        console.error('Error fetching logos:', error);
+      }
+    }
+  }
   const handleNuevoLogo = () => {
     navigate('/logos/nuevo');
   };
@@ -49,7 +65,7 @@ export default function TablaLogos() {
                   <hr />
                   <div className="card-body">
                     <h5 className="card-title">{logo.nombre}</h5>
-                    {/* <p className="card-text">{logo.descripcion}</p> */}
+                    <button onClick={() => eliminarLogo(logo.id)} className="btn" style={{ border: "1px solid #016add" }}>Eliminar logo</button>
                   </div>
                 </div>
               </div>
