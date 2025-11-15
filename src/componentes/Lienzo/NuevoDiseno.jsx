@@ -93,7 +93,8 @@ export default function NuevoDiseno() {
         plantillaId: plantillaElegida.id,
         nombre: nombre,
         descripcion: descripcion,
-        base64Diseno: dataURL,
+        base64Diseno: elementos,
+        base64Preview : dataURL
       };
       const token = Cookies.get("access_token");
       const res = await axios.post("http://localhost:9090/api/disenos", payload, {

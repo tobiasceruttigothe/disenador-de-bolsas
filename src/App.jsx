@@ -33,7 +33,6 @@ import ConsultaCliente from "./componentes/Tablas/ConsultaClientes.jsx";
 import AdministrarPlantillas from "./componentes/Tablas/AdministrarPlantillas.jsx";
 
 import RecuperarCuenta from "./componentes/Log/RecuperarCuenta";
-import VerificarMail from "./componentes/Log/VerificarMail";
 import ResetPassword from "./componentes/Log/ResetPassword";
 import CambiarContraseña from "./componentes/Log/CambiarContraseña";
 
@@ -308,7 +307,6 @@ function App() {
 
         {/* --- Recuperación de cuenta y verificación --- */}
         <Route path="/recuperar-contraseña" element={<RecuperarCuenta />} />
-        <Route path="/verify-email" element={<VerificarMail />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
         {/* REVISA ESTOS GASPI, DEBERIAS ELIMINAR EL DE VERIFY-EMAIL*/}

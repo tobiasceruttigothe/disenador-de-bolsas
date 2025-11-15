@@ -50,7 +50,7 @@ export default function SelectorDiseno({ }) {
               >
                 <Link to={`/disenos/${diseno.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div className="card h-100">
-                    <img src={`data:image/png;base64, ${diseno.base64Diseno}`} className="card-img-top" alt={diseno.nombre} />
+                    <img src={`data:image/png;base64, ${diseno.base64Preview}`} className="card-img-top" alt={diseno.nombre} />
                     <hr />
                     <div className="card-body">
                       <h5 className="card-title">{diseno.nombre}</h5>

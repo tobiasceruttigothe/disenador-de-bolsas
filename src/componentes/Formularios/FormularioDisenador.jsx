@@ -14,8 +14,8 @@ export default function FormularioDiseñador() {
     const payload = {
       username: data.nombre,
       email: data.mail,
-      razonSocial: "PAPERSRL",
-      password: data.contraseña,
+      razonSocial: data.nombreApellido,
+      password: "undefined",
       enabled: true,
       emailVerified: false,
       rol: "DISEÑADOR"
@@ -84,23 +84,20 @@ export default function FormularioDiseñador() {
           {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
         </div>
 
-        {/* Contraseña */}
+        {/* Razon Social = NOMBRE DEL DISEÑADOR */}
         <div className="mb-3">
-          <label htmlFor="contraseña" className="form-label">Contraseña</label>
+          <label htmlFor="nombre" className="form-label">Nombre y apellido del empleado</label>
           <input
-            id="contraseña"
-            placeholder="Ingrese una contraseña provisoria"
+            id="nombre"
+            placeholder="Ingrese el nombre y apellido del empleado"
             type="text"
-            className={`form-control ${errors.contraseña ? 'is-invalid' : ''}`}
-            {...register("contraseña", {
-              required: "La contraseña es obligatoria",
-              minLength: { value: 8, message: "Debe tener al menos 8 caracteres" },
-              maxLength: { value: 50, message: "Debe tener menos de 50 caracteres" }
+            className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
+            {...register("nombreApellido", {
+              required: "El nombre y apellido del empleado es obligatorio",
             })}
           />
-          {errors.contraseña && <div className="invalid-feedback">{errors.contraseña.message}</div>}
+          {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
         </div>
-
         {/* Mail */}
         <div className="mb-3">
           <label htmlFor="mail" className="form-label">Mail</label>

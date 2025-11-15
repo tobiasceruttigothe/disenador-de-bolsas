@@ -18,7 +18,7 @@ export default function TablaClientes() {
     // Filtra en tiempo real al cambiar el filtro o la lista de clientes
     setClientesFiltrados(
       clientes.filter((c) =>
-        c.username.toLowerCase().includes(filtro.toLowerCase())
+        c?.username.toLowerCase().includes(filtro.toLowerCase())
       )
     );
   }, [filtro, clientes]);
@@ -66,10 +66,6 @@ export default function TablaClientes() {
     navigate("/clientes/nuevo");
   };
 
-  const modificar = (username) => {
-    alert(`Modificar cliente: ${username}`);
-  };
-
   return (
     <div className="container-fluid min-vh-100 py-4 bg-light fondo">
       <div className="row justify-content-center">
@@ -95,13 +91,13 @@ export default function TablaClientes() {
 
           {/* TABLA */}
           <div className="table-responsive mb-4">
-            <table className="table table-bordered table-striped table-hover">
+            <table className="table table-bordered table-striped table-hover" style={{ tableLayout: 'auto' }}>
               <thead className="table-light">
                 <tr>
                   <th>Nombre de Usuario</th>
                   <th>Mail</th>
                   <th>Razón Social</th>
-                  <th>Acciones</th>
+                  <th style={{ width: "110px", whiteSpace: "nowrap" }}></th>
                 </tr>
               </thead>
               <tbody>
@@ -111,34 +107,7 @@ export default function TablaClientes() {
                       <td>{c.username}</td>
                       <td>{c.email}</td>
                       <td>{c.razonSocial}</td>
-                      <td>
-                        <button
-                          className="btn m-1"
-                          style={{
-                            border: "2px solid #016add",
-                            backgroundColor: "transparent",
-                            color: "#016add",
-                            fontWeight: "500",
-                            padding: "0.375rem 0.75rem",
-                            borderRadius: "0.375rem",
-                            cursor: "pointer",
-                            transition: "all 0.3s ease",
-                          }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = "#016add";
-                            e.currentTarget.style.color = "#fff";
-                            e.currentTarget.style.transform = "scale(1.05)";
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = "transparent";
-                            e.currentTarget.style.color = "#016add";
-                            e.currentTarget.style.transform = "scale(1)";
-                          }}
-                          onClick={() => modificar(c.username)}
-                        >
-                          Modificar
-                        </button>
-
+                      <td style={{ width: "110px", whiteSpace: "nowrap" }}>
                         <button
                           className="btn m-1"
                           style={{

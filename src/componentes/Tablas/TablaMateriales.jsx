@@ -18,7 +18,7 @@ export default function TablaMateriales() {
     // Filtra en tiempo real al cambiar el filtro o la lista de materiales
     setMaterialesFiltrados(
       materiales.filter((m) =>
-        m.nombre.toLowerCase().includes(filtro.toLowerCase())
+        m?.nombre.toLowerCase().includes(filtro.toLowerCase())
       )
     );
   }, [filtro, materiales]);

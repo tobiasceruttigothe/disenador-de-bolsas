@@ -1,6 +1,6 @@
 import axios from "axios"
 import Cookies from "js-cookie"
-import {useState, useEffect} from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 
 export default function ConsultaClientes() {
@@ -30,7 +30,7 @@ export default function ConsultaClientes() {
   };
 
   const handleClick = (id) => () => {
-   console.log("Ver diseños del cliente con ID:", id);
+    console.log("Ver diseños del cliente con ID:", id);
   }
 
   const [filtro, setFiltro] = useState("");
@@ -38,7 +38,7 @@ export default function ConsultaClientes() {
   const handleFiltrar = () => {
     if (filtro.trim() === "") return;
     const filtrados = clientes.filter((c) =>
-      c.nombre.toLowerCase().includes(filtro.toLowerCase())
+      c?.nombre.toLowerCase().includes(filtro.toLowerCase())
     );
     setClientes(filtrados);
   };
@@ -68,87 +68,87 @@ export default function ConsultaClientes() {
             </div>
 
             <div className="table-responsive mb-4">
-              <table className="table table-bordered table-striped table-hover">
+              <table className="table table-bordered table-striped table-hover" style={{ tableLayout: 'auto' }}>
                 <thead className="table-light">
                   <tr>
                     <th>Nombre de Usuario</th>
                     <th>Mail</th>
                     <th>Razon Social</th>
-                    <th></th>
+                    <th style={{ width: "440px", whiteSpace: "nowrap" }}></th>
                   </tr>
                 </thead>
-                {clientes.length > 0 ? (
-                  clientes.map((c, index) => (
-                    <tr key={index}>
-                      <td>{c.username}</td>
-                      <td>{c.email}</td>
-                      <td>{c.razonSocial}</td>
-                      <td>
+                <tbody>
+                  {clientes.length > 0 ? (
+                    clientes.map((c, index) => (
+                      <tr key={index}>
+                        <td>{c.username}</td>
+                        <td>{c.email}</td>
+                        <td>{c.razonSocial}</td>
+                        <td>
+                          <button
+                            className="btn m-1"
+                            style={{
+                              backgroundColor: "#016add",
+                              color: "#fff",
+                              border: "2px solid #016add",
+                              fontWeight: "500",
+                              padding: "0.375rem 0.75rem",
+                              borderRadius: "0.375rem",
+                              cursor: "pointer",
+                              transition: "all 0.3s ease"
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = "#014bb5";
+                              e.currentTarget.style.borderColor = "#014bb5";
+                              e.currentTarget.style.transform = "scale(1.05)";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = "#016add";
+                              e.currentTarget.style.borderColor = "#016add";
+                              e.currentTarget.style.transform = "scale(1)";
+                            }}
+                            onClick={handleClick(c.id)}
+                          >
+                            Ver diseños del cliente
+                          </button>
 
-
-                        <button
-                          className="btn m-1"
-                          style={{
-                            backgroundColor: "#016add",
-                            color: "#fff",
-                            border: "2px solid #016add",
-                            fontWeight: "500",
-                            padding: "0.375rem 0.75rem",
-                            borderRadius: "0.375rem",
-                            cursor: "pointer",
-                            transition: "all 0.3s ease"
-                          }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = "#014bb5";
-                            e.currentTarget.style.borderColor = "#014bb5";
-                            e.currentTarget.style.transform = "scale(1.05)";
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = "#016add";
-                            e.currentTarget.style.borderColor = "#016add";
-                            e.currentTarget.style.transform = "scale(1)";
-                          }}
-                          onClick={handleClick(c.id)}
-                        >
-                          Ver diseños del cliente
-                        </button>
-
-                        <button
-                          className="btn m-1"
-                          style={{
-                            border: "2px solid #016add",
-                            backgroundColor: "transparent",
-                            color: "#016add",
-                            fontWeight: "500",
-                            padding: "0.375rem 0.75rem",
-                            borderRadius: "0.375rem",
-                            cursor: "pointer",
-                            transition: "all 0.3s ease"
-                          }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = "#016add";
-                            e.currentTarget.style.color = "#fff";
-                            e.currentTarget.style.transform = "scale(1.05)";
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = "transparent";
-                            e.currentTarget.style.color = "#016add";
-                            e.currentTarget.style.transform = "scale(1)";
-                          }}
-                          onClick={() => plantillas(c.username, c.id)}
-                        >
-                          Administrar sus plantillas
-                        </button>
+                          <button
+                            className="btn m-1"
+                            style={{
+                              border: "2px solid #016add",
+                              backgroundColor: "transparent",
+                              color: "#016add",
+                              fontWeight: "500",
+                              padding: "0.375rem 0.75rem",
+                              borderRadius: "0.375rem",
+                              cursor: "pointer",
+                              transition: "all 0.3s ease"
+                            }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = "#016add";
+                              e.currentTarget.style.color = "#fff";
+                              e.currentTarget.style.transform = "scale(1.05)";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = "transparent";
+                              e.currentTarget.style.color = "#016add";
+                              e.currentTarget.style.transform = "scale(1)";
+                            }}
+                            onClick={() => plantillas(c.username, c.id)}
+                          >
+                            Administrar sus plantillas
+                          </button>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="4" className="text-center">
+                        No hay clientes para mostrar
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="4" className="text-center">
-                      No hay clientes para mostrar
-                    </td>
-                  </tr>
-                )}
+                  )}
+                </tbody>
               </table>
             </div>
           </div>

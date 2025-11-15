@@ -18,7 +18,8 @@ export function initCanvas(canvasElement, imageUrl) {
     canvas.renderAll();
   };
 
-  // Borrar objetos con Delete/Backspace
+
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Delete" || e.key === "Backspace") {
       const activeObjects = canvas.getActiveObjects();
@@ -42,6 +43,13 @@ export function initCanvas(canvasElement, imageUrl) {
 
   return canvas;
 }
+
+export function initCanvasVacio(canvasEl) {
+  return new fabric.Canvas(canvasEl, {
+    preserveObjectStacking: true
+  });
+}
+
 
 // --- Funciones agregar objetos ---
 export function agregarFoto(canvas, url) {
@@ -71,20 +79,41 @@ export function guardarDiseno(canvas) {
 
 export function guardarElementos(canvas) {
   if (!canvas) return null;
-  const canvasJson = canvas.toJSON();
-  canvasJson.base64diseno = guardarDiseno(canvas);
-  return canvasJson;
+  const json = canvas.toJSON();
+  return json;
 }
 
-export function cargarDiseno(canvas, json) {
-  if (!canvas || !json) return;
-  const templateId = json.templateId;
-  const backgroundUrl = `/plantillas/${templateId}.png`;
-  fabric.Image.fromURL(backgroundUrl, img => {
-    canvas.backgroundImage = img;
-    canvas.loadFromJSON(json, () => canvas.renderAll());
-  });
+
+export async function cargarDiseno(canvas, json) {
+  // 1. Limpiar canvas
+  canvas.clear();
+
+  // 2. Si hay backgroundImage en el JSON → usar fabric.Image.fromURL
+  if (json.backgroundImage && json.backgroundImage.src) {
+    await new Promise(resolve => {
+      fabric.Image.fromURL(json.backgroundImage.src, img => {
+        img.selectable = false;
+        img.evented = false;
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
+        canvas.setDimensions({ width: img.width, height: img.height });
+        resolve();
+      });
+    });
+  }
+
+  // 3. Crear objetos
+  for (const obj of json.objects) {
+    fabric.util.enlivenObjects([obj], enlivened => {
+      enlivened.forEach(o => canvas.add(o));
+      canvas.renderAll();
+    });
+  }
 }
+
+
+
+
+
 
 // --- Figuras ---
 export function agregarCuadrado(canvas, color) {

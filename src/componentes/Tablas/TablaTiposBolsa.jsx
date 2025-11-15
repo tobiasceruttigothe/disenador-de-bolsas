@@ -17,7 +17,7 @@ export default function TablaTipoBolsa() {
   useEffect(() => {
     setTiposBolsaFiltrados(
       tiposBolsa.filter((t) =>
-        t.nombre.toLowerCase().includes(filtro.toLowerCase())
+        t?.nombre.toLowerCase().includes(filtro.toLowerCase())
       )
     );
   }, [filtro, tiposBolsa]);

@@ -109,8 +109,9 @@ export default function FormularioCliente() {
       <form
         onSubmit={handleSubmit(handleSubmitForm)}
         className="w-100 bg-white p-4 rounded shadow"
-        style={{ maxWidth: '450px' }}
+        style={{ maxWidth: '1000px' }}
       >
+
         <div className="text-center mb-4">
           <img
             src={logo}
@@ -119,139 +120,137 @@ export default function FormularioCliente() {
             style={{ width: '80px', height: '80px' }}
           />
         </div>
+
         <h2 className="text-center mb-4">Agregar plantilla</h2>
 
-        {/* Nombre */}
-        <div className="mb-3">
-          <label htmlFor="nombre" className="form-label">Nombre de la plantilla</label>
-          <input
-            id="nombre"
-            type="text"
-            placeholder="Ingrese un nombre de plantilla"
-            className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-            {...register("nombre", { required: "El nombre es obligatorio" })}
-          />
-          {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+        <div className="row">
+          {/* Columna izquierda */}
+          <div className="col-md-6">
+
+            {/* Nombre */}
+            <div className="mb-3">
+              <label htmlFor="nombre" className="form-label">Nombre de la plantilla</label>
+              <input
+                id="nombre"
+                type="text"
+                placeholder="Ingrese un nombre de plantilla"
+                className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
+                {...register("nombre", { required: "El nombre es obligatorio" })}
+              />
+              {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+            </div>
+
+            {/* Material */}
+            <div className="mb-3">
+              <label className="form-label">Material</label>
+              {materiales.length > 0 ? materiales.map(m => (
+                <div key={m.id} className="form-check">
+                  <input
+                    id={`material-${m.id}`}
+                    type="radio"
+                    value={m.id}
+                    className={`form-check-input ${errors.materialId ? 'is-invalid' : ''}`}
+                    {...register("materialId", { required: "El material es obligatorio" })}
+                  />
+                  <label htmlFor={`material-${m.id}`} className="form-check-label">
+                    {m.nombre}
+                  </label>
+                </div>
+              )) : <p>Cargando materiales...</p>}
+              {errors.materialId && <div className="invalid-feedback">{errors.materialId.message}</div>}
+            </div>
+          </div>
+
+          {/* Columna derecha */}
+          <div className="col-md-6">
+            <div className="mb-3">
+              <label htmlFor="base64Plantilla" className="form-label">Archivo de Plantilla</label>
+              <input
+                id="base64Plantilla"
+                type="file"
+                accept=".jpg,.png,.pdf,.svg"
+                className={`form-control ${!base64Plantilla && estado === "Error" ? 'is-invalid' : ''}`}
+                onChange={handleFileChange}
+              />
+              {!base64Plantilla && estado === "Error" && (
+                <div className="invalid-feedback">Debe seleccionar un archivo</div>
+              )}
+            </div>
+            {/* Tipo de Bolsa */}
+            <div className="mb-3">
+              <label className="form-label">Tipo de Bolsa</label>
+              {tiposBolsa.length > 0 ? tiposBolsa.map(t => (
+                <div key={t.id} className="form-check">
+                  <input
+                    id={`tipoBolsa-${t.id}`}
+                    type="radio"
+                    value={t.id}
+                    className={`form-check-input ${errors.tipoBolsaId ? 'is-invalid' : ''}`}
+                    {...register("tipoBolsaId", { required: "El tipo de bolsa es obligatorio" })}
+                  />
+                  <label htmlFor={`tipoBolsa-${t.id}`} className="form-check-label">
+                    {t.nombre}
+                  </label>
+                </div>
+              )) : <p>Cargando tipos de bolsa...</p>}
+              {errors.tipoBolsaId && <div className="invalid-feedback">{errors.tipoBolsaId.message}</div>}
+            </div>
+          </div>
         </div>
+        <div className="row">
+          {/* Ancho */}
+          <div className="col-md-4 mb-3">
+            <label htmlFor="ancho" className="form-label">Ancho (cm)</label>
+            <input
+              id="ancho"
+              type="number"
+              step="0.01"
+              placeholder="Ingrese el ancho"
+              className={`form-control ${errors.ancho ? 'is-invalid' : ''}`}
+              {...register("ancho", { required: "El ancho es obligatorio", min: 0 })}
+            />
+            {errors.ancho && <div className="invalid-feedback">{errors.ancho.message}</div>}
+          </div>
 
+          {/* Alto */}
+          <div className="col-md-4 mb-3">
+            <label htmlFor="alto" className="form-label">Alto (cm)</label>
+            <input
+              id="alto"
+              type="number"
+              step="0.01"
+              placeholder="Ingrese el alto"
+              className={`form-control ${errors.alto ? 'is-invalid' : ''}`}
+              {...register("alto", { required: "El alto es obligatorio", min: 0 })}
+            />
+            {errors.alto && <div className="invalid-feedback">{errors.alto.message}</div>}
+          </div>
 
-
-        <div className="mb-3">
-          <label htmlFor="materialId" className="form-label">Material</label>
-          {materiales.length > 0 ? (
-            materiales.map((material) => (
-              <div key={material.id} className="form-check">
-                <input
-                  id={`material-${material.id}`}
-                  type="radio"
-                  value={material.id}
-                  className={`form-check-input ${errors.materialId ? 'is-invalid' : ''}`}
-                  {...register("materialId", { required: "El material es obligatorio" })}
-                />
-                <label htmlFor={`material-${material.id}`} className="form-check-label">
-                  {material.nombre}
-                </label>
-              </div>
-            ))
-          ) : (<p>Cargando materiales...</p>)}
-          {errors.materialId && <div className="invalid-feedback">{errors.materialId.message}</div>}
-        </div>
-
-        {/* Tipo de Bolsa ID */}
-        <div className="mb-3">
-          <label htmlFor="tipoBolsaId" className="form-label">Tipo de Bolsa</label>
-          {tiposBolsa.length > 0 ? (
-            tiposBolsa.map((tipo) => (
-              <div key={tipo.id} className="form-check">
-                <input
-                  id={`tipoBolsa-${tipo.id}`}
-                  type="radio"
-                  value={tipo.id}
-                  className={`form-check-input ${errors.tipoBolsaId ? 'is-invalid' : ''}`}
-                  {...register("tipoBolsaId", { required: "El tipo de bolsa es obligatorio" })}
-                />
-                <label htmlFor={`tipoBolsa-${tipo.id}`} className="form-check-label">
-                  {tipo.nombre}
-                </label>
-              </div>
-            ))
-          ) : (<p>Cargando tipos de bolsa...</p>)}
-          {errors.tipoBolsaId && <div className="invalid-feedback">{errors.tipoBolsaId.message}</div>}
-        </div>
-        {/* Archivo -> Base64 */}
-        <div className="mb-3">
-          <label htmlFor="base64Plantilla" className="form-label">Archivo de Plantilla (Máximo 10Mb)</label>
-          <input
-            id="base64Plantilla"
-            type="file"
-            accept=".jpg,.png,.pdf,.svg"
-            className={`form-control ${!base64Plantilla && estado === "Error" ? 'is-invalid' : ''}`}
-            onChange={handleFileChange}
-          />
-          {!base64Plantilla && estado === "Error" && (
-            <div className="invalid-feedback">Debe seleccionar un archivo</div>
-          )}
-        </div>
-
-        {/* Ancho */}
-        <div className="mb-3">
-          <label htmlFor="ancho" className="form-label">Ancho (cm)</label>
-          <input
-            id="ancho"
-            type="number"
-            step="0.01"
-            placeholder="Ingrese el ancho"
-            className={`form-control ${errors.ancho ? 'is-invalid' : ''}`}
-            {...register("ancho", {
-              required: "El ancho es obligatorio",
-              min: { value: 0, message: "Debe ser positivo" }
-            })}
-          />
-          {errors.ancho && <div className="invalid-feedback">{errors.ancho.message}</div>}
-        </div>
-
-        {/* Alto */}
-        <div className="mb-3">
-          <label htmlFor="alto" className="form-label">Alto (cm)</label>
-          <input
-            id="alto"
-            type="number"
-            step="0.01"
-            placeholder="Ingrese el alto"
-            className={`form-control ${errors.alto ? 'is-invalid' : ''}`}
-            {...register("alto", {
-              required: "El alto es obligatorio",
-              min: { value: 0, message: "Debe ser positivo" }
-            })}
-          />
-          {errors.alto && <div className="invalid-feedback">{errors.alto.message}</div>}
-        </div>
-
-        {/* Profundidad */}
-        <div className="mb-3">
-          <label htmlFor="profundidad" className="form-label">Profundidad (cm)</label>
-          <input
-            id="profundidad"
-            type="number"
-            step="0.01"
-            placeholder="Ingrese la profundidad"
-            className={`form-control ${errors.profundidad ? 'is-invalid' : ''}`}
-            {...register("profundidad", {
-              required: "La profundidad es obligatoria",
-              min: { value: 0, message: "Debe ser positivo" }
-            })}
-          />
-          {errors.profundidad && <div className="invalid-feedback">{errors.profundidad.message}</div>}
+          {/* Profundidad */}
+          <div className="col-md-4 mb-3">
+            <label htmlFor="profundidad" className="form-label">Profundidad (cm)</label>
+            <input
+              id="profundidad"
+              type="number"
+              step="0.01"
+              placeholder="Ingrese la profundidad"
+              className={`form-control ${errors.profundidad ? 'is-invalid' : ''}`}
+              {...register("profundidad", { required: "La profundidad es obligatoria", min: 0 })}
+            />
+            {errors.profundidad && <div className="invalid-feedback">{errors.profundidad.message}</div>}
+          </div>
         </div>
 
         <button
-          className="btn w-100 text-white"
+          className="btn w-100 text-white mt-3"
           style={{ backgroundColor: '#016add' }}
           disabled={estado === "Cargando"}
         >
           {estado === "Cargando" ? "Enviando..." : "Ingresar"}
         </button>
+
       </form>
+
 
       {/* Alertas dinámicas */}
       {estado && (

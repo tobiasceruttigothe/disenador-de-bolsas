@@ -41,11 +41,11 @@ export default function RecuperarCuenta() {
           <h2 className="text-center mb-4">Recuperar Cuenta</h2>
 
           <div className="mb-3">
-            <label htmlFor="mail" className="form-label">Correo electrónico</label>
+            <label htmlFor="mail" className="form-label">Mail</label>
             <input
               id="mail"
               type="email"
-              placeholder="Ingrese su correo"
+              placeholder="Ingrese su mail"
               className="form-control"
               value={mail}
               onChange={(e) => setMail(e.target.value)}

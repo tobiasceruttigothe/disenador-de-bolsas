@@ -33,17 +33,20 @@ export default function AdministrarPlantillas() {
         const plantillas = res.data.data;
         setPlantillasUsuario(plantillas);
 
-        const imagenes = {};
-        for (const p of plantillas) {
-          const img = await buscarImagenBase64(p.id);
-          imagenes[p.id] = img;
-        }
-        setImagenesBase64(imagenes);
+        plantillas.forEach(p => {
+          buscarImagenBase64(p.id).then(img => {
+            setImagenesBase64(prev => ({
+              ...prev,
+              [p.id]: img
+            }));
+          });
+        });
 
       } catch (e) {
         console.log("Error al cargar las plantillas del cliente", e);
       }
     };
+
 
     if (id) fetchPlantillas();
   }, [id]);
@@ -74,7 +77,7 @@ export default function AdministrarPlantillas() {
               <thead className="table-light">
                 <tr>
                   <th>Nombre de la Plantilla</th>
-                  <th>Foto</th>
+                  <th>Imagen</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,9 +87,7 @@ export default function AdministrarPlantillas() {
                       <td style={{
                         verticalAlign: 'middle',
                         fontSize: '20px',
-                        fontWeight: '500',
-                        textAlign: 'center',
-                        padding: '12px',
+                        fontWeight: '500'
                       }}>{p.nombre}</td>
                       <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
                         {imagenesBase64[p.id] ? (

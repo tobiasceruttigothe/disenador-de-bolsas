@@ -65,7 +65,33 @@ export default function TablaLogos() {
                   <hr />
                   <div className="card-body">
                     <h5 className="card-title">{logo.nombre}</h5>
-                    <button onClick={() => eliminarLogo(logo.id)} className="btn" style={{ border: "1px solid #016add" }}>Eliminar logo</button>
+                    <hr></hr>
+                    <button
+                      className="btn m-1"
+                      style={{
+                        border: "2px solid #016add",
+                        backgroundColor: "transparent",
+                        color: "#016add",
+                        fontWeight: "500",
+                        padding: "0.375rem 0.75rem",
+                        borderRadius: "0.375rem",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                      }}
+                      onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = "#016add";
+                        e.currentTarget.style.color = "#fff";
+                        e.currentTarget.style.transform = "scale(1.05)";
+                      }}
+                      onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                        e.currentTarget.style.color = "#016add";
+                        e.currentTarget.style.transform = "scale(1)";
+                      }}
+                      onClick={() => alert(`Modificar diseñador: ${d.username}`)}
+                    >
+                      Modificar
+                    </button>
                   </div>
                 </div>
               </div>

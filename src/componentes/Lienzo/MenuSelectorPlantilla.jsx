@@ -1,8 +1,10 @@
 import React from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom'
 
 export default function MenuSelectorPlantilla({ plantillas, setPlantillaElegida, setPlantillaBool }) {
+    const navigate = useNavigate()
     const [plantillaSeleccionada, setPlantillaSeleccionada] = React.useState(null);
     const [imagenBase64, setImagenBase64] = React.useState(null);
     const [cargando, setCargando] = React.useState(false);
@@ -45,47 +47,134 @@ export default function MenuSelectorPlantilla({ plantillas, setPlantillaElegida,
     }, [plantillaSeleccionada]);
 
     return (
-        <div style={{ padding: "20px", width: "350px", height: "400px", backgroundColor: "white", borderRadius: "8px" }}>
-            <label>Seleccione una plantilla</label>
+        <div style={{
+            padding: "20px",
+            width: "400px",
+            height: "450px",
+            backgroundColor: "white",
+            borderRadius: "8px",
+            display: "flex",
+            flexDirection: "column"
+        }}>
 
-            {plantillas.length > 0 ? (
-                <select
-                    className="form-select mb-3"
-                    defaultValue=""
-                    onChange={(e) => {
-                        const seleccionada = plantillas.find(p => p.id === parseInt(e.target.value));
-                        setPlantillaSeleccionada(seleccionada);
-                    }}
-                >
-                    <option value="" disabled>Seleccione una plantilla</option>
-                    {plantillas.map((plantilla) => (
-                        <option key={plantilla.id} value={plantilla.id}>
-                            {plantilla.nombre}
-                        </option>
-                    ))}
-                </select>
-            ) : (
-                <p>No hay plantillas disponibles. Contáctese con un Diseñador.</p>
-            )}
+            {/* CONTENIDO SUPERIOR */}
+            <div style={{ flex: "1 1 auto" }}>
+                <h2>Seleccione una plantilla</h2>
 
-            <p>Vista previa:</p>
-            <div style={{ border: "1px solid #00000013", width: "100%", height: "150px", overflow: "auto", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                {cargando ? (
-                    <p>Cargando imagen...</p>
-                ) : imagenBase64 ? (
-                    <img
-                        src={`data:image/png;base64,${imagenBase64}`}
-                        alt="Vista previa de la plantilla"
-                        style={{ maxWidth: "100%", maxHeight: "100%" }}
-                    />
+                {plantillas.length > 0 ? (
+                    <>
+                        <select
+                            className="form-select mb-3"
+                            defaultValue=""
+                            onChange={(e) => {
+                                const seleccionada = plantillas.find(p => p.id === parseInt(e.target.value));
+                                setPlantillaSeleccionada(seleccionada);
+                            }}
+                        >
+                            <option value="" disabled>Seleccione una plantilla</option>
+                            {plantillas.map((plantilla) => (
+                                <option key={plantilla.id} value={plantilla.id}>
+                                    {plantilla.nombre}
+                                </option>
+                            ))}
+                        </select>
+
+                        <p>Vista previa:</p>
+
+                        <div style={{
+                            border: "1px solid #00000013",
+                            width: "100%",
+                            height: "150px",
+                            overflow: "auto",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center"
+                        }}>
+                            {cargando ? (
+                                <p>Cargando imagen...</p>
+                            ) : imagenBase64 ? (
+                                <img
+                                    src={`data:image/png;base64,${imagenBase64}`}
+                                    alt="Vista previa de la plantilla"
+                                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                                />
+                            ) : (
+                                <p>Seleccione una plantilla para ver la vista previa.</p>
+                            )}
+                        </div>
+                    </>
                 ) : (
-                    <p>Seleccione una plantilla para ver la vista previa.</p>
+                    <>
+                        <p className="p-3 border rounded m-3">
+                            No hay plantillas disponibles. Contáctese con un Diseñador.
+                        </p>
+                    </>
                 )}
             </div>
 
-            <button className="mt-3 btn btn-primary" onClick={handleClick}>
-                Confirmar selección
-            </button>
+            {/* BOTONES ABAJO A LA DERECHA */}
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px"
+            }}>
+                <button
+                    className="btn m-1"
+                    style={{
+                        border: "2px solid #016add",
+                        backgroundColor: "transparent",
+                        color: "#016add",
+                        fontWeight: "500",
+                        padding: "0.375rem 0.75rem",
+                        borderRadius: "0.375rem",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                    }}
+                    onMouseOver={(e) => {
+                        e.currentTarget.style.backgroundColor = "#016add";
+                        e.currentTarget.style.color = "#fff";
+                        e.currentTarget.style.transform = "scale(1.05)";
+                    }}
+                    onMouseOut={(e) => {
+                        e.currentTarget.style.backgroundColor = "transparent";
+                        e.currentTarget.style.color = "#016add";
+                        e.currentTarget.style.transform = "scale(1)";
+                    }}
+                    onClick={() => navigate("/disenos")}
+                >
+                    Volver a Mis Diseños
+                </button>
+                {plantillas.length > 0 && (
+                    <button
+                        className={`btn m-1 ${!plantillaSeleccionada ? "disabled" : ""} `}
+                        style={{
+                            backgroundColor: "#016add",
+                            color: "#fff",
+                            border: "2px solid #016add",
+                            fontWeight: "500",
+                            padding: "0.375rem 0.75rem",
+                            borderRadius: "0.375rem",
+                            cursor: "pointer",
+                            transition: "all 0.3s ease",
+                        }}
+                        onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = "#014bb5";
+                            e.currentTarget.style.borderColor = "#014bb5";
+                            e.currentTarget.style.transform = "scale(1.05)";
+                        }}
+                        onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "#016add";
+                            e.currentTarget.style.borderColor = "#016add";
+                            e.currentTarget.style.transform = "scale(1)";
+                        }}
+
+                        onClick={handleClick}
+                    >
+                        Confirmar selección
+                    </button>
+                )}
+
+            </div>
         </div>
     );
 }

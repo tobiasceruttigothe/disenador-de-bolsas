@@ -15,7 +15,7 @@ export default function FormularioCliente() {
       username: data.nombre,
       email: data.mail,
       razonSocial: data.razonSocial,
-      password: data.contraseña,
+      password: "undefined",
       enabled: true,
       emailVerified: false,
       rol: "CLIENTE"
@@ -91,27 +91,6 @@ export default function FormularioCliente() {
         </div>
 
         {/* Contraseña */}
-        <div className="mb-3">
-          <label htmlFor="contraseña" className="form-label">Contraseña</label>
-          <input
-            id="contraseña"
-            placeholder="Ingrese una contraseña provisoria"
-            type="text"
-            className={`form-control ${errors.contraseña ? 'is-invalid' : ''}`}
-            {...register("contraseña", {
-              required: "La contraseña es obligatoria",
-              minLength: {
-                value: 8,
-                message: "La contraseña debe tener al menos 8 caracteres"
-              },
-              maxLength: {
-                value: 50,
-                message: "La contraseña debe tener menos de 50 caracteres"
-              }
-            })}
-          />
-          {errors.contraseña && <div className="invalid-feedback">{errors.contraseña.message}</div>}
-        </div>
 
         {/* Razón Social */}
         <div className="mb-3">

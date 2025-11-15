@@ -3,40 +3,67 @@ import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
 import Modal from "./ModalConfirmacion.jsx"
 import MenuGuardado from "./MenuGuardado.jsx"
-import MenuSelectorPlantilla from "./MenuSelectorPlantilla.jsx"
 import Cookies from "js-cookie";
 import axios from "axios";
 import "../../index.css"
+import { cargarDiseno } from "../../services/lienzoCreacion.js"
+import { useParams } from "react-router-dom";
+import * as fabric from "fabric";
 
-export default function NuevoDiseno() {
+export default function CargarDiseno() {
     const canvasRef = useRef(null);
     const canvasInstance = useRef(null);
 
     const [plantillaElegida, setPlantillaElegida] = useState();
     const [diseno, setDiseno] = useState()
     const [modalAbierto, setModalAbierto] = useState(false);
+    const [base64, setBase64] = useState()
 
-    const params = new URLSearchParams(window.location.search);
-    const id = params.get("id");
+    const { id } = useParams();
 
-useEffect(() => {
-    const fetchDiseno = async () => {
-      try {
-        const token = Cookies.get("access_token");
-        const res = await axios.get(`http://localhost:9090/api/disenos/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        setDiseno(res.data);
-        console.log(diseno)
-      } catch (e) {
-        console.error("Error al cargar los diseños", e);
-      }
-    };
-    fetchDiseno();
-  }, []);
+    useEffect(() => {
+        if (!id) return;
+        const fetchDiseno = async () => {
+            try {
+                const token = Cookies.get("access_token");
+                const res = await axios.get(`http://localhost:9090/api/disenos/${id}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+                setDiseno(res.data.data);
+                setBase64(JSON.parse(res.data.data.base64Diseno))
+
+            } catch (e) {
+                console.error("Error al cargar los diseños", e);
+            }
+        };
+        fetchDiseno();
+    }, [id]);
+
+    useEffect(() => {
+        const cargar = async () => {
+            if (!base64 || !canvasRef.current) return;
+            const fondo = base64.backgroundImage.src
+            const objetos = base64.objects
+            const { initCanvas } = await import("../../services/lienzoCreacion.js");
+
+            canvasInstance.current = initCanvas(canvasRef.current, fondo);
+
+            if (objetos && objetos.length > 0) {
+                console.log(objetos)
+                const objetosJSON = { version: base64.version, objects: objetos };
+                canvasInstance.current.loadFromJSON(objetosJSON, () => {
+                    canvasInstance.current.renderAll();
+                });
+            }
+        };
+        cargar()
+    }, [base64]);
+
+
+
 
     const agregarFigura = (funcion, ...args) => {
         import("../../services/lienzoCreacion.js").then(module => {
@@ -49,7 +76,6 @@ useEffect(() => {
             activar(canvasInstance.current, opciones);
         });
     };
-
 
     const handleGuardarDiseno = () => setModalAbierto(true);
 

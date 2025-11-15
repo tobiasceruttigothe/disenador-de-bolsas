@@ -41,14 +41,17 @@ export default function Perfil() {
                             <label className="form-label"><strong>Email:</strong></label>
                             <p>{email}</p>
                         </div>
-                        {Cookies.get("rol")== "cliente"? <div className="mb-4">
+                        {rol== "cliente"? <div className="mb-4">
                             <label className="form-label"><strong>Razón Social:</strong></label>
                             <p>{razonSocial}</p>
-                        </div> : null}
+                        </div> : 
+                        <div className="mb-4">
+                            <label className="form-label"><strong>Nombre y apellido del empleado: </strong></label>
+                            <p>{razonSocial}</p>
+                        </div>}
                         <div className="mb-4">
                             <label className="form-label"><strong>Contraseña:</strong></label>
                             <p>******** <button className="btn btn-sm mb-2" onClick={handleContraseña}>Cambiar Contraseña</button></p>
-
                         </div>
                     </div>
                 </div>
