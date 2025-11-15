@@ -1,14 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
-import Modal from "./ModalConfirmacion.jsx"
-import MenuGuardado from "./MenuGuardado.jsx"
 import Cookies from "js-cookie";
 import axios from "axios";
 import "../../index.css"
-import { cargarDiseno } from "../../services/lienzoCreacion.js"
-import { useParams } from "react-router-dom";
-import * as fabric from "fabric";
+import { useParams, useNavigate } from "react-router-dom";
+
 
 export default function CargarDiseno() {
     const canvasRef = useRef(null);
@@ -16,10 +13,13 @@ export default function CargarDiseno() {
 
     const [plantillaElegida, setPlantillaElegida] = useState();
     const [diseno, setDiseno] = useState()
-    const [modalAbierto, setModalAbierto] = useState(false);
     const [base64, setBase64] = useState()
+    const [nombre, setNombre] = useState("")
+    const [descripcion, setDescripcion] = useState("")
 
     const { id } = useParams();
+
+    const navigate = useNavigate()
 
     useEffect(() => {
         if (!id) return;
@@ -33,6 +33,8 @@ export default function CargarDiseno() {
                     },
                 });
                 setDiseno(res.data.data);
+                setNombre(res.data.data.nombre)
+                setDescripcion(res.data.data.descripcion)
                 setBase64(JSON.parse(res.data.data.base64Diseno))
 
             } catch (e) {
@@ -45,24 +47,17 @@ export default function CargarDiseno() {
     useEffect(() => {
         const cargar = async () => {
             if (!base64 || !canvasRef.current) return;
+            if (canvasInstance.current) {
+                canvasInstance.current.dispose();
+            }
             const fondo = base64.backgroundImage.src
             const objetos = base64.objects
-            const { initCanvas } = await import("../../services/lienzoCreacion.js");
+            const { cargarCanvas } = await import("../../services/lienzoCreacion.js");
 
-            canvasInstance.current = initCanvas(canvasRef.current, fondo);
-
-            if (objetos && objetos.length > 0) {
-                console.log(objetos)
-                const objetosJSON = { version: base64.version, objects: objetos };
-                canvasInstance.current.loadFromJSON(objetosJSON, () => {
-                    canvasInstance.current.renderAll();
-                });
-            }
+            canvasInstance.current = await cargarCanvas(canvasRef.current, fondo, objetos);
         };
         cargar()
     }, [base64]);
-
-
 
 
     const agregarFigura = (funcion, ...args) => {
@@ -77,31 +72,28 @@ export default function CargarDiseno() {
         });
     };
 
-    const handleGuardarDiseno = () => setModalAbierto(true);
 
-    const confirmarGuardado = async (nombre, descripcion) => {
-        setModalAbierto(false);
+    const handleGuardarDiseno = async () => {
         try {
             const { guardarDiseno, guardarElementos } = await import("../../services/lienzoCreacion.js");
             const dataURL = guardarDiseno(canvasInstance.current);
             const elementos = JSON.stringify(guardarElementos(canvasInstance.current));
             const payload = {
-                usuarioId: Cookies.get("usuarioId"),
-                plantillaId: plantillaElegida.id,
                 nombre: nombre,
                 descripcion: descripcion,
-                base64Diseno: dataURL,
+                base64Diseno: elementos,
+                base64Preview: dataURL
             };
-            console.log(elementos);
             const token = Cookies.get("access_token");
             console.log(payload)
-            const res = await axios.post("http://localhost:9090/api/disenos", payload, {
+            const res = await axios.put(`http://localhost:9090/api/disenos/${id}`, payload, {
                 headers: {
                     "Content-Type": "application/json",
                     "Authorization": `Bearer ${token}`
                 }
             });
-            console.log(res.data)
+            alert("Diseño actualizado correctamente.")
+            navigate("/disenos")
         } catch (error) {
             console.error("Error al guardar el diseño:", error);
         }
@@ -135,10 +127,6 @@ export default function CargarDiseno() {
             >
                 Guardar diseño
             </button>
-
-            <Modal isVisible={modalAbierto} onClose={() => setModalAbierto(false)}>
-                <MenuGuardado confirmarGuardado={confirmarGuardado}></MenuGuardado>
-            </Modal>
         </div>
     );
 }

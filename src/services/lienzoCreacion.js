@@ -2,7 +2,7 @@ import * as fabric from "fabric";
 
 let clickOutsideListener = null;
 
-// Inicializar canvas con imagen de fondo
+
 export function initCanvas(canvasElement, imageUrl) {
   const canvas = new fabric.Canvas(canvasElement, { width: 800, height: 600 });
 
@@ -44,13 +44,6 @@ export function initCanvas(canvasElement, imageUrl) {
   return canvas;
 }
 
-export function initCanvasVacio(canvasEl) {
-  return new fabric.Canvas(canvasEl, {
-    preserveObjectStacking: true
-  });
-}
-
-
 // --- Funciones agregar objetos ---
 export function agregarFoto(canvas, url) {
   if (!canvas) return;
@@ -83,37 +76,156 @@ export function guardarElementos(canvas) {
   return json;
 }
 
+export async function cargarCanvas(canvasElement, fondo, objetos) {
 
-export async function cargarDiseno(canvas, json) {
-  // 1. Limpiar canvas
-  canvas.clear();
+  const canvas = new fabric.Canvas(canvasElement, { width: 800, height: 600 });
 
-  // 2. Si hay backgroundImage en el JSON → usar fabric.Image.fromURL
-  if (json.backgroundImage && json.backgroundImage.src) {
-    await new Promise(resolve => {
-      fabric.Image.fromURL(json.backgroundImage.src, img => {
-        img.selectable = false;
-        img.evented = false;
-        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas));
-        canvas.setDimensions({ width: img.width, height: img.height });
-        resolve();
+  const imgElement = new Image();
+  imgElement.src = fondo;
+  imgElement.onload = () => {
+    const bg = new fabric.Image(imgElement, { selectable: false, evented: false });
+    canvas.setDimensions({
+      width: imgElement.width,
+      height: imgElement.height
+    });
+    canvas.backgroundImage = bg;
+    canvas.renderAll();
+  };
+
+  for (const obj of objetos) {
+    if (obj.type == "Image") {
+      const img = new Image();
+      img.src = obj.src;
+      img.onload = () => {
+        const fImg = new fabric.Image(img, {
+          left: obj.left, top: obj.top, scaleX: obj.scaleX, scaleY: obj.scaleY,
+          angle: obj.angle, flipX: obj.flipX, flipY: obj.flipY, height: obj.height, width: obj.width
+        });
+        canvas.add(fImg);
+      };
+    }
+    if (obj.type == "Textbox") {
+      const t = new fabric.Textbox(obj.text, {
+        left: obj.left, top: obj.top, fill: obj.fill, fontSize: obj.fontSize,
+        fontFamily: obj.fontFamily, width: obj.width, height: obj.height, angle: obj.angle,
+        flipX: obj.flipX, flipY: obj.flipY
       });
-    });
+      canvas.add(t);
+    }
+    if (obj.type == "Path") {
+      const fPath = new fabric.Path(obj.path, {
+        left: obj.left,
+        top: obj.top,
+        fill: obj.fill,
+        stroke: obj.stroke,
+        strokeWidth: obj.strokeWidth,
+        strokeLineCap: obj.strokeLineCap,
+        strokeLineJoin: obj.strokeLineJoin,
+        strokeMiterLimit: obj.strokeMiterLimit,
+        strokeUniform: obj.strokeUniform,
+        opacity: obj.opacity,
+        scaleX: obj.scaleX,
+        scaleY: obj.scaleY,
+        angle: obj.angle,
+        visible: obj.visible
+      });
+      canvas.add(fPath);
+    }
+
+    if (obj.type == "Rect") {
+      const forma = new fabric.Rect({
+        left: obj.left, top: obj.top, fill: obj.fill,
+        width: obj.width, height: obj.height, angle: obj.angle,
+        flipX: obj.flipX, flipY: obj.flipY
+      })
+      canvas.add(forma)
+    }
+
+    if (obj.type == "Circle") {
+      const forma = new fabric.Circle({
+        left: obj.left, top: obj.top, fill: obj.fill,
+        width: obj.width, height: obj.height, angle: obj.angle,
+        flipX: obj.flipX, flipY: obj.flipY
+      })
+      canvas.add(forma)
+    }
+
+    if (obj.type == "Triangle") {
+      const forma = new fabric.Triangle({
+        left: obj.left, top: obj.top, fill: obj.fill,
+        width: obj.width, height: obj.height, angle: obj.angle,
+        flipX: obj.flipX, flipY: obj.flipY
+      })
+      canvas.add(forma)
+    }
+
+    if (obj.type === "Line") {
+      const forma = new fabric.Line(
+        [obj.x1, obj.y1, obj.x2, obj.y2],
+        {
+          left: obj.left,
+          top: obj.top,
+          stroke: obj.stroke,
+          strokeWidth: obj.strokeWidth,
+          opacity: obj.opacity,
+          angle: obj.angle,
+          flipX: obj.flipX,
+          flipY: obj.flipY,
+          visible: obj.visible
+        }
+      );
+      canvas.add(forma);
+    }
+
+    if (obj.type === "Polygon") {
+      const poly = new fabric.Polygon(
+        obj.points,
+        {
+          left: obj.left,
+          top: obj.top,
+          fill: obj.fill,
+          stroke: obj.stroke,
+          strokeWidth: obj.strokeWidth,
+          opacity: obj.opacity,
+          angle: obj.angle,
+          scaleX: obj.scaleX,
+          scaleY: obj.scaleY,
+          flipX: obj.flipX,
+          flipY: obj.flipY,
+          visible: obj.visible,
+          strokeLineJoin: obj.strokeLineJoin,
+          strokeMiterLimit: obj.strokeMiterLimit
+        }
+      );
+      canvas.add(poly);
+    }
   }
 
-  // 3. Crear objetos
-  for (const obj of json.objects) {
-    fabric.util.enlivenObjects([obj], enlivened => {
-      enlivened.forEach(o => canvas.add(o));
-      canvas.renderAll();
-    });
-  }
+
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Delete" || e.key === "Backspace") {
+      const activeObjects = canvas.getActiveObjects();
+      if (!activeObjects || activeObjects.length === 0) return;
+      let borro = false;
+      activeObjects.forEach(obj => {
+        const esTexto = obj.type === "textbox" || obj.type === "text" || obj.type === "i-text";
+        const editandoTexto = esTexto && obj.isEditing;
+        if (!editandoTexto) {
+          borro = true;
+          canvas.remove(obj);
+        }
+      });
+      if (borro) {
+        e.preventDefault();
+        canvas.discardActiveObject();
+        canvas.requestRenderAll();
+      }
+    }
+  });
+
+  return canvas;
 }
-
-
-
-
-
 
 // --- Figuras ---
 export function agregarCuadrado(canvas, color) {

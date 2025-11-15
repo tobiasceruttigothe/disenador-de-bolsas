@@ -78,7 +78,7 @@ export default function MenuPincel({ activarModoDibujo }) {
             <div className="d-flex justify-content-between">
                 <button className="btn" onClick={handleActivar} style={{ flexGrow: 1, color: "#000000ff",
               border: "1px solid #016add ",
-              backgroundColor: "#016bdd42",
+              backgroundColor: "#1e446d42",
               borderRadius: "8px",
               cursor: "pointer" }}>
                     Activar dibujo
@@ -88,7 +88,7 @@ export default function MenuPincel({ activarModoDibujo }) {
             <div
                 style={{
                     marginTop: "20px",
-                    height: "150px",
+                    height: "100px",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -106,7 +106,7 @@ export default function MenuPincel({ activarModoDibujo }) {
                     }}
                 />
             </div>
-            <p style={{fontSize: "14px", color: "#555"}}>El pincel se activa al hacer click en "Activar dibujo", y se desactiva al hacer click fuera del canvas.</p>
+            <p style={{marginTop: "15px", fontSize: "14px", color: "#555"}}>El pincel se activa al hacer click en "Activar dibujo", y se desactiva al hacer click fuera del canvas.</p>
         </div>
     );
 }
