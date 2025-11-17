@@ -183,7 +183,7 @@ export default function FormularioCliente() {
                 <input
                   id="base64Plantilla"
                   type="file"
-                  accept=".jpg,.png,.svg"
+                  accept=".jpg,.png, .jpeg"
                   className={`form-control ${!base64Plantilla && estado === "Error" ? 'is-invalid' : ''}`}
                   onChange={handleFileChange}
                 />
