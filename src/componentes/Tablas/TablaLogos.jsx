@@ -51,18 +51,18 @@ export default function TablaLogos() {
   return (
     <>
       <button className="align-items-center d-flex justify-content-center"
-        style={{
-          margin: "20px", marginTop: "85px",  width: "70px", height: "40px", padding: "10px",
+        style={{ position:"fixed", top:"85px", left:"20px",
+          margin: "20px",  width: "70px", height: "40px", padding: "10px",
           backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
         }}
         onClick={() => navigate("/inicio")}
       >
         ←
       </button>
-      <div className='fondo'>
+      <div style={{marginTop:"85px"}} className='fondo'>
         <div className="container">
-          <br />
           <h2 className="mb-3">Tus logos</h2>
+          <hr></hr>
           <div className="row">
             {logos.length > 0 ? (logos.map((logo) => (
               <div
@@ -76,30 +76,10 @@ export default function TablaLogos() {
                     <h5 className="card-title">{logo.nombre}</h5>
                     <hr></hr>
                     <button
-                      className="btn m-1"
-                      style={{
-                        border: "2px solid #016add",
-                        backgroundColor: "transparent",
-                        color: "#016add",
-                        fontWeight: "500",
-                        padding: "0.375rem 0.75rem",
-                        borderRadius: "0.375rem",
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                      }}
-                      onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = "#016add";
-                        e.currentTarget.style.color = "#fff";
-                        e.currentTarget.style.transform = "scale(1.05)";
-                      }}
-                      onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = "#016add";
-                        e.currentTarget.style.transform = "scale(1)";
-                      }}
-                      onClick={() => alert(`Modificar diseñador: ${d.username}`)}
+                      className="boton-2"
+                      onClick={() => eliminarLogo(logo.id)}
                     >
-                      Modificar
+                      Eliminar Logo
                     </button>
                   </div>
                 </div>

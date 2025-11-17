@@ -8,6 +8,7 @@ import "../../styles/main.css"
 import { useNavigate } from 'react-router-dom';
 
 import MenuVer from "./MenuVer"
+import MenuDescargar from "./MenuDescargar"
 import Modal from "./ModalConfirmacion"
 
 export default function SelectorDiseno({ }) {
@@ -17,6 +18,7 @@ export default function SelectorDiseno({ }) {
   const navigate = useNavigate();
 
   const [modalVer, setModalVer] = useState(false)
+  const [modalDescargar, setModalDescargar] = useState(false)
 
   useEffect(() => {
     const fetchDisenos = async () => {
@@ -43,12 +45,13 @@ export default function SelectorDiseno({ }) {
   }
 
   const handleVer = (diseno) => {
-    console.log(diseno)
     setDisenoClick(diseno)
     setModalVer(true)
   }
 
   const handleDescargar = (diseno) => {
+    setDisenoClick(diseno)
+    setModalDescargar(true)
 
   }
 
@@ -150,6 +153,9 @@ export default function SelectorDiseno({ }) {
         </div>
         <Modal isVisible={modalVer} onClose={() => { setModalVer(false); setDisenoClick() }}>
           <MenuVer setModalVer={setModalVer} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuVer>
+        </Modal>
+        <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
+          <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuDescargar>
         </Modal>
 
       </div>
