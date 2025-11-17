@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import bolsa from "../../assets/pack designer final.png";
 
 export default function TablaProductos({ }) {
+  const navigate = useNavigate()
   const acciones = [
     { id: 1, nombre: "Administrar materiales", ruta: "/productos/materiales", imagen: bolsa },
     { id: 2, nombre: "Administrar plantillas", ruta: "/productos/plantillas", imagen: bolsa },
@@ -11,10 +12,19 @@ export default function TablaProductos({ }) {
 
   return (
     <>
-      <div className="container-fluid min-vh-100 py-4 bg-light fondo">
+      <button className="align-items-center d-flex justify-content-center"
+        style={{position:"fixed", top:"85px", left:"20px",
+          margin: "20px", width: "70px", height: "40px", padding: "10px",
+          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+        }}
+        onClick={() => navigate("/inicio")}
+      >
+        ←
+      </button>
+      <div style={{marginTop:"85px"}} className="container-fluid min-vh-100 py-4 bg-light fondo">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
-            <h2>Administrar productos</h2>
+            <h2>Consultar productos</h2>
             <hr />
             <div className="row justify-content-center">
               {acciones.map((accion) => (

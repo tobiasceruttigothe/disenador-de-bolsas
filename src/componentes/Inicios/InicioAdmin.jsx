@@ -20,9 +20,10 @@ export default function InicioAdmin() {
 
   return (
     <>
-      <div className="fondo py-5">
+      <div className="fondo py-5 mt-5">
         <div className="container">
-          <h2 className="mb-4 text-center">Selecciona una acción</h2>
+          <h2 className="mb-4 text-center">Seleccioná una acción</h2>
+          <hr></hr>
           <div className="row justify-content-center">
             {acciones.map((accion) => (
               <div key={accion.id} className="col-12 col-sm-6 col-md-4 mb-3">

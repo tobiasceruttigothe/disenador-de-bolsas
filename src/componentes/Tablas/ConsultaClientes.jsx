@@ -30,7 +30,7 @@ export default function ConsultaClientes() {
   };
 
   const handleClick = (id) => () => {
-    console.log("Ver diseños del cliente con ID:", id);
+    navigate(`/disenos/cliente/${id}`)
   }
 
   const [filtro, setFiltro] = useState("");
@@ -49,10 +49,20 @@ export default function ConsultaClientes() {
 
   return (
     <>
-      <div className="container-fluid min-vh-100 py-4 bg-light fondo">
+          <button className="align-items-center d-flex justify-content-center"
+        style={{position:"fixed", top:"85px", left:"20px",
+          margin: "20px", width: "70px", height: "40px", padding: "10px",
+          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+        }}
+        onClick={() => navigate("/inicio")}
+      >
+        ←
+      </button>
+      <div style={{marginTop:"85px"}} className="container-fluid min-vh-100 py-4 bg-light fondo">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
             <h2 className="mb-4">Consulta de Clientes</h2>
+            <hr></hr>
             <div className="mb-4">
               <input
                 type="text"

@@ -10,7 +10,7 @@ export async function login(user) {
         params.append('client_id', 'backend-service');
         params.append('client_secret', 'qL9zabLf/LtV48DrZsG6ivGm9/5C8TedHqawXXisvUA='); 
         params.append('grant_type', 'password');
-        params.append('username', user.mail);
+        params.append('username', user.mail.trim());
         params.append('password', user.contraseña);
 
         const {data} = await axios.post(link, params, {

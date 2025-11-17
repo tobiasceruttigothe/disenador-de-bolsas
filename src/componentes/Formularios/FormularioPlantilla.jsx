@@ -3,6 +3,7 @@ import logo from '../../assets/pack designer final.png';
 import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
+import { useNavigate } from 'react-router-dom'
 
 export default function FormularioCliente() {
   const [estado, setEstado] = useState(null);
@@ -11,7 +12,8 @@ export default function FormularioCliente() {
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
-
+  const navigate = useNavigate() 
+  
   const [materiales, setMateriales] = useState([]);
   const [tiposBolsa, setTiposBolsa] = useState([]);
 
@@ -105,6 +107,16 @@ export default function FormularioCliente() {
   };
 
   return (
+    <>
+      <button className="align-items-center d-flex justify-content-center"
+        style={{position:"fixed", top:"85px", left:"20px",
+          margin: "20px", width: "70px", height: "40px", padding: "10px",
+          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+        }}
+        onClick={() => navigate("/productos/plantillas")}
+      >
+        ←
+      </button>
     <div className="d-flex justify-content-center align-items-center vh-100 fondo">
       <form
         onSubmit={handleSubmit(handleSubmitForm)}
@@ -267,6 +279,7 @@ export default function FormularioCliente() {
         </div>
       )}
     </div>
+    </>
   );
 }
 

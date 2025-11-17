@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Modal = ({ isVisible, onClose, children }) => {
-  if (!isVisible) return null; // No renderiza nada si no está visible
+  if (!isVisible) return null;
 
   return (
     <div

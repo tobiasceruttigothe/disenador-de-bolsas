@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { useNavigate} from "react-router-dom" 
+import { useNavigate } from "react-router-dom"
 import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
 import Modal from "./ModalConfirmacion.jsx"
@@ -94,7 +94,7 @@ export default function NuevoDiseno() {
         nombre: nombre,
         descripcion: descripcion,
         base64Diseno: elementos,
-        base64Preview : dataURL
+        base64Preview: dataURL
       };
       const token = Cookies.get("access_token");
       const res = await axios.post("http://localhost:9090/api/disenos", payload, {
@@ -133,7 +133,14 @@ export default function NuevoDiseno() {
       </div>
 
       <button
-        style={{ color: "#fff", backgroundColor: "#016add", border: "none", borderRadius: "5px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+        style={{ backgroundColor: "white", color: "#016add", border: "2px solid #016add", borderRadius: "7px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "200px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+        onClick={() => navigate(-1)}
+      >
+        Cancelar
+      </button>
+      
+      <button
+        style={{ color: "#fff", backgroundColor: "#016add", border: "2px solid #016add", borderRadius: "5px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
         onClick={handleGuardarDiseno}
       >
         Guardar diseño

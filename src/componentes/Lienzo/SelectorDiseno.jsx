@@ -4,11 +4,19 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import bolsa from '../../assets/pack designer final.png';
 import "../../index.css"
+import "../../styles/main.css"
 import { useNavigate } from 'react-router-dom';
+
+import MenuVer from "./MenuVer"
+import Modal from "./ModalConfirmacion"
 
 export default function SelectorDiseno({ }) {
   const [disenos, setDisenos] = useState([])
+  const [disenoClick, setDisenoClick] = useState()
+
   const navigate = useNavigate();
+
+  const [modalVer, setModalVer] = useState(false)
 
   useEffect(() => {
     const fetchDisenos = async () => {
@@ -34,52 +42,116 @@ export default function SelectorDiseno({ }) {
     navigate(`/disenos/${diseno.id}`);
   }
 
+  const handleVer = (diseno) => {
+    console.log(diseno)
+    setDisenoClick(diseno)
+    setModalVer(true)
+  }
+
+  const handleDescargar = (diseno) => {
+
+  }
+
+  const handleGenerar = (diseno) => {
+
+  }
+
+  const handleEliminar = async (id) => {
+    try {
+      const token = Cookies.get("access_token")
+      const res = await axios.delete(`http://localhost:9090/api/disenos/${id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      });
+      setDisenos((prev) => prev.filter((d) => d.id !== id));
+    }
+    catch (e) {
+      console.log("Surgió un error al eliminar el diseño.")
+    }
+  }
 
   return (
     <>
-      <div className='fondo'>
+      <button className="align-items-center d-flex justify-content-center"
+        style={{position:"fixed", top:"85px", left:"20px",
+          margin: "20px",width: "70px", height: "40px", padding: "10px",
+          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+        }}
+        onClick={() => navigate(-1)}
+      >
+        ←
+      </button>
+
+      <div style={{marginTop:"85px"}} className='fondo'>
         <div className="container">
-          <br />
-          <h2 className="mb-3">Tus diseños</h2>
+          <h2 className="my-3">Tus diseños</h2>
+          <hr></hr>
           <div className="row">
             {disenos.length > 0 ? (disenos.map((diseno) => (
               <div
                 key={diseno.id}
                 className={`col-md-4 mb-4`}
-                onClick={() => handleClick(diseno)}
               >
-                <Link to={`/disenos/${diseno.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div className="card h-100">
-                    <img src={`data:image/png;base64, ${diseno.base64Preview}`} className="card-img-top" alt={diseno.nombre} />
-                    <hr />
-                    <div className="card-body">
-                      <h5 className="card-title">{diseno.nombre}</h5>
-                      <p className="card-text">{diseno.descripcion}</p>
+
+                <div className="card h-100">
+                  <img onClick={() => handleClick(diseno)} src={`data:image/png;base64, ${diseno.base64Preview}`} className="card-img-top" alt={diseno.nombre} />
+                  <hr />
+                  <div className="card-body">
+                    <h5 className="card-title">{diseno.nombre}</h5>
+                    <p className="card-text">{diseno.descripcion ? diseno.descripcion : <>&nbsp;</>}</p>
+                    <div className="d-flex gap-2">
+                      <button className="boton-2" onClick={() => handleClick(diseno)}>Editar diseño</button>
+                      <button className="boton-1" onClick={() => handleEliminar(diseno.id)}>Eliminar diseño</button>
+                      <div className="dropdown">
+                        <button
+                          className="btn"
+                          type="button"
+                          data-bs-toggle="dropdown"
+                          aria-expanded="false"
+                        >
+                          ⋮
+                        </button>
+
+                        <ul className="dropdown-menu">
+                          <li><button className="dropdown-item" onClick={() => handleVer(diseno)}>Ver mi diseño</button></li>
+                          <li><button className="dropdown-item" onClick={() => handleDescargar(diseno)}>Descargar</button></li>
+                          <li><button className="dropdown-item" onClick={() => handleGenerar(diseno)}>Generar vista 3D</button></li>
+                        </ul>
+                      </div>
+
                     </div>
+
                   </div>
-                </Link>
+                </div>
               </div>
+
             ))) : (
               <p>No tienes diseños guardados. ¡Creá uno nuevo!</p>
             )}
             <hr />
             <div
-                key={"nuevoDiseno"}
-                className={`col-md-4 mb-4`}
-              >
-                <Link to={`/nuevoDiseno`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div className="card h-100">
-                    <img src={bolsa} className="card-img-top" alt={"nuevo diseño"} />
-                    <hr />
-                    <div className="card-body">
-                      <h5 className="card-title">Nuevo diseño</h5>
-                      <p className="card-text">Crear nuevo diseño</p>
-                    </div>
+              key={"nuevoDiseno"}
+              className={`col-md-4 mb-4`}
+            >
+              <Link to={`/nuevoDiseno`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div className="card h-100">
+                  <img src={bolsa} className="card-img-top" alt={"nuevo diseño"} />
+                  <hr />
+                  <div className="card-body">
+                    <h5 className="card-title">Nuevo diseño</h5>
+                    <p className="card-text">Crear nuevo diseño</p>
                   </div>
-                </Link>
-              </div>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
+        <Modal isVisible={modalVer} onClose={() => { setModalVer(false); setDisenoClick() }}>
+          <MenuVer setModalVer={setModalVer} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuVer>
+        </Modal>
+
       </div>
     </>
   );

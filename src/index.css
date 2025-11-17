@@ -2,9 +2,10 @@
 
 .fondo {
   background-image: url('./assets/fondo.png');
-  background-size: cover;
-  background-position: center;
-  height: 100vh;
+  background-repeat: repeat-y;
+  background-size: 100% auto;
+  background-position: top;
+  min-height: 100vh;
   width: 100%;
 }
 
@@ -51,24 +52,32 @@ button {
 
 /* index.css */
 .card-bolsa {
-  height: 250px; /* altura fija */
+  height: 250px;
+  /* altura fija */
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* separa imagen y botón */
+  justify-content: space-between;
+  /* separa imagen y botón */
 }
 
 .card-bolsa img {
-  height: 150px; /* altura de la imagen */
-  object-fit: cover; /* escala sin deformar */
+  height: 150px;
+  /* altura de la imagen */
+  object-fit: cover;
+  /* escala sin deformar */
 }
 
 /* Estilo para las cards de acciones */
 .card-accion {
-  height: 250px;              /* altura fija */
+  height: 250px;
+  /* altura fija */
   display: flex;
-  flex-direction: column;     /* columnas: imagen arriba, botón abajo */
-  justify-content: space-between; /* separa imagen y botón */
-  align-items: center;        /* centra horizontalmente */
+  flex-direction: column;
+  /* columnas: imagen arriba, botón abajo */
+  justify-content: space-between;
+  /* separa imagen y botón */
+  align-items: center;
+  /* centra horizontalmente */
   padding: 1rem;
   cursor: pointer;
 }
@@ -86,4 +95,3 @@ button {
   display: block;
   align-self: center;
 }
-

@@ -50,6 +50,15 @@ export default function TablaLogos() {
   };
   return (
     <>
+      <button className="align-items-center d-flex justify-content-center"
+        style={{
+          margin: "20px", marginTop: "85px",  width: "70px", height: "40px", padding: "10px",
+          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+        }}
+        onClick={() => navigate("/inicio")}
+      >
+        ←
+      </button>
       <div className='fondo'>
         <div className="container">
           <br />

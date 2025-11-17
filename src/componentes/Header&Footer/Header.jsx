@@ -63,6 +63,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
   return (
     <Navbar
       expand="lg"
+      fixed="top"
       className="shadow-sm"
       style={{
         background: "#016bddff",

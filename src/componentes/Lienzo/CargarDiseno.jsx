@@ -122,7 +122,14 @@ export default function CargarDiseno() {
             </div>
 
             <button
-                style={{ color: "#fff", backgroundColor: "#016add", border: "none", borderRadius: "5px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+                style={{ backgroundColor: "white", color: "#016add", border: "2px solid #016add", borderRadius: "7px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "200px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+                onClick={()=>navigate(-1)}
+            >
+                Cancelar
+            </button>
+
+            <button
+                style={{ color: "#fff", border: "2px solid #016add", backgroundColor: "#016add", borderRadius: "5px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
                 onClick={handleGuardarDiseno}
             >
                 Guardar diseño

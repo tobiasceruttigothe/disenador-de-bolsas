@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'
 import "../../index.css";
 
 export default function RecuperarCuenta() {
   const [mail, setMail] = useState("");
-  const [exito, setExito] = useState(null); 
+  const [exito, setExito] = useState(null);
+  const navigate = useNavigate()
 
   const reset = () => setMail("");
 
@@ -23,11 +25,13 @@ export default function RecuperarCuenta() {
 
   return (
     <>
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light fondo">
+      <div className="d-flex justify-content-center align-items-center fondo">
         <form
           onSubmit={handleSubmit}
-          className="w-100 bg-white p-4 rounded shadow"
-          style={{ maxWidth: '400px' }}
+          className="bg-white p-4 rounded shadow"
+          style={{
+            width: "550px",
+          }}
         >
           <div className="text-center mb-4">
             <img
@@ -39,9 +43,11 @@ export default function RecuperarCuenta() {
           </div>
 
           <h2 className="text-center mb-4">Recuperar Cuenta</h2>
-
+          <hr></hr>
+          <p className="my-4" style={{color: "black"}}>Para recuperar su cuenta, se le enviará un correo al mail que proporcione. Siga 
+            las instrucciones para restablecer la contraseña. 
+          </p>
           <div className="mb-3">
-            <label htmlFor="mail" className="form-label">Mail</label>
             <input
               id="mail"
               type="email"
@@ -52,15 +58,26 @@ export default function RecuperarCuenta() {
               required
             />
           </div>
+          <div className="d-flex gap-2">
+            <button
+              type="button"
+              className="btn"
+              style={{ borderColor: '#016add', color: "#016add", flex: 1 }}
+              onClick={() => navigate("/login")}
+            >
+              ←
+            </button>
 
-          <button
-            type="submit"
-            disabled={mail === ""}
-            className="btn w-100 text-white"
-            style={{ backgroundColor: '#016add' }}
-          >
-            Enviar
-          </button>
+            <button
+              type="submit"
+              disabled={mail === ""}
+              className="btn text-white"
+              style={{ backgroundColor: '#016add', flex: 5 }}
+            >
+              Enviar
+            </button>
+          </div>
+
         </form>
       </div>
 

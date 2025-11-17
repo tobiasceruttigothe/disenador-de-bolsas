@@ -7,7 +7,8 @@ import bolsa from "../../assets/pack designer final.png";
 export default function InicioDisenador() {
   const acciones = [
     { id: 1, nombre: "Ver Clientes", ruta: "/verClientes", imagen: user },
-    { id: 2, nombre: "Crear diseño", ruta: "/nuevoDiseno", imagen: bolsa },
+    { id: 2, nombre: "Mis diseños", ruta: "/disenos", imagen: bolsa },
+    { id: 3, nombre: "Crear diseño", ruta: "/nuevoDiseno", imagen: bolsa }
   ];
 
   const [seleccionada, setSeleccionada] = useState(null);
@@ -18,9 +19,10 @@ export default function InicioDisenador() {
 
   return (
     <>
-      <div className="fondo py-5">
+      <div className="fondo py-5 mt-5">
         <div className="container">
-          <h2 className="mb-4 text-center">Selecciona una acción</h2>
+          <h2 className="mb-4 text-center">Seleccioná una acción</h2>
+          <hr></hr>
           <div className="row justify-content-center">
             {acciones.map((accion) => (
               <div key={accion.id} className="col-12 col-sm-6 col-md-4 mb-3">

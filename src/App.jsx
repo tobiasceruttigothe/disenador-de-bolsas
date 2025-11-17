@@ -31,6 +31,7 @@ import Perfil from "./componentes/Tablas/Perfil.jsx";
 
 import ConsultaCliente from "./componentes/Tablas/ConsultaClientes.jsx";
 import AdministrarPlantillas from "./componentes/Tablas/AdministrarPlantillas.jsx";
+import VerDisenosCliente from "./componentes/Lienzo/VerDisenosCliente.jsx"
 
 import RecuperarCuenta from "./componentes/Log/RecuperarCuenta";
 import ResetPassword from "./componentes/Log/ResetPassword";
@@ -257,7 +258,7 @@ function App() {
         <Route 
           path="/disenos"
           element={
-            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente", "disenador"]}>
               <SelectorDiseno />
             </RutaPrivadaConRol>
           }
@@ -266,8 +267,17 @@ function App() {
         <Route 
           path="/disenos/:id"
           element={
-            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente", "disenador"]}>
               <CargarDiseno/>
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route 
+          path="/disenos/cliente/:id"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["disenador"]}>
+              <VerDisenosCliente/>
             </RutaPrivadaConRol>
           }
         />
