@@ -24,13 +24,24 @@ export default function NuevoDiseno() {
   useEffect(() => {
     const fetchPlantillas = async () => {
       try {
-        const id = Cookies.get("usuarioId");
-        const res = await axios.get(`http://localhost:9090/api/plantillas/usuario/${id}/habilitadas`, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        setPlantillas(res.data.data);
+        if (Cookies.get("rol") === "cliente") {
+          const id = Cookies.get("usuarioId");
+          const res = await axios.get(`http://localhost:9090/api/plantillas/usuario/${id}/habilitadas`, {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+          setPlantillas(res.data.data);
+        } else {
+          const token = Cookies.get("access_token");
+          const res = await axios.get(`http://localhost:9090/api/plantillas`, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+          });
+          setPlantillas(res.data.data);
+        }
       } catch (e) {
         console.error("Error al cargar las plantillas", e);
       }
@@ -80,7 +91,11 @@ export default function NuevoDiseno() {
   };
 
 
-  const handleGuardarDiseno = () => setModalAbierto(true);
+  const handleGuardarDiseno = async () => {
+    setModalAbierto(true);
+    const { deseleccionar } = await import("../../services/lienzoCreacion.js");
+    deseleccionar(canvasInstance.current)
+  }
 
   const confirmarGuardado = async (nombre, descripcion) => {
     setModalAbierto(false);
@@ -138,7 +153,7 @@ export default function NuevoDiseno() {
       >
         Cancelar
       </button>
-      
+
       <button
         style={{ color: "#fff", backgroundColor: "#016add", border: "2px solid #016add", borderRadius: "5px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
         onClick={handleGuardarDiseno}

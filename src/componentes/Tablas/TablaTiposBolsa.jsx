@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import  "../../styles/main.css"
 
 export default function TablaTipoBolsa() {
   const navigate = useNavigate();
@@ -100,7 +101,7 @@ export default function TablaTipoBolsa() {
                 <thead className="table-light">
                   <tr>
                     <th>Nombre</th>
-                    <th>Acciones</th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -108,56 +109,9 @@ export default function TablaTipoBolsa() {
                     tiposBolsaFiltrados.map((t, index) => (
                       <tr key={index}>
                         <td>{t.nombre}</td>
-                        <td>
+                        <td style={{ width: "100px", textAlign: "center" }}>
                           <button
-                            className="btn m-1"
-                            style={{
-                              border: "2px solid #016add",
-                              backgroundColor: "transparent",
-                              color: "#016add",
-                              fontWeight: "500",
-                              padding: "0.375rem 0.75rem",
-                              borderRadius: "0.375rem",
-                              cursor: "pointer",
-                              transition: "all 0.3s ease",
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = "#016add";
-                              e.currentTarget.style.color = "#fff";
-                              e.currentTarget.style.transform = "scale(1.05)";
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = "transparent";
-                              e.currentTarget.style.color = "#016add";
-                              e.currentTarget.style.transform = "scale(1)";
-                            }}
-                            onClick={() => modificar(t.nombre)}
-                          >
-                            Modificar
-                          </button>
-
-                          <button
-                            className="btn m-1"
-                            style={{
-                              backgroundColor: "#016add",
-                              color: "#fff",
-                              border: "2px solid #016add",
-                              fontWeight: "500",
-                              padding: "0.375rem 0.75rem",
-                              borderRadius: "0.375rem",
-                              cursor: "pointer",
-                              transition: "all 0.3s ease",
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = "#014bb5";
-                              e.currentTarget.style.borderColor = "#014bb5";
-                              e.currentTarget.style.transform = "scale(1.05)";
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = "#016add";
-                              e.currentTarget.style.borderColor = "#016add";
-                              e.currentTarget.style.transform = "scale(1)";
-                            }}
+                            className="boton-2"
                             onClick={() => eliminar(t.id, t.nombre)}
                           >
                             Eliminar

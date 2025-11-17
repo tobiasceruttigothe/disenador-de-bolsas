@@ -19,7 +19,7 @@ export default function InicioCliente() {
 
   return (
     <>
-      <div className="fondo py-5 mt-5">
+      <div style={{marginTop:"85px"}} className="fondo py-5">
         <div className="container">
           <h2 className="mb-4 text-center">Seleccioná una acción</h2>
           <hr></hr>

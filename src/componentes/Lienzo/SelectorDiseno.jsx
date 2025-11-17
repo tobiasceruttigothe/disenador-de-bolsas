@@ -56,38 +56,41 @@ export default function SelectorDiseno({ }) {
   }
 
   const handleGenerar = (diseno) => {
-
+    console.log(diseno.base64Preview)
   }
 
   const handleEliminar = async (id) => {
-    try {
-      const token = Cookies.get("access_token")
-      const res = await axios.delete(`http://localhost:9090/api/disenos/${id}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-      setDisenos((prev) => prev.filter((d) => d.id !== id));
-    }
-    catch (e) {
-      console.log("Surgió un error al eliminar el diseño.")
+    if (window.confirm("¿Estás seguro que deseas eliminar el diseño? Esta acción no es revertible.")) {
+      try {
+        const token = Cookies.get("access_token")
+        const res = await axios.delete(`http://localhost:9090/api/disenos/${id}`, {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+        setDisenos((prev) => prev.filter((d) => d.id !== id));
+      }
+      catch (e) {
+        console.log("Surgió un error al eliminar el diseño.")
+      }
     }
   }
 
   return (
     <>
       <button className="align-items-center d-flex justify-content-center"
-        style={{position:"fixed", top:"85px", left:"20px",
-          margin: "20px",width: "70px", height: "40px", padding: "10px",
+        style={{
+          position: "fixed", top: "85px", left: "20px",
+          margin: "20px", width: "70px", height: "40px", padding: "10px",
           backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
         }}
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/inicio")}
       >
         ←
       </button>
 
-      <div style={{marginTop:"85px"}} className='fondo'>
+      <div style={{ marginTop: "85px" }} className='fondo'>
         <div className="container">
           <h2 className="my-3">Tus diseños</h2>
           <hr></hr>

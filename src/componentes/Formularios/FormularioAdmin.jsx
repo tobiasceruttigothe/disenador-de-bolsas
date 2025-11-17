@@ -59,7 +59,7 @@ export default function FormularioAdmin() {
           margin: "20px", width: "70px", height: "40px", padding: "10px",
           backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
         }}
-        onClick={() => navigate("/admins")}
+        onClick={() => navigate("/gerentes")}
       >
         ←
       </button>
@@ -104,19 +104,19 @@ export default function FormularioAdmin() {
             {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
           </div>
 
-          {/* Contraseña */}
           <div className="mb-3">
             <label htmlFor="nombre" className="form-label">Nombre y apellido del empleado</label>
             <input
               id="nombre"
               placeholder="Ingrese el nombre y apellido del empleado"
               type="text"
-              className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
+              className={`form-control ${errors.nombreApellido ? 'is-invalid' : ''}`}
               {...register("nombreApellido", {
                 required: "El nombre y apellido del empleado es obligatorio",
               })}
+              disabled={estado === "Cargando"}
             />
-            {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+            {errors.nombreApellido && <div className="invalid-feedback">{errors.nombreApellido.message}</div>}
           </div>
 
           {/* Mail */}

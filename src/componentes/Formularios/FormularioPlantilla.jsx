@@ -147,7 +147,9 @@ export default function FormularioCliente() {
                 type="text"
                 placeholder="Ingrese un nombre de plantilla"
                 className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-                {...register("nombre", { required: "El nombre es obligatorio" })}
+                {...register("nombre", { required: "El nombre es obligatorio",
+                  minLength: {value: 3, message: "Debe tener al menos 3 caracteres."}
+                 })}
               />
               {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
             </div>

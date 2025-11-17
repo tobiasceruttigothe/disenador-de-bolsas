@@ -99,6 +99,7 @@ export default function FormularioCliente() {
                   message: "El nombre de usuario debe tener menos de 50 caracteres"
                 }
               })}
+              disabled={estado === "Cargando"}
             />
             {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
           </div>
@@ -120,6 +121,7 @@ export default function FormularioCliente() {
                   message: "La razón social debe tener menos de 100 caracteres"
                 }
               })}
+              disabled={estado === "Cargando"}
             />
             {errors.razonSocial && <div className="invalid-feedback">{errors.razonSocial.message}</div>}
           </div>
@@ -143,6 +145,7 @@ export default function FormularioCliente() {
                   message: "El mail debe tener menos de 100 caracteres"
                 }
               })}
+              disabled={estado === "Cargando"}
             />
             {errors.mail && <div className="invalid-feedback">{errors.mail.message}</div>}
           </div>

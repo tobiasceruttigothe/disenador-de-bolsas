@@ -8,7 +8,7 @@ export default function InicioAdmin() {
   const acciones = [
     { id: 1, nombre: "Administrar diseñadores", ruta: "/disenadores", imagen: user },
     { id: 2, nombre: "Administrar clientes", ruta: "/clientes", imagen: user },
-    { id: 3, nombre: "Administrar adm. gerenciales", ruta: "/admins", imagen: user },
+    { id: 3, nombre: "Administrar gerentes de ventas", ruta: "/gerentes", imagen: user },
     { id: 4, nombre: "Administrar productos", ruta: "/productos", imagen: bolsa },
   ];
 
@@ -20,7 +20,7 @@ export default function InicioAdmin() {
 
   return (
     <>
-      <div className="fondo py-5 mt-5">
+      <div style={{marginTop:"85px"}} className="fondo py-5">
         <div className="container">
           <h2 className="mb-4 text-center">Seleccioná una acción</h2>
           <hr></hr>

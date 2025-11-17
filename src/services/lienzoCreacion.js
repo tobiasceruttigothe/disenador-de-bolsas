@@ -73,7 +73,6 @@ export function guardarDiseno(canvas) {
 export function guardarElementos(canvas) {
   if (!canvas) return null;
   const json = canvas.toJSON();
-  console.log(json)
   return json;
 }
 
@@ -126,7 +125,7 @@ export async function cargarCanvas(canvasElement, fondo, objetos) {
         selectable: obj.selectable ?? true,
         evented: obj.evented ?? true,
         scaleX: 1,
-        scaleY: 1 
+        scaleY: 1
       });
 
 
@@ -222,7 +221,6 @@ export async function cargarCanvas(canvasElement, fondo, objetos) {
   }
 
 
-
   document.addEventListener("keydown", (e) => {
     if (e.key === "Delete" || e.key === "Backspace") {
       const activeObjects = canvas.getActiveObjects();
@@ -245,6 +243,11 @@ export async function cargarCanvas(canvasElement, fondo, objetos) {
   });
 
   return canvas;
+}
+
+export function deseleccionar(canvas) {
+  canvas.discardActiveObject();
+  canvas.requestRenderAll();
 }
 
 // --- Figuras ---

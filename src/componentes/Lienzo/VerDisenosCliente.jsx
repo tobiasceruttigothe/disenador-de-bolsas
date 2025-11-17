@@ -8,6 +8,7 @@ import "../../styles/main.css"
 import { useNavigate, useParams } from 'react-router-dom';
 
 import MenuVer from "./MenuVer"
+import MenuDescargar from "./MenuDescargar"
 import Modal from "./ModalConfirmacion"
 
 export default function VerDisenosCliente({ }) {
@@ -18,6 +19,7 @@ export default function VerDisenosCliente({ }) {
     const navigate = useNavigate();
 
     const [modalVer, setModalVer] = useState(false)
+    const [modalDescargar, setModalDescargar] = useState(false)
 
     const { id } = useParams();
 
@@ -55,13 +57,13 @@ export default function VerDisenosCliente({ }) {
     }
 
     const handleVer = (diseno) => {
-        console.log(diseno)
         setDisenoClick(diseno)
         setModalVer(true)
     }
 
     const handleDescargar = (diseno) => {
-
+        setDisenoClick(diseno)
+        setModalDescargar(true)
     }
 
     const handleGenerar = (diseno) => {
@@ -69,18 +71,20 @@ export default function VerDisenosCliente({ }) {
     }
 
     const handleEliminar = async (id) => {
-        try {
-            const token = Cookies.get("access_token")
-            const res = await axios.delete(`http://localhost:9090/api/disenos/${id}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-            });
-            setDisenos((prev) => prev.filter((d) => d.id !== id));
-        }
-        catch (e) {
-            console.log("Surgió un error al eliminar el diseño.")
+        if (window.confirm("¿Estás seguro que deseas eliminar el diseño? Esta acción no es revertible.")) {
+            try {
+                const token = Cookies.get("access_token")
+                const res = await axios.delete(`http://localhost:9090/api/disenos/${id}`, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+                setDisenos((prev) => prev.filter((d) => d.id !== id));
+            }
+            catch (e) {
+                console.log("Surgió un error al eliminar el diseño.")
+            }
         }
     }
 
@@ -88,14 +92,15 @@ export default function VerDisenosCliente({ }) {
         <>
             <button className="align-items-center d-flex justify-content-center"
                 style={{
-                    position:"fixed", top:"85px", left:"20px",
+                    position: "fixed", top: "85px", left: "20px",
                     margin: "20px",
                     width: "70px", height: "40px",
                     padding: "10px",
                     backgroundColor: "white",
                     color: "#016add",
                     border: "1px solid #016add",
-                    borderRadius: "7px"}}
+                    borderRadius: "7px"
+                }}
 
                 onClick={() => navigate("/verClientes")}
             >
@@ -168,7 +173,9 @@ export default function VerDisenosCliente({ }) {
                 <Modal isVisible={modalVer} onClose={() => { setModalVer(false); setDisenoClick() }}>
                     <MenuVer setModalVer={setModalVer} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuVer>
                 </Modal>
-
+                <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
+                    <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuDescargar>
+                </Modal>
             </div>
         </>
     );

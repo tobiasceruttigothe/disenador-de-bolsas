@@ -1,5 +1,5 @@
 import React from 'react'
-import {crearPDF} from '../../services/crearPDF'
+import { crearPDF } from '../../services/crearPDF'
 import "../../styles/main.css"
 
 export default function MenuDescargar({ setModalDescargar, disenoClick, setDisenoClick }) {
@@ -13,6 +13,25 @@ export default function MenuDescargar({ setModalDescargar, disenoClick, setDisen
         link.click();
     };
 
+    const base64ToJPG = (base64) => {
+        const img = new Image();
+        img.src = base64;
+        img.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0);
+            canvas.toBlob((blob) => {
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = "diseño.jpg";
+                link.click();
+                URL.revokeObjectURL(link.href);
+            }, "image/jpeg", 0.95);
+        };
+    };
+
 
     const handlePDF = async () => {
         crearPDF(base, disenoClick.nombre, disenoClick.descripcion, disenoClick.plantillaNombre)
@@ -23,7 +42,7 @@ export default function MenuDescargar({ setModalDescargar, disenoClick, setDisen
     }
 
     const handleJPG = async () => {
-        descargarArchivo(`data:image/jpeg;base64,${base}`, "diseño.jpg")
+        base64ToJPG(`data:image/png;base64,${base}`);
     }
 
     return (

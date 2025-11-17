@@ -93,6 +93,7 @@ export default function FormularioDiseñador() {
               minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
               maxLength: { value: 50, message: "Debe tener menos de 50 caracteres" }
             })}
+            disabled={estado === "Cargando"}
           />
           {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
         </div>
@@ -104,12 +105,13 @@ export default function FormularioDiseñador() {
             id="nombre"
             placeholder="Ingrese el nombre y apellido del empleado"
             type="text"
-            className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
+            className={`form-control ${errors.nombreApellido ? 'is-invalid' : ''}`}
             {...register("nombreApellido", {
               required: "El nombre y apellido del empleado es obligatorio",
             })}
+            disabled={estado === "Cargando"}
           />
-          {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+          {errors.nombreApellido && <div className="invalid-feedback">{errors.nombreApellido.message}</div>}
         </div>
         {/* Mail */}
         <div className="mb-3">
@@ -124,6 +126,7 @@ export default function FormularioDiseñador() {
               pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ingrese un mail válido" },
               maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" }
             })}
+            disabled={estado === "Cargando"}
           />
           {errors.mail && <div className="invalid-feedback">{errors.mail.message}</div>}
         </div>

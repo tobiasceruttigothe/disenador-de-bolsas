@@ -70,7 +70,8 @@ export default function FormularioTipoBolsa() {
               className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
               {...register("nombre", {
                 required: "El nombre es obligatorio",
-                maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" }
+                maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" },
+                minLength: { value: 3, message: "Debe tener al menos 3 caracteres"}
               })}
             />
             {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
