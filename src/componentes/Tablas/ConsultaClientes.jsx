@@ -61,7 +61,7 @@ export default function ConsultaClientes() {
       <div style={{marginTop:"85px"}} className="container-fluid min-vh-100 py-4 bg-light fondo">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
-            <h2 className="mb-4">Consulta de Clientes</h2>
+            <h2 className="mb-4">Consultar Clientes</h2>
             <hr></hr>
             <div className="mb-4">
               <input

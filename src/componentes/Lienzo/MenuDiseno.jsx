@@ -27,12 +27,12 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
             borderBottomLeftRadius: "8px",
           }}
         >
-          <button className={`btn text-start mb-2 ${opcion === "imagen" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("imagen")}> Imagen </button>
-          <button className={`btn text-start mb-2 ${opcion === "texto" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("texto")}> Texto </button>
-          <button className={`btn text-start mb-2 ${opcion === "pincel" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("pincel")}> Pincel </button>
-          <button className={`btn text-start mb-2 ${opcion === "ia" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("ia")}> IA </button>
-          <button className={`btn text-start mb-2 ${opcion === "formas" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("formas")}> Formas </button>
-          <button className={`btn text-start  ${opcion === "logo" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("logo")}> Logos </button>
+          <button className={`btn mb-2 ${opcion === "imagen" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("imagen")}> Imagen </button>
+          <button className={`btn mb-2 ${opcion === "texto" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("texto")}> Texto </button>
+          <button className={`btn mb-2 ${opcion === "pincel" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("pincel")}> Pincel </button>
+          <button className={`btn mb-2 ${opcion === "ia" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("ia")} disabled> IA </button>
+          <button className={`btn mb-2 ${opcion === "formas" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("formas")}> Formas </button>
+          <button className={`btn ${opcion === "logo" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("logo")}> Logos </button>
         </div>
 
         <div className="flex-grow-1" style={{

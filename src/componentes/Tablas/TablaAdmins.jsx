@@ -62,7 +62,7 @@ export default function TablaAdmins() {
   };
 
   const irAOtroComponente = () => {
-    navigate("/gerentes/nuevo");
+    navigate("/admins/nuevo");
   };
 
 
@@ -81,7 +81,7 @@ export default function TablaAdmins() {
 
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
-            <h2>Consultar Gerentes de ventas</h2>
+            <h2>Consultar Administradores gerenciales</h2>
             <hr />
             <div className="mb-4">
               <input

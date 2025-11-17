@@ -38,7 +38,7 @@ export default function Log({ setLogeado, setTipoUsuario, setNombre, setMail }) 
       >
 
         <div
-          className=" bg-white d-flex align-items-center justify-content-center"
+          className="d-flex align-items-center justify-content-center"
           style={{
             textAlign: "center",
             padding: "30px 20px",

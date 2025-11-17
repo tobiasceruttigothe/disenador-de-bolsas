@@ -46,6 +46,7 @@ export default function MenuVer({ setModalVer, disenoClick, setDisenoClick }) {
     return (
         <div style={{ width: "1000px" }}>
             <h2>Ver datos del diseño</h2>
+            <hr></hr>
             <form onSubmit={handleSubmit((data) => {
                 confirmarGuardado(data.nombre, data.descripcion);
                 reset();

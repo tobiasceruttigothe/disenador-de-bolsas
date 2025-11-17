@@ -8,7 +8,7 @@ export default function InicioAdmin() {
   const acciones = [
     { id: 1, nombre: "Administrar diseñadores", ruta: "/disenadores", imagen: user },
     { id: 2, nombre: "Administrar clientes", ruta: "/clientes", imagen: user },
-    { id: 3, nombre: "Administrar gerentes de ventas", ruta: "/gerentes", imagen: user },
+    { id: 3, nombre: "Administrar adm. gerenciales", ruta: "/admins", imagen: user },
     { id: 4, nombre: "Administrar productos", ruta: "/productos", imagen: bolsa },
   ];
 

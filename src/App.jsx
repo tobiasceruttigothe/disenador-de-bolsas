@@ -139,7 +139,7 @@ function App() {
         />
 
         <Route
-          path="/gerentes/nuevo"
+          path="/admins/nuevo"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <FormularioAdmin />
@@ -166,7 +166,7 @@ function App() {
         />
 
         <Route
-          path="/gerentes"
+          path="/admins"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
               <TablaAdmins />

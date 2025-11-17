@@ -15,7 +15,7 @@ const Modal = ({ isVisible, onClose, children }) => {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 1000,
+        zIndex: 9999,
       }}
       onClick={onClose}
     >
@@ -28,6 +28,8 @@ const Modal = ({ isVisible, onClose, children }) => {
           maxWidth: '80%',
           maxHeight: '90vh',      
           overflowY: 'auto', 
+          zIndex: 10000,
+          position: "relative"
         }}
         onClick={(e) => e.stopPropagation()}
       >

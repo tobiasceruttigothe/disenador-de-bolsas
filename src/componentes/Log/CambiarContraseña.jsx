@@ -2,10 +2,13 @@ import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
 import axios from 'axios';
 import "../../index.css";
+import {useNavigate} from 'react-router-dom'
 
 export default function CambiarConstraseña() {
   const [mail, setMail] = useState("");
   const [exito, setExito] = useState(null); 
+
+  const navigate = useNavigate()
 
   const reset = () => setMail("");
 
@@ -23,6 +26,22 @@ export default function CambiarConstraseña() {
 
   return (
     <>
+      <button className="align-items-center d-flex justify-content-center"
+            style={{
+                position: "fixed", top: "85px", left: "20px",
+                margin: "20px",
+                width: "70px", height: "40px",
+                padding: "10px",
+                backgroundColor: "white",
+                color: "#016add",
+                border: "1px solid #016add",
+                borderRadius: "7px"
+            }}
+
+            onClick={() => navigate("/perfil")}
+        >
+            ←
+        </button>
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light fondo">
         <form
           onSubmit={handleSubmit}
@@ -39,9 +58,10 @@ export default function CambiarConstraseña() {
           </div>
 
           <h2 className="text-center mb-4">Cambiar contraseña</h2>
+          <hr></hr>
 
           <div className="mb-3">
-            <p> Para cambiar su contraseña, se le enviará un mail de confirmación.</p>
+            <p> Para cambiar su contraseña, se le enviará un mail con instrucciones a seguir.</p>
             <input
               id="mail"
               type="email"

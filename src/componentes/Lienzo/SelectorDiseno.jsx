@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 import MenuVer from "./MenuVer"
 import MenuDescargar from "./MenuDescargar"
+import Menu3d from "./Menu3d"
 import Modal from "./ModalConfirmacion"
 
 export default function SelectorDiseno({ }) {
@@ -19,6 +20,7 @@ export default function SelectorDiseno({ }) {
 
   const [modalVer, setModalVer] = useState(false)
   const [modalDescargar, setModalDescargar] = useState(false)
+  const [modal3d, setModal3d] = useState(false)
 
   useEffect(() => {
     const fetchDisenos = async () => {
@@ -56,7 +58,8 @@ export default function SelectorDiseno({ }) {
   }
 
   const handleGenerar = (diseno) => {
-    console.log(diseno.base64Preview)
+    setDisenoClick(diseno)+
+    setModal3d(true)
   }
 
   const handleEliminar = async (id) => {
@@ -160,7 +163,9 @@ export default function SelectorDiseno({ }) {
         <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
           <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuDescargar>
         </Modal>
-
+            <Modal isVisible={modal3d} onClose={() => { setModal3d(false); setDisenoClick() }}>
+          <Menu3d setModal3d={setModal3d} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></Menu3d>
+        </Modal>
       </div>
     </>
   );

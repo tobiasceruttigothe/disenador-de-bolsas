@@ -83,7 +83,7 @@ export default function MenuDescargar({ setModalDescargar, disenoClick, setDisen
             <div style={{ display: "flex", justifyContent: "flex-end" }}>
                 <button
                     className="boton-2 w-25 mt-3 me-3"
-                    onClick={() => { setModalDescargar(false); setDisenoClick("") }}
+                    onClick={() => { setModalDescargar(false); setDisenoClick() }}
                     type="submit"
                 >
                     Volver

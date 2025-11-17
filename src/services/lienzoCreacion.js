@@ -18,7 +18,18 @@ export function initCanvas(canvasElement, imageUrl) {
     canvas.renderAll();
   };
 
+  function handleClickOutside(e) {
+    if (!canvas) return;                     // prevención extra
+    const canvasEl = canvas.upperCanvasEl;   // acá daba error antes
 
+    if (canvasEl && !canvasEl.contains(e.target) && canvas.getActiveObject()) {
+      canvas.discardActiveObject();
+      canvas.requestRenderAll();
+    }
+  }
+
+
+  document.addEventListener("mousedown", handleClickOutside);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Delete" || e.key === "Backspace") {
@@ -220,6 +231,16 @@ export async function cargarCanvas(canvasElement, fondo, objetos) {
     }
   }
 
+  function handleClickOutside(e) {
+    if (!canvas) return;                     
+    const canvasEl = canvas.upperCanvasEl;  
+
+    if (canvasEl && !canvasEl.contains(e.target) && canvas.getActiveObject()) {
+      canvas.discardActiveObject();
+      canvas.requestRenderAll();
+    }
+  }
+  document.addEventListener("mousedown", handleClickOutside);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Delete" || e.key === "Backspace") {

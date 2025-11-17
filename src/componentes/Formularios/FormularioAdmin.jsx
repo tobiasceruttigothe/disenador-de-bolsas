@@ -59,7 +59,7 @@ export default function FormularioAdmin() {
           margin: "20px", width: "70px", height: "40px", padding: "10px",
           backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
         }}
-        onClick={() => navigate("/gerentes")}
+        onClick={() => navigate("/admins")}
       >
         ←
       </button>
@@ -78,7 +78,7 @@ export default function FormularioAdmin() {
               style={{ width: '80px', height: '80px' }}
             />
           </div>
-          <h2 className="text-center mb-4">Agregar Administrador</h2>
+          <h2 className="text-center mb-4">Agregar Administradores Gerenciales</h2>
 
           {/* Nombre */}
           <div className="mb-3">
