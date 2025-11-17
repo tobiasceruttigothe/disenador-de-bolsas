@@ -147,7 +147,7 @@ export default function NuevoDiseno() {
       </button>
 
       <Modal isVisible={modalAbierto} onClose={() => setModalAbierto(false)}>
-        <MenuGuardado confirmarGuardado={confirmarGuardado}></MenuGuardado>
+        <MenuGuardado confirmarGuardado={confirmarGuardado} setModalAbierto={setModalAbierto}></MenuGuardado>
       </Modal>
       <Modal isVisible={!plantillaBool} onClose={() => setPlantillaBool(false)}>
         <MenuSelectorPlantilla plantillas={plantillas} setPlantillaElegida={setPlantillaElegida} setPlantillaBool={setPlantillaBool}></MenuSelectorPlantilla>

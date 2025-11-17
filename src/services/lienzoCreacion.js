@@ -73,6 +73,7 @@ export function guardarDiseno(canvas) {
 export function guardarElementos(canvas) {
   if (!canvas) return null;
   const json = canvas.toJSON();
+  console.log(json)
   return json;
 }
 
@@ -106,10 +107,29 @@ export async function cargarCanvas(canvasElement, fondo, objetos) {
     }
     if (obj.type == "Textbox") {
       const t = new fabric.Textbox(obj.text, {
-        left: obj.left, top: obj.top, fill: obj.fill, fontSize: obj.fontSize,
-        fontFamily: obj.fontFamily, width: obj.width, height: obj.height, angle: obj.angle,
-        flipX: obj.flipX, flipY: obj.flipY
+        left: obj.left,
+        top: obj.top,
+        fill: obj.fill,
+        fontSize: obj.fontSize,
+        fontFamily: obj.fontFamily,
+        fontWeight: obj.fontWeight || 'normal',
+        fontStyle: obj.fontStyle || 'normal',
+        textAlign: obj.textAlign || 'left',
+        lineHeight: obj.lineHeight || 1.16,
+        textDecoration: obj.textDecoration || '',
+        opacity: obj.opacity ?? 1,
+        width: obj.width,
+        height: obj.height,
+        angle: obj.angle,
+        flipX: obj.flipX,
+        flipY: obj.flipY,
+        selectable: obj.selectable ?? true,
+        evented: obj.evented ?? true,
+        scaleX: 1,
+        scaleY: 1 
       });
+
+
       canvas.add(t);
     }
     if (obj.type == "Path") {

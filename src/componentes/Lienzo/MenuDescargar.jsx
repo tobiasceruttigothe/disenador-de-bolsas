@@ -15,7 +15,6 @@ export default function MenuDescargar({ setModalDescargar, disenoClick, setDisen
 
 
     const handlePDF = async () => {
-        console.log(disenoClick.nombre, disenoClick.descripcion, disenoClick.plantillaNombre)
         crearPDF(base, disenoClick.nombre, disenoClick.descripcion, disenoClick.plantillaNombre)
     };
 

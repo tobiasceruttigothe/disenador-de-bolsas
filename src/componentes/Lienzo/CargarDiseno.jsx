@@ -85,7 +85,6 @@ export default function CargarDiseno() {
                 base64Preview: dataURL
             };
             const token = Cookies.get("access_token");
-            console.log(payload)
             const res = await axios.put(`http://localhost:9090/api/disenos/${id}`, payload, {
                 headers: {
                     "Content-Type": "application/json",

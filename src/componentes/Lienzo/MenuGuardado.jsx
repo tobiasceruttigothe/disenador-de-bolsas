@@ -1,8 +1,10 @@
 import React from 'react'
 import { useForm } from 'react-hook-form';
 
-export default function MenuGuardado({confirmarGuardado}) {
+export default function MenuGuardado({ confirmarGuardado, setModalAbierto }) {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
+
   return (
     <div>
       <h2>Guardar Diseño</h2>
@@ -11,28 +13,67 @@ export default function MenuGuardado({confirmarGuardado}) {
         confirmarGuardado(data.nombre, data.descripcion);
         reset();
       })}>
-        <div>
-          <p>Nombre:</p>
+        {/* Nombre */}
+        <div className="mb-3">
+          <label>Nombre:</label>
           <input
             type="text"
             className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-            {...register("nombre", { required: "El nombre es obligatorio" })}
+            {...register("nombre", {
+              required: "El nombre es obligatorio",
+              minLength: { value: 3, message: "Debe tener al menos 3 caracteres" }
+            })}
           />
-          {errors.nombre && (<div className="invalid-feedback">{errors.nombre.message}</div>)}
+          {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
         </div>
-        <br />
-        <div>
-          <p>Descripción:</p>
-          <input type="text"
-          className="form-control"
-          style={{height: "80px", width: "300px"}}
+
+        {/* Descripción */}
+        <div className="mb-3">
+          <label>Descripción:</label>
+          <textarea
+            className={`form-control ${errors.descripcion ? 'is-invalid' : ''}`}
+            style={{
+              height: "80px",
+              width: "100%",
+              resize: "none"
+            }}
             {...register("descripcion")}
           />
-          {errors.descripcion && <span>{errors.descripcion.message}</span>}
+          {errors.descripcion && <div className="invalid-feedback">{errors.descripcion.message}</div>}
         </div>
-        <br />
-        <button className="p-2" style={{width: "300px", height: "40px", border:"black", color: "white", borderRadius: "4px", backgroundColor: "#016add"}} type="submit">
-          Guardar diseño</button>
+
+        <div className="d-flex justify-content-end gap-2 mt-3">
+          <button
+            onClick={() => setModalAbierto(false)}
+            className="p-2"
+            style={{
+              width: "100px",
+              height: "40px",
+              border: "2px solid #016add",
+              color: "#016add",
+              borderRadius: "4px",
+              backgroundColor: "white"
+            }}
+            type="button"
+          >
+            Volver
+          </button>
+          <button
+            className="p-2"
+            style={{
+              width: "100px",
+              height: "40px",
+              border: "2px solid #016add",
+              color: "white",
+              borderRadius: "4px",
+              backgroundColor: "#016add"
+            }}
+            type="submit"
+          >
+            Guardar diseño
+          </button>
+        </div>
+
       </form>
     </div>
   )
