@@ -34,7 +34,7 @@ export default function MenuImagen({ agregarFoto }) {
          }}>
             <h2 className="mb-3 mx-2">Agregar Imagen</h2>
             <div className="input-group m-1">
-                <input id="inputArchivo" type="file" className="form-control" style={{ display: "none" }} onChange={onChangeImagen} ref={inputImgRef} />
+                <input id="inputArchivo" accept='.jpg, .jpeg, .png' type="file" className="form-control" style={{ display: "none" }} onChange={onChangeImagen} ref={inputImgRef} />
                 <label htmlFor="inputArchivo" className="btn" style={{border: "2px solid rgb(0,0,0,0.3)", borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px"}}> Elegir Imagen</label>
                 <button className={`btn btn-secondary  ${imagen ? "" : "disabled"}`} onClick={handleAddImagen}>Agregar Imagen</button>
             </div>
