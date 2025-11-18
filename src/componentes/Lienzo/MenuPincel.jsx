@@ -68,7 +68,6 @@ export default function MenuPincel({ activarModoDibujo }) {
                     <option value="CircleBrush">Círculo</option>
                     <option value="SprayBrush">Spray</option>
                     <option value="PatternBrush">Patrón</option>
-                    <option value="SquareBrush">Cuadrado</option>
                 </select>
             </div>
 

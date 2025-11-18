@@ -4,7 +4,8 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
 
 export default function ConsultaClientes() {
-  const [clientes, setClientes] = useState([])
+  const [clientes, setClientes] = useState([]);
+  const [clientesOriginales, setClientesOriginales] = useState([]);
   const [estado, setEstado] = useState(undefined)
 
   const navigate = useNavigate();
@@ -23,9 +24,11 @@ export default function ConsultaClientes() {
           "Authorization": `Bearer ${token}`,
         },
       });
+
       setClientes(cl.data);
+      setClientesOriginales(cl.data); // ← esta es la clave
     } catch (e) {
-      setEstado("errorCarga")
+      setEstado("errorCarga");
     }
   };
 
@@ -36,21 +39,41 @@ export default function ConsultaClientes() {
   const [filtro, setFiltro] = useState("");
 
   const handleFiltrar = () => {
-    if (filtro.trim() === "") return;
-    const filtrados = clientes.filter((c) =>
-      c?.nombre.toLowerCase().includes(filtro.toLowerCase())
+    if (filtro.trim() === "") {
+      setClientes(clientesOriginales); // si está vacío restaura
+      return;
+    }
+
+    const filtrados = clientesOriginales.filter((c) =>
+      c?.username.toLowerCase().includes(filtro.toLowerCase())
     );
+
     setClientes(filtrados);
   };
+
 
   const plantillas = (nombre, id) => {
     navigate(`/verClientes/plantillas?id=${id}&user=${nombre}`);
   };
 
+  useEffect(() => {
+    if (filtro.trim() === "") {
+      setClientes(clientesOriginales);
+      return;
+    }
+
+    const filtrados = clientesOriginales.filter((c) =>
+      c.username.toLowerCase().includes(filtro.toLowerCase())
+    );
+
+    setClientes(filtrados);
+  }, [filtro]);
+
   return (
     <>
-          <button className="align-items-center d-flex justify-content-center"
-        style={{position:"fixed", top:"85px", left:"20px",
+      <button className="align-items-center d-flex justify-content-center"
+        style={{
+          position: "fixed", top: "85px", left: "20px",
           margin: "20px", width: "70px", height: "40px", padding: "10px",
           backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
         }}
@@ -58,7 +81,7 @@ export default function ConsultaClientes() {
       >
         ←
       </button>
-      <div style={{marginTop:"85px"}} className="container-fluid min-vh-100 py-4 bg-light fondo">
+      <div style={{ marginTop: "85px" }} className="container-fluid min-vh-100 py-4 bg-light fondo">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
             <h2 className="mb-4">Consultar Clientes</h2>
