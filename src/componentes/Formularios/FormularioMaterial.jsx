@@ -90,7 +90,7 @@ export default function FormularioMateriales() {
             style={{ backgroundColor: '#016add' }}
             disabled={estado === "Cargando"}
           >
-            {estado === "Cargando" ? "Enviando..." : "Ingresar"}
+            {estado === "Cargando" ? "Enviando..." : "Enviar"}
           </button>
         </form>
 

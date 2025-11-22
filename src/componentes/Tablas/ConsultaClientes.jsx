@@ -38,20 +38,6 @@ export default function ConsultaClientes() {
 
   const [filtro, setFiltro] = useState("");
 
-  const handleFiltrar = () => {
-    if (filtro.trim() === "") {
-      setClientes(clientesOriginales); // si está vacío restaura
-      return;
-    }
-
-    const filtrados = clientesOriginales.filter((c) =>
-      c?.username.toLowerCase().includes(filtro.toLowerCase())
-    );
-
-    setClientes(filtrados);
-  };
-
-
   const plantillas = (nombre, id) => {
     navigate(`/verClientes/plantillas?id=${id}&user=${nombre}`);
   };
@@ -95,9 +81,6 @@ export default function ConsultaClientes() {
                 value={filtro}
                 onChange={(e) => setFiltro(e.target.value)}
               />
-              <button className="btn btn-primary me-2" onClick={handleFiltrar}>
-                Buscar
-              </button>
             </div>
 
             <div className="table-responsive mb-4">

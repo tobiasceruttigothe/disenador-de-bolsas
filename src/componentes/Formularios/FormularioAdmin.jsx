@@ -148,7 +148,7 @@ export default function FormularioAdmin() {
             style={{ backgroundColor: '#016add' }}
             disabled={estado === "Cargando"}
           >
-            Ingresar
+            Enviar
           </button>
         </form>
 

@@ -155,7 +155,7 @@ export default function FormularioCliente() {
             style={{ backgroundColor: '#016add' }}
             disabled={estado === "Cargando"} // bloquea el botón mientras carga
           >
-            {estado === "Cargando" ? "Enviando..." : "Ingresar"}
+            {estado === "Cargando" ? "Enviando..." : "Enviar"}
           </button>
         </form>
 
