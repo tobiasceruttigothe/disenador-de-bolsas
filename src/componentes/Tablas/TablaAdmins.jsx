@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { apiClient } from "../../config/axios";
+import { useNotificacion } from "../../hooks/useNotificacion";
+import Notificacion from "../Notificaciones/Notificacion";
+import ModalConfirmacion from "../ModalConfirmacion";
 
 export default function TablaAdmins() {
   const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
   const [admins, setAdmins] = useState([]);
   const [adminsFiltrados, setAdminsFiltrados] = useState([]);
-  const [estado, setEstado] = useState(undefined);
   const [filtro, setFiltro] = useState("");
+  const [modalEliminar, setModalEliminar] = useState({ visible: false, nombre: null });
 
   useEffect(() => {
     fetchAdmins();
@@ -23,42 +26,42 @@ export default function TablaAdmins() {
   }, [filtro, admins]);
 
   const fetchAdmins = async () => {
-    const token = Cookies.get("access_token");
     try {
-      const res = await axios.get(
-        "http://localhost:9090/api/usuarios/list/users/admins",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await apiClient.get("/usuarios/list/users/admins");
       setAdmins(res.data);
     } catch (e) {
-      setEstado("errorCarga");
+      console.error("Error al cargar administradores:", e);
+      mostrarError("No se pudieron cargar los administradores. Intente nuevamente más tarde.");
     }
   };
 
-  const eliminar = async (nombre) => {
-    if (window.confirm(`¿Seguro que desea eliminar a ${nombre}?`)) {
-      const token = Cookies.get("access_token");
-      try {
-        await axios.delete(
-          `http://localhost:9090/api/usuarios/eliminate/${nombre}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            },
-          }
-        );
-        setEstado("eliminado");
-        setAdmins((prev) => prev.filter((a) => a.username !== nombre));
-      } catch (error) {
-        setEstado("errorEliminar");
+  const handleEliminarClick = (nombre) => {
+    setModalEliminar({ visible: true, nombre });
+  };
+
+  const confirmarEliminar = async () => {
+    const nombre = modalEliminar.nombre;
+    if (!nombre) {
+      mostrarError("Error: No se pudo identificar el administrador a eliminar.");
+      setModalEliminar({ visible: false, nombre: null });
+      return;
+    }
+    
+    try {
+      await apiClient.delete(`/usuarios/eliminate/${nombre}`);
+      mostrarExito("Administrador eliminado exitosamente.");
+      setAdmins((prev) => prev.filter((a) => a.username !== nombre));
+    } catch (error) {
+      console.error("Error al eliminar administrador:", error);
+      if (error.response && error.response.status === 403) {
+        mostrarError("No tienes permisos para eliminar administradores. Verifica que tu usuario tenga el rol de administrador.");
+      } else if (error.response && error.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else {
+        mostrarError("No se pudo eliminar el administrador. Intente nuevamente más tarde.");
       }
     }
+    setModalEliminar({ visible: false, nombre: null });
   };
 
   const irAOtroComponente = () => {
@@ -137,7 +140,7 @@ export default function TablaAdmins() {
                               e.currentTarget.style.borderColor = "#016add";
                               e.currentTarget.style.transform = "scale(1)";
                             }}
-                            onClick={() => eliminar(a.username)}
+                            onClick={() => handleEliminarClick(a.username)}
                           >
                             Eliminar
                           </button>
@@ -157,34 +160,22 @@ export default function TablaAdmins() {
           </div>
         </div>
 
-        {/* ALERTAS */}
-        {estado === "eliminado" && (
-          <div
-            className="alert alert-success position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            Administrador eliminado exitosamente.
-          </div>
-        )}
-        {estado === "errorEliminar" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            Admin no pudo ser eliminado.
-          </div>
-        )}
-        {estado === "errorCarga" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            No se pudieron cargar los administradores. Intente nuevamente más tarde
-          </div>
-        )}
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
+        
+        <ModalConfirmacion
+          isVisible={modalEliminar.visible}
+          onClose={() => setModalEliminar({ visible: false, nombre: null })}
+          onConfirm={confirmarEliminar}
+          titulo="Eliminar administrador"
+          mensaje={`¿Estás seguro que deseas eliminar a ${modalEliminar.nombre}? Esta acción no se puede deshacer.`}
+          tipo="danger"
+        />
       </div>
     </>
   );

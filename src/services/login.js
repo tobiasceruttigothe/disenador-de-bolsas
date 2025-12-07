@@ -1,14 +1,19 @@
 import axios from "axios";
 import Cookies from 'js-cookie';
 import jwt_decode from "jwt-decode";
-
+import { KEYCLOAK_TOKEN_URL } from '../config/api.js';
 
 export async function login(user) {
     try {
-        const link = "http://localhost:8080/realms/tesina/protocol/openid-connect/token";
+        const link = KEYCLOAK_TOKEN_URL; // Asegúrate que sea http://localhost:8080/realms/tesina/protocol/openid-connect/token
         const params = new URLSearchParams();
-        params.append('client_id', 'backend-service');
-        params.append('client_secret', 'qL9zabLf/LtV48DrZsG6ivGm9/5C8TedHqawXXisvUA='); 
+        
+        // CAMBIO 1: Usar el nuevo cliente público
+        params.append('client_id', 'frontend-service'); 
+        
+        // CAMBIO 2: ELIMINAR el client_secret (los clientes públicos no lo usan)
+        // params.append('client_secret', '...'); 
+        
         params.append('grant_type', 'password');
         params.append('username', user.mail.trim());
         params.append('password', user.contraseña);
@@ -18,6 +23,8 @@ export async function login(user) {
             'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
+        
+        // ... (El resto del código se mantiene igual)
         const payload = jwt_decode(data.access_token);
         const roles = payload.realm_access.roles;
 
@@ -28,13 +35,23 @@ export async function login(user) {
                 role = "cliente"} 
             else if (roles.includes("DISEÑADOR")) {
                 role = "disenador"}
-        Cookies.set('access_token', data.access_token, { expires: 1 });
-        Cookies.set('refresh_token', data.refresh_token, { expires: 7 });
-        Cookies.set('rol', role, { expires: 1 });
-        Cookies.set('nombre', payload.preferred_username, { expires: 1 });
-        Cookies.set('mail', payload.email, { expires: 1 });
-        Cookies.set('usuarioId', payload.sub, { expires: 7 })
-        Cookies.set('razonSocial', payload.razonSocial, { expires: 7 });
+
+        const cookieOptions = { 
+          expires: 1
+        };
+        
+        Cookies.set('access_token', data.access_token, cookieOptions);
+        Cookies.set('refresh_token', data.refresh_token, { ...cookieOptions, expires: 7 });
+        Cookies.set('rol', role, cookieOptions);
+        Cookies.set('nombre', payload.preferred_username, cookieOptions);
+        Cookies.set('mail', payload.email, cookieOptions);
+        Cookies.set('usuarioId', payload.sub, { ...cookieOptions, expires: 7 });
+        
+        if (payload.razonSocial) {
+          Cookies.set('razonSocial', payload.razonSocial, { ...cookieOptions, expires: 7 });
+        }
+        
+        console.log('✅ Cookies guardadas después del login');
 
         return {
             access_token: data.access_token,
@@ -46,5 +63,6 @@ export async function login(user) {
     } 
 
     catch (error) {
-        throw error;
-        }}
+        throw error;
+    }
+}

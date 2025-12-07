@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom'
@@ -14,19 +14,13 @@ export default function FormularioTipoBolsa() {
   const navigate = useNavigate()
 
   const handleSubmitForm = async (data) => {
-    const token = Cookies.get('access_token');
     const payload = { nombre: data.nombre };
 
     try {
       setEstado("Cargando");
       setMensaje("Cargando...");
 
-      await axios.post("http://localhost:9090/api/tipos-bolsa", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      });
+      await apiClient.post("/tipos-bolsa", payload);
 
       reset();
       setEstado("Exito");

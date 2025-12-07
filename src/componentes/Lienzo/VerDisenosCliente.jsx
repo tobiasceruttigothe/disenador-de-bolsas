@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { Link } from 'react-router-dom';
 import bolsa from '../../assets/pack designer final.png';
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
+import ModalConfirmacion from '../ModalConfirmacion';
 import "../../index.css"
 import "../../styles/main.css"
 import { useNavigate, useParams } from 'react-router-dom';
@@ -17,39 +20,31 @@ export default function VerDisenosCliente({ }) {
     const [usuario, setUsuario] = useState(" ")
 
     const navigate = useNavigate();
+    const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
     const [modalVer, setModalVer] = useState(false)
     const [modalDescargar, setModalDescargar] = useState(false)
+    const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null })
 
     const { id } = useParams();
 
     useEffect(() => {
+        if (!id) return;
         const fetchDisenos = async () => {
             try {
-                const token = Cookies.get("access_token");
-                const res = await axios.get(`http://localhost:9090/api/disenos/usuario/${id}`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
+                const res = await apiClient.get(`/disenos/usuario/${id}`);
                 setDisenos(res.data.data);
 
-                const users = await axios.get(`http://localhost:9090/api/usuarios/list/users/clients`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
-
-                const encontrado = users.data.find(u => u.id === id)
-                setUsuario(encontrado)
+                const users = await apiClient.get(`/usuarios/list/users/clients`);
+                const encontrado = users.data.find(u => u.id === id);
+                setUsuario(encontrado || { username: "Usuario desconocido" });
             } catch (e) {
                 console.error("Error al cargar los diseños", e);
+                mostrarError("Error al cargar los diseños. Intente nuevamente.");
             }
         };
         fetchDisenos();
-    }, []);
+    }, [id]);
 
 
     const handleClick = (diseno) => {
@@ -82,36 +77,30 @@ export default function VerDisenosCliente({ }) {
                 base64Diseno: elementos,
                 base64Preview: dataURL
             };
-            const token = Cookies.get("access_token");
-            const res = await axios.post("http://localhost:9090/api/disenos", payload, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-            alert("Diseño guardado correctamente.")
+            const res = await apiClient.post("/disenos", payload);
+            mostrarExito("Diseño guardado correctamente.");
         } catch (error) {
             console.error("Error al guardar el diseño:", error);
+            mostrarError("Error al guardar el diseño. Intente nuevamente.");
         }
     };
 
-const handleEliminar = async (id) => {
-    if (window.confirm("¿Estás seguro que deseas eliminar el diseño? Esta acción no es revertible.")) {
-        try {
-            const token = Cookies.get("access_token")
-            const res = await axios.delete(`http://localhost:9090/api/disenos/${id}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-            });
-            setDisenos((prev) => prev.filter((d) => d.id !== id));
-        }
-        catch (e) {
-            console.log("Surgió un error al eliminar el diseño.")
-        }
+const handleEliminarClick = (id) => {
+    setModalEliminar({ visible: true, id });
+};
+
+const confirmarEliminar = async () => {
+    const id = modalEliminar.id;
+    try {
+        await apiClient.delete(`/disenos/${id}`);
+        mostrarExito("Diseño eliminado exitosamente.");
+        setDisenos((prev) => prev.filter((d) => d.id !== id));
+    } catch (e) {
+        console.error("Error al eliminar diseño:", e);
+        mostrarError("Surgió un error al eliminar el diseño.");
     }
-}
+    setModalEliminar({ visible: false, id: null });
+};
 
 return (
     <>
@@ -150,7 +139,7 @@ return (
                                     <p className="card-text">{diseno.descripcion ? diseno.descripcion : <>&nbsp;</>}</p>
                                     <div className="d-flex gap-2">
                                         <button className="boton-2" onClick={() => handleClick(diseno)}>Editar diseño</button>
-                                        <button className="boton-1" onClick={() => handleEliminar(diseno.id)}>Eliminar diseño</button>
+                                        <button className="boton-1" onClick={() => handleEliminarClick(diseno.id)}>Eliminar diseño</button>
                                         <div className="dropdown">
                                             <button
                                                 className="btn"
@@ -202,6 +191,14 @@ return (
             <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
                 <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuDescargar>
             </Modal>
+            
+            <Notificacion
+                tipo={notificacion.tipo}
+                mensaje={notificacion.mensaje}
+                visible={notificacion.visible}
+                onClose={ocultarNotificacion}
+                duracion={notificacion.duracion}
+            />
         </div>
     </>
 );

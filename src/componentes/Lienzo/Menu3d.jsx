@@ -1,37 +1,28 @@
 import React from 'react'
-import { crearPDF } from '../../services/crearPDF'
-import Cookies from "js-cookie"
-import axios from "axios"
+import { apiClient } from '../../config/axios'
 import "../../styles/main.css"
 
-export default function MenuDescargar({ setModal3d, disenoClick, setDisenoClick }) {
+export default function Menu3d({ setModal3d, disenoClick, setDisenoClick, onSuccess, onError }) {
 
     const handle3d = async () => {
         try {
-            const token = Cookies.get("access_token")
-            const id = disenoClick.id
-            const status = await axios.get("http://localhost:9090/api/ia/health", {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-            if (status.status == 200){
-                await axios.post("http://localhost:9090/api/ia/generate-3d", {disenoId: id}, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-            alert("Imagen generada correctamente. Se actualizará el diseño automáticamente pronto.")
-            setModal3d(false)
-            setDisenoClick()
+            if (!disenoClick || !disenoClick.id) {
+                if (onError) onError("No se ha seleccionado un diseño válido.");
+                return;
+            }
+            const id = disenoClick.id;
+            const status = await apiClient.get("/ia/health");
+            if (status.status === 200){
+                await apiClient.post("/ia/generate-3d", {disenoId: id});
+                if (onSuccess) onSuccess("Imagen generada correctamente. Se actualizará el diseño automáticamente pronto.");
+                setModal3d(false);
+                setDisenoClick();
             } else{
-                throw new Error("El servidor externo no esta en funcionamiento actualmente. ")
+                throw new Error("El servidor externo no esta en funcionamiento actualmente.");
             }
         } catch (err) {
-            alert("Ha ocurrido un error con la generación de la imagen. Intente de nuevo luego")
-            console.log(err)
+            if (onError) onError("Ha ocurrido un error con la generación de la imagen. Intente de nuevo luego");
+            console.error("Error al generar vista 3D:", err);
         }
     }
 

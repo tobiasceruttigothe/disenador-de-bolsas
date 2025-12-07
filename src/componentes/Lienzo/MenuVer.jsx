@@ -2,7 +2,7 @@ import React from 'react'
 import { useForm } from 'react-hook-form';
 import { useEffect, useState } from "react"
 import Cookies from 'js-cookie'
-import axios from "axios"
+import { apiClient } from '../../config/axios'
 import { FaEdit, FaCheck } from "react-icons/fa";
 
 export default function MenuVer({ setModalVer, disenoClick, setDisenoClick }) {
@@ -21,36 +21,27 @@ export default function MenuVer({ setModalVer, disenoClick, setDisenoClick }) {
     }, [reset])
 
     useEffect(() => {
+        if (!disenoClick || !disenoClick.plantillaId) return;
         const fetchPlantilla = async () => {
             try {
-                const token = Cookies.get("access_token")
-                const res = await axios.get(`http://localhost:9090/api/plantillas/${disenoClick.plantillaId}`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
+                const res = await apiClient.get(`/plantillas/${disenoClick.plantillaId}`);
                 setMaterial(res.data.data.material.nombre);
                 setTipoBolsa(res.data.data.tipoBolsa.nombre)
                 setAncho(res.data.data.ancho)
                 setAlto(res.data.data.alto)
                 setProfundidad(res.data.data.profundidad)
-
             }
             catch (error) {
                 console.log("Ocurrió un error", error)
             }
         }
         fetchPlantilla()
-    }, [reset])
+    }, [disenoClick])
     return (
         <div style={{ width: "1000px" }}>
             <h2>Ver datos del diseño</h2>
             <hr></hr>
-            <form onSubmit={handleSubmit((data) => {
-                confirmarGuardado(data.nombre, data.descripcion);
-                reset();
-            })}>
+            <form>
                 <br></br>
                 <h3>Datos del diseño: </h3>
                 <div>

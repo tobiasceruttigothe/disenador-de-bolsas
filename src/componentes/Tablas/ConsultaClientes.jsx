@@ -1,47 +1,46 @@
-import axios from "axios"
-import Cookies from "js-cookie"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom";
+import { apiClient } from "../../config/axios";
+import { useNotificacion } from "../../hooks/useNotificacion";
+import Notificacion from "../Notificaciones/Notificacion";
 
 export default function ConsultaClientes() {
   const [clientes, setClientes] = useState([])
-  const [estado, setEstado] = useState(undefined)
-
+  const [clientesFiltrados, setClientesFiltrados] = useState([])
+  const [filtro, setFiltro] = useState("")
   const navigate = useNavigate();
+  const { notificacion, mostrarError, ocultarNotificacion } = useNotificacion();
 
   useEffect(() => {
     fetchClientes();
   }, []);
 
+  useEffect(() => {
+    // Filtra en tiempo real al cambiar el filtro o la lista de clientes
+    if (filtro.trim() === "") {
+      setClientesFiltrados(clientes);
+    } else {
+      setClientesFiltrados(
+        clientes.filter((c) =>
+          c?.username?.toLowerCase().includes(filtro.toLowerCase())
+        )
+      );
+    }
+  }, [filtro, clientes]);
 
   const fetchClientes = async () => {
-    const token = Cookies.get("access_token");
     try {
-      const cl = await axios.get("http://localhost:9090/api/usuarios/list/users/clients", {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-      setClientes(cl.data);
+      const res = await apiClient.get("/usuarios/list/users/clients");
+      setClientes(res.data);
     } catch (e) {
-      setEstado("errorCarga")
+      console.error("Error al cargar clientes:", e);
+      mostrarError("No se pudieron cargar los clientes. Intente nuevamente más tarde.");
     }
   };
 
   const handleClick = (id) => () => {
     navigate(`/disenos/cliente/${id}`)
   }
-
-  const [filtro, setFiltro] = useState("");
-
-  const handleFiltrar = () => {
-    if (filtro.trim() === "") return;
-    const filtrados = clientes.filter((c) =>
-      c?.nombre.toLowerCase().includes(filtro.toLowerCase())
-    );
-    setClientes(filtrados);
-  };
 
   const plantillas = (nombre, id) => {
     navigate(`/verClientes/plantillas?id=${id}&user=${nombre}`);
@@ -72,9 +71,6 @@ export default function ConsultaClientes() {
                 value={filtro}
                 onChange={(e) => setFiltro(e.target.value)}
               />
-              <button className="btn btn-primary me-2" onClick={handleFiltrar}>
-                Buscar
-              </button>
             </div>
 
             <div className="table-responsive mb-4">
@@ -88,8 +84,8 @@ export default function ConsultaClientes() {
                   </tr>
                 </thead>
                 <tbody>
-                  {clientes.length > 0 ? (
-                    clientes.map((c, index) => (
+                  {clientesFiltrados.length > 0 ? (
+                    clientesFiltrados.map((c, index) => (
                       <tr key={index}>
                         <td>{c.username}</td>
                         <td>{c.email}</td>
@@ -164,15 +160,13 @@ export default function ConsultaClientes() {
           </div>
         </div>
 
-        {estado == "errorCarga" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            No se pudieron cargar los clientes. Intente nuevamente más tarde
-          </div>
-        )}
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
       </div>
     </>
   );

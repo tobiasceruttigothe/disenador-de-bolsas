@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom'
 
@@ -21,13 +21,7 @@ export default function MenuSelectorPlantilla({ plantillas, setPlantillaElegida,
     const cargarImagen = async (plantillaId) => {
         try {
             setCargando(true);
-            const token = Cookies.get("access_token");
-            const res = await axios.get(`http://localhost:9090/api/plantillas/${plantillaId}`, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-            });
+            const res = await apiClient.get(`/plantillas/${plantillaId}`);
             const base64 = res.data.data.base64Plantilla;
             setImagenBase64(base64);
         } catch (error) {

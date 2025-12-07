@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import "../../index.css";
 import {useNavigate} from 'react-router-dom'
 
@@ -15,7 +15,7 @@ export default function CambiarConstraseña() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:9090/api/auth/forgot-password", { email: mail });
+      await apiClient.post("/auth/forgot-password");
       setExito(true);
       reset();
     } catch (error) {

@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from '../../assets/pack designer final.png';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
+import { logTokenInfo } from '../../utils/decodeToken';
 
 export default function FormularioDiseñador() {
-  const [estado, setEstado] = useState(null); // "Cargando", "Exito", "Error" o null
-  const [mensaje, setMensaje] = useState(""); 
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
-  const navigate = useNavigate()
+  // Verificar token y permisos al montar
+  useEffect(() => {
+    logTokenInfo();
+    const rol = Cookies.get('rol');
+    if (rol !== 'admin') {
+      console.warn('⚠️ Usuario no es admin. Rol actual:', rol);
+      mostrarError('Solo los administradores pueden crear usuarios.');
+    }
+  }, []);
   
   const handleSubmitForm = async (data) => {
-    const token = Cookies.get('access_token');
     const payload = {
       username: data.nombre,
       email: data.mail,
@@ -25,31 +35,35 @@ export default function FormularioDiseñador() {
     };
 
     try {
-      setEstado("Cargando");
-      setMensaje("Cargando...");
-
-      await axios.post("http://localhost:9090/api/usuarios/create", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
+      // Verificar rol antes de enviar
+      const rol = Cookies.get('rol');
+      console.log('🔐 Rol del usuario:', rol);
+      console.log('📤 Enviando petición para crear diseñador:', payload);
+      
+      await apiClient.post("/usuarios/create", payload);
       reset();
-      setEstado("Exito");
-      setMensaje("Diseñador agregado con éxito");
+      mostrarExito("Diseñador agregado con éxito");
+      setTimeout(() => {
+        navigate("/disenadores");
+      }, 1500);
     } catch (error) {
       console.error("Error al agregar el diseñador:", error);
-
-      if (error.response && error.response.status === 409) {
-        setMensaje("Nombre de usuario ya registrado");
+      console.error("Response:", error.response?.data);
+      console.error("Status:", error.response?.status);
+      console.error("Headers enviados:", error.config?.headers);
+      
+      if (error.response && error.response.status === 403) {
+        const rol = Cookies.get('rol');
+        mostrarError(`No tienes permisos para crear usuarios. Tu rol actual es: ${rol || 'no definido'}. Solo los administradores pueden crear usuarios.`);
+      } else if (error.response && error.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else if (error.response && error.response.status === 409) {
+        mostrarError("Nombre de usuario ya registrado");
       } else if (error.response && error.response.status === 502) {
-        setMensaje("Mail ya registrado");
+        mostrarError("Mail ya registrado");
       } else {
-        setMensaje("Ocurrió un error al agregar el diseñador");
+        mostrarError("Ocurrió un error al agregar el diseñador. Intente nuevamente más tarde.");
       }
-
-      setEstado("Error");
     }
   };
 
@@ -93,7 +107,6 @@ export default function FormularioDiseñador() {
               minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
               maxLength: { value: 50, message: "Debe tener menos de 50 caracteres" }
             })}
-            disabled={estado === "Cargando"}
           />
           {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
         </div>
@@ -109,7 +122,6 @@ export default function FormularioDiseñador() {
             {...register("nombreApellido", {
               required: "El nombre y apellido del empleado es obligatorio",
             })}
-            disabled={estado === "Cargando"}
           />
           {errors.nombreApellido && <div className="invalid-feedback">{errors.nombreApellido.message}</div>}
         </div>
@@ -126,35 +138,26 @@ export default function FormularioDiseñador() {
               pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ingrese un mail válido" },
               maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" }
             })}
-            disabled={estado === "Cargando"}
           />
           {errors.mail && <div className="invalid-feedback">{errors.mail.message}</div>}
         </div>
 
-        <button
+          <button
           className="btn w-100 text-white"
           style={{ backgroundColor: '#016add' }}
-          disabled={estado === "Cargando"}
+          type="submit"
         >
-          {estado === "Cargando" ? "Enviando..." : "Ingresar"}
+          Ingresar
         </button>
       </form>
 
-      {/* Alertas dinámicas */}
-      {estado && (
-        <div
-          className={`alert ${
-            estado === "Exito"
-              ? "alert-success"
-              : estado === "Error"
-              ? "alert-danger"
-              : "alert-info"
-          } position-absolute bottom-0 start-50 translate-middle-x mb-4`}
-          role="alert"
-        >
-          {mensaje}
-        </div>
-      )}
+      <Notificacion
+        tipo={notificacion.tipo}
+        mensaje={notificacion.mensaje}
+        visible={notificacion.visible}
+        onClose={ocultarNotificacion}
+        duracion={notificacion.duracion}
+      />
     </div>
     </>
   );

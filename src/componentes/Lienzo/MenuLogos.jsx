@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useEffect } from "react";
 import Cookies from 'js-cookie'
-import axios from 'axios'
+import { apiClient } from '../../config/axios';
 
 export default function MenuLogos({ agregarFoto }) {
   const [logos, setLogos] = useState([])
@@ -9,17 +9,15 @@ export default function MenuLogos({ agregarFoto }) {
   useEffect(() => {
     const fetchLogos = async () => {
       try {
-        const token = Cookies.get("access_token");
         const id = Cookies.get("usuarioId");
-        const res = await axios.get(`http://localhost:9090/api/logos/usuario/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
+        if (!id) {
+          console.error("No se encontró el ID de usuario");
+          return;
+        }
+        const res = await apiClient.get(`/logos/usuario/${id}`);
         setLogos(res.data.data);
       } catch (e) {
-        console.error("Error al cargar los diseños", e);
+        console.error("Error al cargar los logos", e);
       }
     };
     fetchLogos();
