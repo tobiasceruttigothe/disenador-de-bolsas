@@ -15,7 +15,7 @@ export default function CambiarConstraseña() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await apiClient.post("/auth/forgot-password");
+      await apiClient.post("/auth/forgot-password", { email: mail });
       setExito(true);
       reset();
     } catch (error) {

@@ -1,179 +1,175 @@
 import { jsPDF } from "jspdf";
-import logoSrc from "../assets/papersrl.png"; // tu logo
+import logoSrc from "../assets/papersrl.png";
 
 export function crearPDF(b64, nombre, descripcion, plantilla, material, tipoBolsa, ancho, alto, profundidad) {
     const imgSrc = `data:image/png;base64,${b64}`;
-    const pdf = new jsPDF({ unit: "px", format: "a4" });
+    // Usamos 'pt' para mayor precisión tipográfica, A4
+    const pdf = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
 
     const img = new Image();
     const logo = new Image();
 
-    // Esperar a que ambas imágenes se carguen
     let imgLoaded = false;
     let logoLoaded = false;
 
+    // Colores corporativos (Puedes ajustar estos valores RGB a los de tu marca)
+    const PRIMARY_COLOR = [41, 128, 185]; // Azul profesional
+    const SECONDARY_COLOR = [240, 240, 240]; // Gris muy claro para fondos
+    const TEXT_COLOR = [60, 60, 60]; // Gris oscuro para texto
+    const LABEL_COLOR = [120, 120, 120]; // Gris para etiquetas
+
     const trySavePDF = () => {
         if (!imgLoaded || !logoLoaded) return;
-        
+
         const pageWidth = pdf.internal.pageSize.getWidth();
         const pageHeight = pdf.internal.pageSize.getHeight();
-        const imgWidth = img.width;
-        const imgHeight = img.height;
+        const margin = 40;
 
-        let y = 50;
+        // --- 1. ENCABEZADO ---
+        // Franja de color superior
+        pdf.setFillColor(...PRIMARY_COLOR);
+        pdf.rect(0, 0, pageWidth, 80, 'F');
 
-        // Título principal
-        pdf.setFont("Helvetica", "bold");
-        pdf.setFontSize(28);
-        pdf.text("Diseño Generado", pageWidth / 2, y, { align: "center" });
+        // Título del documento (Blanco)
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(24);
+        pdf.setTextColor(255, 255, 255);
+        pdf.text("Ficha Técnica de Diseño", margin, 50);
 
-        // Línea horizontal debajo del título
-        y += 15;
-        pdf.setLineWidth(1.5);
-        pdf.line(50, y, pageWidth - 50, y);
+        // Logo (Sobre la franja azul, alineado a la derecha)
+        // Ajustamos el logo para que entre en el header
+        const logoWidth = 100;
+        const logoRatio = logo.height / logo.width;
+        const logoHeight = logoWidth * logoRatio;
+        pdf.addImage(logo, "PNG", pageWidth - margin - logoWidth, 40 - (logoHeight / 2), logoWidth, logoHeight);
 
-        // Espacio después del título
-        y += 35;
+        // --- 2. CONTENEDOR DE DATOS (Fondo gris suave) ---
+        let y = 110;
+        
+        // Dibujar fondo para la sección de datos
+        pdf.setFillColor(...SECONDARY_COLOR);
+        // Rectángulo redondeado simulado (o normal)
+        pdf.rect(margin, y, pageWidth - (margin * 2), 160, 'F');
 
-        // Sección: Datos del diseño
-        pdf.setFont("Helvetica", "bold");
-        pdf.setFontSize(18);
-        pdf.text("Datos del diseño", 50, y);
-        y += 25;
+        // Configuraciones de texto para datos
+        const col1X = margin + 20;
+        const col2X = pageWidth / 2 + 20;
+        let yText = y + 30;
 
-        pdf.setFontSize(12);
-        const leftMargin = 50;
-        const labelWidth = 120;
-        const valueStart = leftMargin + labelWidth;
+        // Función auxiliar para dibujar pares Etiqueta: Valor
+        const drawField = (label, value, x, currentY) => {
+            pdf.setFont("helvetica", "bold");
+            pdf.setFontSize(9);
+            pdf.setTextColor(...LABEL_COLOR);
+            pdf.text(label.toUpperCase(), x, currentY);
 
-        if (nombre) {
-            pdf.setFont("Helvetica", "bold");
-            pdf.text("Nombre:", leftMargin, y);
-            pdf.setFont("Helvetica", "normal");
-            pdf.text(nombre, valueStart, y);
-            y += 22;
-        }
+            pdf.setFont("helvetica", "normal");
+            pdf.setFontSize(11);
+            pdf.setTextColor(...TEXT_COLOR);
+            // Si el valor no existe o es guión, poner "N/A"
+            const valStr = (value && value !== "-") ? String(value) : "N/A";
+            pdf.text(valStr, x, currentY + 12);
+            
+            return 35; // Espacio para el siguiente campo
+        };
 
+        // --- COLUMNA IZQUIERDA: Info General ---
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(14);
+        pdf.setTextColor(...PRIMARY_COLOR);
+        pdf.text("Información General", col1X, yText - 10);
+
+        let yLeft = yText + 10;
+        yLeft += drawField("Nombre del Proyecto", nombre, col1X, yLeft);
+        yLeft += drawField("Plantilla Base", plantilla, col1X, yLeft);
+        
+        // Descripción (Manejo de texto largo)
         if (descripcion) {
-            pdf.setFont("Helvetica", "bold");
-            pdf.text("Descripción:", leftMargin, y);
-            pdf.setFont("Helvetica", "normal");
-            const lines = pdf.splitTextToSize(descripcion, pageWidth - valueStart - 50);
-            lines.forEach((line, index) => {
-                pdf.text(line, valueStart, y + (index * 16));
-            });
-            y += (lines.length * 16) + 6;
+            pdf.setFont("helvetica", "bold");
+            pdf.setFontSize(9);
+            pdf.setTextColor(...LABEL_COLOR);
+            pdf.text("DESCRIPCIÓN", col1X, yLeft);
+            
+            pdf.setFont("helvetica", "normal");
+            pdf.setFontSize(10); // Un poco más chica para que entre
+            pdf.setTextColor(...TEXT_COLOR);
+            const descLines = pdf.splitTextToSize(descripcion, (pageWidth / 2) - margin - 40);
+            pdf.text(descLines, col1X, yLeft + 12);
         }
 
-        if (plantilla) {
-            pdf.setFont("Helvetica", "bold");
-            pdf.text("Plantilla:", leftMargin, y);
-            pdf.setFont("Helvetica", "normal");
-            pdf.text(plantilla, valueStart, y);
-            y += 22;
-        }
+        // --- COLUMNA DERECHA: Especificaciones ---
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(14);
+        pdf.setTextColor(...PRIMARY_COLOR);
+        pdf.text("Especificaciones Técnicas", col2X, yText - 10);
 
-        // Espacio antes de la siguiente sección
-        y += 15;
-
-        // Sección: Datos de la plantilla
-        if (material || tipoBolsa || ancho !== "-" || alto !== "-" || profundidad !== "-") {
-            pdf.setFont("Helvetica", "bold");
-            pdf.setFontSize(18);
-            pdf.text("Datos de la plantilla", 50, y);
-            y += 25;
-
-            pdf.setFontSize(12);
-            
-            if (material) {
-                pdf.setFont("Helvetica", "bold");
-                pdf.text("Material:", leftMargin, y);
-                pdf.setFont("Helvetica", "normal");
-                pdf.text(material, valueStart, y);
-                y += 22;
-            }
-            
-            if (tipoBolsa) {
-                pdf.setFont("Helvetica", "bold");
-                pdf.text("Tipo de bolsa:", leftMargin, y);
-                pdf.setFont("Helvetica", "normal");
-                pdf.text(tipoBolsa, valueStart, y);
-                y += 22;
-            }
-            
-            if (ancho !== "-") {
-                pdf.setFont("Helvetica", "bold");
-                pdf.text("Ancho:", leftMargin, y);
-                pdf.setFont("Helvetica", "normal");
-                pdf.text(`${ancho}`, valueStart, y);
-                y += 22;
-            }
-            
-            if (alto !== "-") {
-                pdf.setFont("Helvetica", "bold");
-                pdf.text("Alto:", leftMargin, y);
-                pdf.setFont("Helvetica", "normal");
-                pdf.text(`${alto}`, valueStart, y);
-                y += 22;
-            }
-            
-            if (profundidad !== "-") {
-                pdf.setFont("Helvetica", "bold");
-                pdf.text("Profundidad:", leftMargin, y);
-                pdf.setFont("Helvetica", "normal");
-                pdf.text(`${profundidad}`, valueStart, y);
-                y += 22;
-            }
-        }
+        let yRight = yText + 10;
+        yRight += drawField("Material", material, col2X, yRight);
+        yRight += drawField("Tipo de Bolsa", tipoBolsa, col2X, yRight);
         
-        // Línea separadora antes de la imagen
-        y += 15;
-        pdf.setLineWidth(0.8);
-        pdf.line(50, y, pageWidth - 50, y);
-
-        y += 20; // espacio extra antes de imagen
+        // Dimensiones en una sola línea para ahorrar espacio
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(9);
+        pdf.setTextColor(...LABEL_COLOR);
+        pdf.text("DIMENSIONES (An x Al x Pr)", col2X, yRight);
         
-        // Calcular espacio disponible para la imagen (después de todos los datos)
-        const espacioDisponible = pageHeight - y - 100; // 100px para márgenes y logo
-        const ratio = Math.min((pageWidth - 100) / imgWidth, espacioDisponible / imgHeight);
-        const newWidth = imgWidth * ratio;
-        const newHeight = imgHeight * ratio;
-        const xImg = (pageWidth - newWidth) / 2;
+        pdf.setFont("helvetica", "bold"); // Destacar las medidas
+        pdf.setFontSize(11);
+        pdf.setTextColor(0, 0, 0);
+        const medidas = `${ancho || '-'} x ${alto || '-'} x ${profundidad || '-'} cm`;
+        pdf.text(medidas, col2X, yRight + 12);
+
+
+        // --- 3. VISTA PREVIA DEL DISEÑO ---
+        y = 300; // Posición debajo del cuadro gris
+
+        // Título de la sección imagen
+        pdf.setFont("helvetica", "bold");
+        pdf.setFontSize(12);
+        pdf.setTextColor(...TEXT_COLOR);
+        pdf.text("VISTA PREVIA DEL DISEÑO", margin, y);
         
-        pdf.addImage(img, "PNG", xImg, y, newWidth, newHeight);
+        // Línea separadora fina
+        pdf.setDrawColor(200, 200, 200);
+        pdf.line(margin, y + 5, pageWidth - margin, y + 5);
 
-        const logoWidth = 80; // ancho del logo en px
-        const logoHeight = 30; // alto del logo en px
-        const xLogo = pageWidth - logoWidth - 40; // margen derecho 40px
-        const yLogo = pageHeight - logoHeight - 20; // margen inferior 20px
-        pdf.addImage(logo, "PNG", xLogo, yLogo, logoWidth, logoHeight);
+        y += 20;
 
-        pdf.save("diseño.pdf");
+        // Calcular ratio de imagen para centrar y maximizar
+        const maxImgHeight = pageHeight - y - 60; // Dejar 60px para footer
+        const maxImgWidth = pageWidth - (margin * 2);
+        
+        const imgRatio = Math.min(maxImgWidth / img.width, maxImgHeight / img.height);
+        const finalWidth = img.width * imgRatio;
+        const finalHeight = img.height * imgRatio;
+        const centerX = (pageWidth - finalWidth) / 2;
+
+        // Borde alrededor de la imagen (simula un marco)
+        pdf.setDrawColor(220, 220, 220);
+        pdf.setLineWidth(1);
+        pdf.rect(centerX - 1, y - 1, finalWidth + 2, finalHeight + 2); // Borde fino
+        
+        // Imagen
+        pdf.addImage(img, "PNG", centerX, y, finalWidth, finalHeight);
+
+        // --- 4. PIE DE PÁGINA ---
+        const today = new Date().toLocaleDateString();
+        pdf.setFont("helvetica", "italic");
+        pdf.setFontSize(8);
+        pdf.setTextColor(150, 150, 150);
+        pdf.text(`Generado el ${today} | Paper S.R.L - Sistema de Diseño`, pageWidth / 2, pageHeight - 20, { align: "center" });
+
+        // Guardar
+        const cleanName = nombre ? nombre.replace(/\s+/g, '_') : 'diseno';
+        pdf.save(`${cleanName}_ficha_tecnica.pdf`);
     };
 
-    // Configurar handlers de carga de imágenes
-    img.onload = () => {
-        imgLoaded = true;
-        trySavePDF();
-    };
+    // Manejo de carga asíncrona (igual que antes, pero crítico)
+    img.onload = () => { imgLoaded = true; trySavePDF(); };
+    logo.onload = () => { logoLoaded = true; trySavePDF(); };
+    img.onerror = () => { console.error("Error img"); };
+    logo.onerror = () => { logoLoaded = true; trySavePDF(); }; // Si falla logo, imprime igual
 
-    img.onerror = (err) => {
-        console.error("Error al cargar la imagen:", err);
-    };
-
-    logo.onload = () => {
-        logoLoaded = true;
-        trySavePDF();
-    };
-
-    logo.onerror = (err) => {
-        console.error("Error al cargar el logo:", err);
-        // Continuar sin logo si falla
-        logoLoaded = true;
-        trySavePDF();
-    };
-
-    // Iniciar carga de imágenes después de configurar los handlers
     img.src = imgSrc;
     logo.src = logoSrc;
 }
