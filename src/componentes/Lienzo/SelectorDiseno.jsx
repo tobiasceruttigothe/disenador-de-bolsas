@@ -27,17 +27,18 @@ export default function SelectorDiseno({ }) {
   const [modal3d, setModal3d] = useState(false)
   const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null })
 
+  const fetchDisenos = async () => {
+    try {
+      const id = Cookies.get("usuarioId");
+      const res = await apiClient.get(`/disenos/usuario/${id}`);
+      setDisenos(res.data.data);
+    } catch (e) {
+      console.error("Error al cargar los diseños", e);
+      mostrarError("Error al cargar los diseños. Intente nuevamente.");
+    }
+  };
+
   useEffect(() => {
-    const fetchDisenos = async () => {
-      try {
-        const id = Cookies.get("usuarioId");
-        const res = await apiClient.get(`/disenos/usuario/${id}`);
-        setDisenos(res.data.data);
-      } catch (e) {
-        console.error("Error al cargar los diseños", e);
-        mostrarError("Error al cargar los diseños. Intente nuevamente.");
-      }
-    };
     fetchDisenos();
   }, []);
 
@@ -183,6 +184,7 @@ export default function SelectorDiseno({ }) {
             setDisenoClick={setDisenoClick}
             onSuccess={mostrarExito}
             onError={mostrarError}
+            onUpdateDisenos={fetchDisenos}
           ></Menu3d>
         </Modal>
         

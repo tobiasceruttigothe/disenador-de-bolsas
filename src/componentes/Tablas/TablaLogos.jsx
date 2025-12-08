@@ -4,7 +4,11 @@ import Cookies from 'js-cookie';
 import { apiClient } from '../../config/axios';
 import { Link } from 'react-router-dom';
 import bolsa from '../../assets/pack designer final.png';
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
+import ModalConfirmacion from '../ModalConfirmacion';
 import "../../index.css"
+import "../../styles/main.css"
 
 export default function TablaLogos() {
   const [logos, setLogos] = useState([]);

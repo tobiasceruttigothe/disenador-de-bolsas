@@ -1,10 +1,34 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { crearPDF } from '../../services/crearPDF'
+import { apiClient } from '../../config/axios'
 import "../../styles/main.css"
 
 export default function MenuDescargar({ setModalDescargar, disenoClick, setDisenoClick }) {
 
     const base = disenoClick.base64Preview
+    const [material, setMaterial] = useState("")
+    const [tipoBolsa, setTipoBolsa] = useState("")
+    const [ancho, setAncho] = useState("-")
+    const [alto, setAlto] = useState("-")
+    const [profundidad, setProfundidad] = useState("-")
+
+    useEffect(() => {
+        if (!disenoClick || !disenoClick.plantillaId) return;
+        const fetchPlantilla = async () => {
+            try {
+                const res = await apiClient.get(`/plantillas/${disenoClick.plantillaId}`);
+                setMaterial(res.data.data.material.nombre);
+                setTipoBolsa(res.data.data.tipoBolsa.nombre)
+                setAncho(res.data.data.ancho)
+                setAlto(res.data.data.alto)
+                setProfundidad(res.data.data.profundidad)
+            }
+            catch (error) {
+                console.log("Ocurrió un error al obtener los datos de la plantilla", error)
+            }
+        }
+        fetchPlantilla()
+    }, [disenoClick])
 
     const descargarArchivo = (base64, nombreArchivo) => {
         const link = document.createElement("a");
@@ -34,7 +58,17 @@ export default function MenuDescargar({ setModalDescargar, disenoClick, setDisen
 
 
     const handlePDF = async () => {
-        crearPDF(base, disenoClick.nombre, disenoClick.descripcion, disenoClick.plantillaNombre)
+        crearPDF(
+            base, 
+            disenoClick.nombre, 
+            disenoClick.descripcion, 
+            disenoClick.plantillaNombre,
+            material,
+            tipoBolsa,
+            ancho,
+            alto,
+            profundidad
+        )
     };
 
     const handlePNG = async () => {
