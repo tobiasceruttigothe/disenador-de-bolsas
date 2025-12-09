@@ -6,7 +6,11 @@ import Modal from "./ModalConfirmacion.jsx"
 import MenuGuardado from "./MenuGuardado.jsx"
 import MenuSelectorPlantilla from "./MenuSelectorPlantilla.jsx"
 import Cookies from "js-cookie";
-import axios from "axios";
+import { apiClient } from "../../config/axios";
+import { API_BASE_URL } from "../../config/api";
+import { useNotificacion } from "../../hooks/useNotificacion";
+import Notificacion from "../Notificaciones/Notificacion";
+import { logTokenInfo } from "../../utils/decodeToken";
 import "../../index.css"
 
 export default function NuevoDiseno() {
@@ -20,26 +24,17 @@ export default function NuevoDiseno() {
   const [plantillaBool, setPlantillaBool] = useState(false);
 
   const navigate = useNavigate()
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
   useEffect(() => {
     const fetchPlantillas = async () => {
       try {
         if (Cookies.get("rol") === "cliente") {
           const id = Cookies.get("usuarioId");
-          const res = await axios.get(`http://localhost:9090/api/plantillas/usuario/${id}/habilitadas`, {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          });
+          const res = await apiClient.get(`/plantillas/usuario/${id}/habilitadas`);
           setPlantillas(res.data.data);
         } else {
-          const token = Cookies.get("access_token");
-          const res = await axios.get(`http://localhost:9090/api/plantillas`, {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            },
-          });
+          const res = await apiClient.get(`/plantillas`);
           setPlantillas(res.data.data);
         }
       } catch (e) {
@@ -55,13 +50,7 @@ export default function NuevoDiseno() {
       if (!plantillaElegida) return;
 
       try {
-        const token = Cookies.get("access_token");
-        const res = await axios.get(`http://localhost:9090/api/plantillas/${plantillaElegida.id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
+        const res = await apiClient.get(`/plantillas/${plantillaElegida.id}`);
 
         const base64 = res.data.data.base64Plantilla;
         const { initCanvas } = await import("../../services/lienzoCreacion.js");
@@ -100,28 +89,107 @@ export default function NuevoDiseno() {
   const confirmarGuardado = async (nombre, descripcion) => {
     setModalAbierto(false);
     try {
+      // Verificar token antes de guardar
+      const tokenInfo = logTokenInfo();
+      const token = Cookies.get("access_token");
+      const rol = Cookies.get("rol");
+      
+      if (!token) {
+        mostrarError("Error: No se encontró el token de acceso. Por favor, inicia sesión nuevamente.");
+        return;
+      }
+      
+      if (!tokenInfo || !tokenInfo.roles || !tokenInfo.roles.includes('DISEÑADOR') && !tokenInfo.roles.includes('CLIENTE')) {
+        console.warn('⚠️ El usuario no tiene los roles necesarios para crear diseños');
+        console.warn('⚠️ Roles en el token:', tokenInfo?.roles);
+        console.warn('⚠️ Rol en cookie:', rol);
+      }
+      
       const { guardarDiseno, guardarElementos } = await import("../../services/lienzoCreacion.js");
       const dataURL = guardarDiseno(canvasInstance.current);
       const elementos = JSON.stringify(guardarElementos(canvasInstance.current));
+      
+      const usuarioId = Cookies.get("usuarioId");
+      if (!usuarioId) {
+        console.error('❌ usuarioId no encontrado en cookies');
+        mostrarError("Error: No se encontró el ID de usuario. Por favor, inicia sesión nuevamente.");
+        return;
+      }
+      
+      if (!plantillaElegida || !plantillaElegida.id) {
+        console.error('❌ No se ha seleccionado una plantilla');
+        mostrarError("Error: Debes seleccionar una plantilla antes de guardar el diseño.");
+        return;
+      }
+      
       const payload = {
-        usuarioId: Cookies.get("usuarioId"),
+        usuarioId: usuarioId,
         plantillaId: plantillaElegida.id,
         nombre: nombre,
         descripcion: descripcion,
         base64Diseno: elementos,
         base64Preview: dataURL
       };
-      const token = Cookies.get("access_token");
-      const res = await axios.post("http://localhost:9090/api/disenos", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
+      
+      console.log('📤 Enviando petición para guardar diseño');
+      console.log('📤 Payload:', {
+        usuarioId: payload.usuarioId,
+        plantillaId: payload.plantillaId,
+        nombre: payload.nombre,
+        descripcion: payload.descripcion,
+        base64Diseno: payload.base64Diseno ? `Presente (${payload.base64Diseno.length} chars)` : 'Ausente',
+        base64Preview: payload.base64Preview ? `Presente (${payload.base64Preview.length} chars)` : 'Ausente'
       });
-      alert("Diseño guardado correctamente.")
-      navigate("/disenos")
+      console.log('📤 URL completa:', API_BASE_URL + '/disenos');
+      console.log('📤 Token presente:', !!token);
+      console.log('📤 Rol:', rol);
+      
+      const res = await apiClient.post("/disenos", payload);
+      mostrarExito("Diseño guardado correctamente.");
+      setTimeout(() => {
+        navigate("/disenos");
+      }, 1500);
     } catch (error) {
       console.error("Error al guardar el diseño:", error);
+      console.error("Response:", error.response?.data);
+      console.error("Status:", error.response?.status);
+      
+      if (error.response && error.response.status === 403) {
+        logTokenInfo();
+        console.error('🔍 Detalles del error 403:');
+        console.error('URL:', error.config?.url);
+        console.error('Method:', error.config?.method);
+        console.error('Base URL:', error.config?.baseURL);
+        console.error('URL completa:', error.config?.baseURL + error.config?.url);
+        console.error('Headers enviados:', JSON.stringify(error.config?.headers, null, 2));
+        console.error('Authorization header:', error.config?.headers?.Authorization ? 'Presente' : 'Ausente');
+        if (error.config?.headers?.Authorization) {
+          console.error('Token (primeros 50 chars):', error.config.headers.Authorization.substring(0, 50) + '...');
+        }
+        console.error('Response status:', error.response?.status);
+        console.error('Response statusText:', error.response?.statusText);
+        console.error('Response data del gateway:', error.response?.data);
+        console.error('Response data (stringified):', JSON.stringify(error.response?.data, null, 2));
+        console.error('Response data (type):', typeof error.response?.data);
+        if (error.response?.data) {
+          console.error('Response data keys:', Object.keys(error.response.data));
+        }
+        console.error('Response headers:', error.response?.headers);
+        console.error('Request config completa:', JSON.stringify({
+          url: error.config?.url,
+          method: error.config?.method,
+          baseURL: error.config?.baseURL,
+          headers: error.config?.headers
+        }, null, 2));
+        
+        const rol = Cookies.get('rol');
+        const token = Cookies.get('access_token');
+        mostrarError(`No tienes permisos para guardar diseños. Tu rol actual es: ${rol || 'no definido'}. Verifica que tu usuario tenga el rol de cliente o diseñador y que el token sea válido. Token presente: ${token ? 'Sí' : 'No'}`);
+      } else if (error.response && error.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else {
+        mostrarError("Error al guardar el diseño. Intente nuevamente.");
+      }
     }
   };
 
@@ -167,6 +235,14 @@ export default function NuevoDiseno() {
       <Modal isVisible={!plantillaBool} onClose={() => setPlantillaBool(false)}>
         <MenuSelectorPlantilla plantillas={plantillas} setPlantillaElegida={setPlantillaElegida} setPlantillaBool={setPlantillaBool}></MenuSelectorPlantilla>
       </Modal>
+      
+      <Notificacion
+        tipo={notificacion.tipo}
+        mensaje={notificacion.mensaje}
+        visible={notificacion.visible}
+        onClose={ocultarNotificacion}
+        duracion={notificacion.duracion}
+      />
     </div>
   );
 }

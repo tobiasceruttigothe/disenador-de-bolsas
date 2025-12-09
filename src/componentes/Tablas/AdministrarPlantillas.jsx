@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import { apiClient } from '../../config/axios';
 import Cookies from 'js-cookie';
 import Modal from "../Lienzo/ModalConfirmacion.jsx"
 import ModalPlantillas from './ModalPlantillas.jsx';
@@ -21,17 +21,7 @@ export default function AdministrarPlantillas() {
   useEffect(() => {
     const fetchPlantillas = async () => {
       try {
-        const token = Cookies.get("access_token");
-        const res = await axios.get(
-          `http://localhost:9090/api/plantillas/usuario/${id}/habilitadas`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            },
-          }
-        );
-
+        const res = await apiClient.get(`/plantillas/usuario/${id}/habilitadas`);
         const plantillas = res.data.data;
         setPlantillasUsuario(plantillas);
 
@@ -43,28 +33,20 @@ export default function AdministrarPlantillas() {
             }));
           });
         });
-
       } catch (e) {
-        console.log("Error al cargar las plantillas del cliente", e);
+        console.error("Error al cargar las plantillas del cliente", e);
       }
     };
-
 
     if (id) fetchPlantillas();
   }, [id]);
 
   const buscarImagenBase64 = async (p) => {
     try {
-      const token = Cookies.get("access_token");
-      const res = await axios.get(`http://localhost:9090/api/plantillas/${p}`, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
-      return res.data.data.base64Plantilla
+      const res = await apiClient.get(`/plantillas/${p}`);
+      return res.data.data.base64Plantilla;
     } catch (e) {
-      console.log("Error al cargar la imagen de la plantilla", e);
+      console.error("Error al cargar la imagen de la plantilla", e);
       return "";
     }
   }

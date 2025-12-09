@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import logo from '../../assets/pack designer final.png';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
 
 export default function FormularioCliente() {
-  const [estado, setEstado] = useState(null);
-  const [mensaje, setMensaje] = useState("");
   const [base64Plantilla, setBase64Plantilla] = useState("");
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
   const [materiales, setMateriales] = useState([]);
   const [tiposBolsa, setTiposBolsa] = useState([]);
@@ -19,13 +19,7 @@ export default function FormularioCliente() {
   useEffect(() => {
     const fetchMateriales = async () => {
       try {
-        const token = Cookies.get('access_token');
-        const response = await axios.get("http://localhost:9090/api/materiales", {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        const response = await apiClient.get("/materiales");
         setMateriales(response.data.data);
       } catch (error) {
         console.error("Error al obtener los materiales:", error);
@@ -33,13 +27,7 @@ export default function FormularioCliente() {
     };
     const fetchTiposBolsa = async () => {
       try {
-        const token = Cookies.get('access_token');
-        const response = await axios.get("http://localhost:9090/api/tipos-bolsa", {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        });
+        const response = await apiClient.get("/tipos-bolsa");
         setTiposBolsa(response.data.data);
       } catch (error) {
         console.error("Error al obtener los tipos de bolsa:", error);
@@ -63,11 +51,8 @@ export default function FormularioCliente() {
   };
 
   const handleSubmitForm = async (data) => {
-    const token = Cookies.get('access_token');
-
     if (!base64Plantilla) {
-      setMensaje("Debe seleccionar un archivo de plantilla");
-      setEstado("Error");
+      mostrarError("Debe seleccionar un archivo de plantilla");
       return;
     }
 
@@ -84,24 +69,16 @@ export default function FormularioCliente() {
 
 
     try {
-      setEstado("Cargando");
-      setMensaje("Cargando...");
-
-      await axios.post("http://localhost:9090/api/plantillas", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
+      await apiClient.post("/plantillas", payload);
       reset();
       setBase64Plantilla("");
-      setEstado("Exito");
-      setMensaje("Plantilla agregada con éxito");
+      mostrarExito("Plantilla agregada con éxito");
+      setTimeout(() => {
+        navigate("/productos/plantillas");
+      }, 1500);
     } catch (error) {
       console.error("Error al agregar la plantilla:", error);
-      setMensaje("Ocurrió un error al agregar la plantilla");
-      setEstado("Error");
+      mostrarError("Ocurrió un error al agregar la plantilla");
     }
   };
 
@@ -184,12 +161,9 @@ export default function FormularioCliente() {
                   id="base64Plantilla"
                   type="file"
                   accept=".jpg,.png, .jpeg"
-                  className={`form-control ${!base64Plantilla && estado === "Error" ? 'is-invalid' : ''}`}
+                  className="form-control"
                   onChange={handleFileChange}
                 />
-                {!base64Plantilla && estado === "Error" && (
-                  <div className="invalid-feedback">Debe seleccionar un archivo</div>
-                )}
               </div>
               {/* Tipo de Bolsa */}
               <div className="mb-3">
@@ -259,28 +233,21 @@ export default function FormularioCliente() {
           <button
             className="btn w-100 text-white mt-3"
             style={{ backgroundColor: '#016add' }}
-            disabled={estado === "Cargando"}
+            type="submit"
           >
-            {estado === "Cargando" ? "Enviando..." : "Enviar"}
+            Ingresar
           </button>
 
         </form>
 
 
-        {/* Alertas dinámicas */}
-        {estado && (
-          <div
-            className={`alert ${estado === "Exito"
-              ? "alert-success"
-              : estado === "Error"
-                ? "alert-danger"
-                : "alert-info"
-              } position-absolute bottom-0 start-50 translate-middle-x mb-4`}
-            role="alert"
-          >
-            {mensaje}
-          </div>
-        )}
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
       </div>
     </>
   );

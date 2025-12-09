@@ -18,7 +18,7 @@ export default function ResendActivation() {
     setIsError(false);
 
     try {
-      const response = await fetch('http://localhost:9090/api/auth/resend-activation', {
+      const response = await fetch('/api/auth/resend-activation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),

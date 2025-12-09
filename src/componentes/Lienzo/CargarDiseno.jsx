@@ -2,7 +2,9 @@ import React, { useRef, useEffect, useState } from "react";
 import MenuDiseno from "./MenuDiseno";
 import Lienzo from "./Lienzo.jsx";
 import Cookies from "js-cookie";
-import axios from "axios";
+import { apiClient } from "../../config/axios";
+import { useNotificacion } from "../../hooks/useNotificacion";
+import Notificacion from "../Notificaciones/Notificacion";
 import "../../index.css"
 import { useParams, useNavigate } from "react-router-dom";
 
@@ -20,25 +22,20 @@ export default function CargarDiseno() {
     const { id } = useParams();
 
     const navigate = useNavigate()
+    const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
     useEffect(() => {
         if (!id) return;
         const fetchDiseno = async () => {
             try {
-                const token = Cookies.get("access_token");
-                const res = await axios.get(`http://localhost:9090/api/disenos/${id}`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
+                const res = await apiClient.get(`/disenos/${id}`);
                 setDiseno(res.data.data);
                 setNombre(res.data.data.nombre)
                 setDescripcion(res.data.data.descripcion)
                 setBase64(JSON.parse(res.data.data.base64Diseno))
-
             } catch (e) {
                 console.error("Error al cargar los diseños", e);
+                mostrarError("Error al cargar el diseño. Intente nuevamente.");
             }
         };
         fetchDiseno();
@@ -84,17 +81,20 @@ export default function CargarDiseno() {
                 base64Diseno: elementos,
                 base64Preview: dataURL
             };
-            const token = Cookies.get("access_token");
-            const res = await axios.put(`http://localhost:9090/api/disenos/${id}`, payload, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                }
-            });
-            alert("Diseño actualizado correctamente.")
-            navigate("/disenos")
+            const res = await apiClient.put(`/disenos/${id}`, payload);
+            mostrarExito("Diseño actualizado correctamente.");
+            setTimeout(() => {
+                navigate("/disenos");
+            }, 1500);
         } catch (error) {
             console.error("Error al guardar el diseño:", error);
+            if (error.response && error.response.status === 403) {
+                mostrarError("No tienes permisos para actualizar diseños. Verifica tu sesión.");
+            } else if (error.response && error.response.status === 401) {
+                mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+            } else {
+                mostrarError("Error al actualizar el diseño. Intente nuevamente.");
+            }
         }
     };
 
@@ -133,6 +133,14 @@ export default function CargarDiseno() {
             >
                 Guardar diseño
             </button>
+            
+            <Notificacion
+                tipo={notificacion.tipo}
+                mensaje={notificacion.mensaje}
+                visible={notificacion.visible}
+                onClose={ocultarNotificacion}
+                duracion={notificacion.duracion}
+            />
         </div>
     );
 }

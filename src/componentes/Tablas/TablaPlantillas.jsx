@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { apiClient } from "../../config/axios";
+import { useNotificacion } from "../../hooks/useNotificacion";
+import Notificacion from "../Notificaciones/Notificacion";
+import ModalConfirmacion from "../ModalConfirmacion";
 
 export default function TablaPlantillas() {
   const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
   const [plantillas, setPlantillas] = useState([]);
   const [plantillasFiltradas, setPlantillasFiltradas] = useState([]);
-  const [estado, setEstado] = useState(undefined);
   const [filtro, setFiltro] = useState("");
+  const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null, nombre: null });
 
   useEffect(() => {
     fetchPlantillas();
@@ -23,34 +26,24 @@ export default function TablaPlantillas() {
   }, [filtro, plantillas]);
 
   const fetchPlantillas = async () => {
-    const token = Cookies.get("access_token");
     try {
-      const res = await axios.get("http://localhost:9090/api/plantillas", {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
+      const res = await apiClient.get("/plantillas");
       setPlantillas(res.data.data || []);
     } catch (e) {
-      setEstado("errorCarga");
+      console.error("Error al cargar plantillas:", e);
+      if (e.response && e.response.status === 403) {
+        mostrarError("No tienes permisos para ver las plantillas. Verifica que tu usuario tenga el rol correcto.");
+      } else if (e.response && e.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else {
+        mostrarError("No se pudieron cargar las plantillas. Intente nuevamente más tarde.");
+      }
     }
   };
 
   const verPlantilla = async (id) => {
-    const token = Cookies.get("access_token");
-
     try {
-      const res = await axios.get(
-        `http://localhost:9090/api/plantillas/${id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          }
-        }
-      );
-
+      const res = await apiClient.get(`/plantillas/${id}`);
       const base64 = res.data.data.base64Plantilla;
 
       const byteCharacters = atob(base64);
@@ -60,33 +53,46 @@ export default function TablaPlantillas() {
       const byteArray = new Uint8Array(byteNumbers);
 
       const blob = new Blob([byteArray], { type: "image/png" });
-
       const url = URL.createObjectURL(blob);
-
       window.open(url, "_blank");
-
     } catch (error) {
       console.error("Error al cargar la plantilla:", error);
-      setEstado("errorImagen");
+      mostrarError("No se pudo cargar la imagen de la plantilla.");
     }
   };
 
-  const eliminar = async (id, nombre) => {
-    if (window.confirm(`¿Seguro que desea eliminar la plantilla ${nombre}?`)) {
-      const token = Cookies.get("access_token");
-      try {
-        await axios.delete(`http://localhost:9090/api/plantillas/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        setEstado("eliminado");
-        setPlantillas((prev) => prev.filter((p) => p.id !== id));
-      } catch (error) {
-        setEstado("errorCarga");
+  const handleEliminarClick = (id, nombre) => {
+    setModalEliminar({ visible: true, id, nombre });
+  };
+
+  const confirmarEliminar = async () => {
+    const { id, nombre } = modalEliminar;
+    if (!id) {
+      mostrarError("Error: No se pudo identificar la plantilla a eliminar.");
+      setModalEliminar({ visible: false, id: null, nombre: null });
+      return;
+    }
+    
+    try {
+      await apiClient.delete(`/plantillas/${id}`);
+      mostrarExito("Plantilla eliminada exitosamente.");
+      setPlantillas((prev) => prev.filter((p) => p.id !== id));
+    } catch (error) {
+      console.error("Error al eliminar plantilla:", error);
+      console.error("Response:", error.response?.data);
+      console.error("Status:", error.response?.status);
+      
+      if (error.response && error.response.status === 403) {
+        mostrarError("No tienes permisos para eliminar plantillas. Verifica que tu usuario tenga el rol de administrador o diseñador.");
+      } else if (error.response && error.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else if (error.response && error.response.status === 404) {
+        mostrarError("La plantilla no fue encontrada. Puede que ya haya sido eliminada.");
+      } else {
+        mostrarError("Error al eliminar la plantilla. Intente nuevamente más tarde.");
       }
     }
+    setModalEliminar({ visible: false, id: null, nombre: null });
   };
 
   const irAOtroComponente = () => {
@@ -201,7 +207,7 @@ export default function TablaPlantillas() {
                               e.currentTarget.style.color = "#016add";
                               e.currentTarget.style.transform = "scale(1)";
                             }}
-                            onClick={() => eliminar(p.id, p.nombre)}
+                            onClick={() => handleEliminarClick(p.id, p.nombre)}
                           >
                             Eliminar
                           </button>
@@ -221,44 +227,22 @@ export default function TablaPlantillas() {
           </div>
         </div>
 
-        {/* ALERTAS */}
-        {estado === "eliminado" && (
-          <div
-            className="alert alert-success position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            Plantilla eliminada exitosamente.
-          </div>
-        )}
-        {estado === "errorEliminar" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            No se pudo eliminar la plantilla.
-          </div>
-        )}
-        {estado === "errorCarga" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            No se pudieron cargar las plantillas. Intente nuevamente más tarde.
-          </div>
-        )}
-
-        {estado === "errorImagen" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            No se pudo cargar la imagen de la plantilla.
-          </div>
-        )}
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
+        
+        <ModalConfirmacion
+          isVisible={modalEliminar.visible}
+          onClose={() => setModalEliminar({ visible: false, id: null, nombre: null })}
+          onConfirm={confirmarEliminar}
+          titulo="Eliminar plantilla"
+          mensaje={`¿Estás seguro que deseas eliminar la plantilla "${modalEliminar.nombre}"? Esta acción no se puede deshacer.`}
+          tipo="danger"
+        />
       </div>
     </>
   );

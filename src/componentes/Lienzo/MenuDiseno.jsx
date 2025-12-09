@@ -1,7 +1,6 @@
 import { useState } from "react";
 import MenuImagen from "./MenuImagen";
 import MenuTexto from "./MenuTexto";
-import MenuIA from "./MenuIA";
 import MenuFormas from "./MenuFormas";
 import MenuLogos from "./MenuLogos";
 import MenuPincel from "./MenuPincel"
@@ -30,7 +29,6 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
           <button className={`btn mb-2 ${opcion === "imagen" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("imagen")}> Imagen </button>
           <button className={`btn mb-2 ${opcion === "texto" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("texto")}> Texto </button>
           <button className={`btn mb-2 ${opcion === "pincel" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("pincel")}> Pincel </button>
-          <button className={`btn mb-2 ${opcion === "ia" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("ia")} disabled> IA </button>
           <button className={`btn mb-2 ${opcion === "formas" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("formas")}> Formas </button>
           <button className={`btn ${opcion === "logo" ? "btn-primary" : "btn-outline-primary"}`} onClick={() => setOpcion("logo")}> Logos </button>
         </div>
@@ -42,7 +40,6 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
           {opcion === "imagen" && <MenuImagen agregarFoto={agregarFoto} />}
           {opcion === "texto" && <MenuTexto agregarTexto={agregarTexto} />}
           {opcion === "pincel" && <MenuPincel activarModoDibujo={activarModoDibujo}/>}
-          {opcion === "ia" && <MenuIA></MenuIA>}
           {opcion === "formas" && <MenuFormas agregarCuadrado={agregarCuadrado} agregarRectangulo={agregarRectangulo} agregarCirculo={agregarCirculo} 
                                     agregarEstrella={agregarEstrella} agregarLinea={agregarLinea} agregarTriangulo={agregarTriangulo}></MenuFormas>}
           {opcion === "logo" && <MenuLogos agregarFoto={agregarFoto}></MenuLogos>}

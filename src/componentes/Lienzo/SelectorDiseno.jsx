@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { Link } from 'react-router-dom';
 import bolsa from '../../assets/pack designer final.png';
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
+import ModalConfirmacion from '../ModalConfirmacion';
 import "../../index.css"
 import "../../styles/main.css"
 import { useNavigate } from 'react-router-dom';
@@ -17,27 +20,25 @@ export default function SelectorDiseno({ }) {
   const [disenoClick, setDisenoClick] = useState()
 
   const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
   const [modalVer, setModalVer] = useState(false)
   const [modalDescargar, setModalDescargar] = useState(false)
   const [modal3d, setModal3d] = useState(false)
+  const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null })
+
+  const fetchDisenos = async () => {
+    try {
+      const id = Cookies.get("usuarioId");
+      const res = await apiClient.get(`/disenos/usuario/${id}`);
+      setDisenos(res.data.data);
+    } catch (e) {
+      console.error("Error al cargar los diseños", e);
+      mostrarError("Error al cargar los diseños. Intente nuevamente.");
+    }
+  };
 
   useEffect(() => {
-    const fetchDisenos = async () => {
-      try {
-        const token = Cookies.get("access_token");
-        const id = Cookies.get("usuarioId");
-        const res = await axios.get(`http://localhost:9090/api/disenos/usuario/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        setDisenos(res.data.data);
-      } catch (e) {
-        console.error("Error al cargar los diseños", e);
-      }
-    };
     fetchDisenos();
   }, []);
 
@@ -58,27 +59,40 @@ export default function SelectorDiseno({ }) {
   }
 
   const handleGenerar = (diseno) => {
-    setDisenoClick(diseno)+
-    setModal3d(true)
+    setDisenoClick(diseno);
+    setModal3d(true);
   }
 
-  const handleEliminar = async (id) => {
-    if (window.confirm("¿Estás seguro que deseas eliminar el diseño? Esta acción no es revertible.")) {
-      try {
-        const token = Cookies.get("access_token")
-        const res = await axios.delete(`http://localhost:9090/api/disenos/${id}`, {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        setDisenos((prev) => prev.filter((d) => d.id !== id));
-      }
-      catch (e) {
-        console.log("Surgió un error al eliminar el diseño.")
+  const handleEliminarClick = (id) => {
+    setModalEliminar({ visible: true, id });
+  };
+
+  const confirmarEliminar = async () => {
+    const id = modalEliminar.id;
+    if (!id) {
+      mostrarError("Error: No se pudo identificar el diseño a eliminar.");
+      setModalEliminar({ visible: false, id: null });
+      return;
+    }
+    
+    try {
+      await apiClient.delete(`/disenos/${id}`);
+      mostrarExito("Diseño eliminado exitosamente.");
+      setDisenos((prev) => prev.filter((d) => d.id !== id));
+    } catch (error) {
+      console.error("Error al eliminar diseño:", error);
+      if (error.response && error.response.status === 403) {
+        mostrarError("No tienes permisos para eliminar este diseño. Solo puedes eliminar tus propios diseños.");
+      } else if (error.response && error.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else if (error.response && error.response.status === 404) {
+        mostrarError("El diseño no fue encontrado. Puede que ya haya sido eliminado.");
+      } else {
+        mostrarError("Error al eliminar el diseño. Intente nuevamente más tarde.");
       }
     }
-  }
+    setModalEliminar({ visible: false, id: null });
+  };
 
   return (
     <>
@@ -112,7 +126,7 @@ export default function SelectorDiseno({ }) {
                     <p className="card-text">{diseno.descripcion ? diseno.descripcion : <>&nbsp;</>}</p>
                     <div className="d-flex gap-2">
                       <button className="boton-2" onClick={() => handleClick(diseno)}>Editar diseño</button>
-                      <button className="boton-1" onClick={() => handleEliminar(diseno.id)}>Eliminar diseño</button>
+                      <button className="boton-1" onClick={() => handleEliminarClick(diseno.id)}>Eliminar diseño</button>
                       <div className="dropdown">
                         <button
                           className="btn"
@@ -164,8 +178,32 @@ export default function SelectorDiseno({ }) {
           <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuDescargar>
         </Modal>
             <Modal isVisible={modal3d} onClose={() => { setModal3d(false); setDisenoClick() }}>
-          <Menu3d setModal3d={setModal3d} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></Menu3d>
+          <Menu3d 
+            setModal3d={setModal3d} 
+            disenoClick={disenoClick} 
+            setDisenoClick={setDisenoClick}
+            onSuccess={mostrarExito}
+            onError={mostrarError}
+            onUpdateDisenos={fetchDisenos}
+          ></Menu3d>
         </Modal>
+        
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
+        
+        <ModalConfirmacion
+          isVisible={modalEliminar.visible}
+          onClose={() => setModalEliminar({ visible: false, id: null })}
+          onConfirm={confirmarEliminar}
+          titulo="Eliminar diseño"
+          mensaje="¿Estás seguro que deseas eliminar el diseño? Esta acción no es revertible."
+          tipo="danger"
+        />
       </div>
     </>
   );

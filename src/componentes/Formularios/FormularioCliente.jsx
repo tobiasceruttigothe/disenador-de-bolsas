@@ -1,19 +1,29 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import logo from '../../assets/pack designer final.png';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom'
-import Cookies from "js-cookie";
+import { useNavigate } from 'react-router-dom';
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
+import { debugAuth, hasRole } from '../../utils/authDebug';
+import Cookies from 'js-cookie';
 
 export default function FormularioCliente() {
-  const [estado, setEstado] = useState(null); // "Cargando", "Exito", "Error" o null
-  const [mensaje, setMensaje] = useState("");
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
-  const navigate = useNavigate()
+  // Verificar autenticación al montar el componente
+  useEffect(() => {
+    debugAuth();
+    const rol = Cookies.get('rol');
+    if (rol !== 'admin') {
+      console.warn('⚠️ Usuario no es admin. Rol actual:', rol);
+      mostrarError('Solo los administradores pueden crear usuarios.');
+    }
+  }, []);
 
   const handleSubmitForm = async (data) => {
-    const token = Cookies.get('access_token');
     const payload = {
       username: data.nombre,
       email: data.mail,
@@ -25,31 +35,35 @@ export default function FormularioCliente() {
     };
 
     try {
-      setEstado("Cargando");
-      setMensaje("Cargando...");
-
-      await axios.post("http://localhost:9090/api/usuarios/create", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
+      // Verificar rol antes de enviar
+      const rol = Cookies.get('rol');
+      console.log('🔐 Rol del usuario:', rol);
+      console.log('📤 Enviando petición para crear cliente:', payload);
+      
+      await apiClient.post("/usuarios/create", payload);
       reset();
-      setEstado("Exito");
-      setMensaje("Cliente agregado con éxito");
+      mostrarExito("Cliente agregado con éxito");
+      setTimeout(() => {
+        navigate("/clientes");
+      }, 1500);
     } catch (error) {
       console.error("Error al agregar el cliente:", error);
-
-      if (error.response && error.response.status === 409) {
-        setMensaje("Nombre de usuario ya registrado");
+      console.error("Response:", error.response?.data);
+      console.error("Status:", error.response?.status);
+      console.error("Headers enviados:", error.config?.headers);
+      
+      if (error.response && error.response.status === 403) {
+        const rol = Cookies.get('rol');
+        mostrarError(`No tienes permisos para crear usuarios. Tu rol actual es: ${rol || 'no definido'}. Solo los administradores pueden crear usuarios.`);
+      } else if (error.response && error.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else if (error.response && error.response.status === 409) {
+        mostrarError("Nombre de usuario ya registrado");
       } else if (error.response && error.response.status === 502) {
-        setMensaje("Mail ya registrado");
+        mostrarError("Mail ya registrado");
       } else {
-        setMensaje("Ocurrió un error al agregar el cliente");
+        mostrarError("Ocurrió un error al agregar el cliente. Intente nuevamente más tarde.");
       }
-
-      setEstado("Error");
     }
   };
 
@@ -99,12 +113,9 @@ export default function FormularioCliente() {
                   message: "El nombre de usuario debe tener menos de 50 caracteres"
                 }
               })}
-              disabled={estado === "Cargando"}
             />
             {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
           </div>
-
-          {/* Contraseña */}
 
           {/* Razón Social */}
           <div className="mb-3">
@@ -121,7 +132,6 @@ export default function FormularioCliente() {
                   message: "La razón social debe tener menos de 100 caracteres"
                 }
               })}
-              disabled={estado === "Cargando"}
             />
             {errors.razonSocial && <div className="invalid-feedback">{errors.razonSocial.message}</div>}
           </div>
@@ -145,7 +155,6 @@ export default function FormularioCliente() {
                   message: "El mail debe tener menos de 100 caracteres"
                 }
               })}
-              disabled={estado === "Cargando"}
             />
             {errors.mail && <div className="invalid-feedback">{errors.mail.message}</div>}
           </div>
@@ -153,26 +162,19 @@ export default function FormularioCliente() {
           <button
             className="btn w-100 text-white"
             style={{ backgroundColor: '#016add' }}
-            disabled={estado === "Cargando"} // bloquea el botón mientras carga
+            type="submit"
           >
-            {estado === "Cargando" ? "Enviando..." : "Enviar"}
+            Ingresar
           </button>
         </form>
 
-        {/* Alertas dinámicas */}
-        {estado && (
-          <div
-            className={`alert ${estado === "Exito"
-                ? "alert-success"
-                : estado === "Error"
-                  ? "alert-danger"
-                  : "alert-info"
-              } position-absolute bottom-0 start-50 translate-middle-x mb-4`}
-            role="alert"
-          >
-            {mensaje}
-          </div>
-        )}
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
       </div>
     </>
   );

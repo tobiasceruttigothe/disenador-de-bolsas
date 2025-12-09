@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { apiClient } from "../../config/axios";
+import { useNotificacion } from "../../hooks/useNotificacion";
+import Notificacion from "../Notificaciones/Notificacion";
+import ModalConfirmacion from "../ModalConfirmacion";
 import "../../styles/main.css"
 
 export default function TablaMateriales() {
   const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
   const [materiales, setMateriales] = useState([]);
   const [materialesFiltrados, setMaterialesFiltrados] = useState([]);
-  const [estado, setEstado] = useState(undefined);
   const [filtro, setFiltro] = useState("");
+  const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null, nombre: null });
 
   useEffect(() => {
     fetchMateriales();
@@ -25,39 +28,44 @@ export default function TablaMateriales() {
   }, [filtro, materiales]);
 
   const fetchMateriales = async () => {
-    const token = Cookies.get("access_token");
     try {
-      const res = await axios.get("http://localhost:9090/api/materiales", {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-      });
+      const res = await apiClient.get("/materiales");
       setMateriales(res.data.data || []);
     } catch (e) {
-      setEstado("errorCarga");
+      console.error("Error al cargar materiales:", e);
+      mostrarError("No se pudieron cargar los materiales. Intente nuevamente más tarde.");
     }
   };
 
-  const eliminar = async (id, nombre) => {
-    if (window.confirm(`¿Seguro que desea eliminar el material ${nombre}?`)) {
-      const token = Cookies.get("access_token");
-      try {
-        await axios.delete(
-          `http://localhost:9090/api/materiales/${id}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            },
-          }
-        );
-        setEstado("eliminado");
-        setMateriales((prev) => prev.filter((m) => m.nombre !== nombre));
-      } catch (error) {
-        setEstado("errorEliminar");
+  const handleEliminarClick = (id, nombre) => {
+    setModalEliminar({ visible: true, id, nombre });
+  };
+
+  const confirmarEliminar = async () => {
+    const { id, nombre } = modalEliminar;
+    if (!id) {
+      mostrarError("Error: No se pudo identificar el material a eliminar.");
+      setModalEliminar({ visible: false, id: null, nombre: null });
+      return;
+    }
+    
+    try {
+      await apiClient.delete(`/materiales/${id}`);
+      mostrarExito("Material eliminado exitosamente.");
+      setMateriales((prev) => prev.filter((m) => m.id !== id));
+    } catch (error) {
+      console.error("Error al eliminar material:", error);
+      if (error.response && error.response.status === 403) {
+        mostrarError("No tienes permisos para eliminar materiales. Verifica que tu usuario tenga el rol de administrador.");
+      } else if (error.response && error.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else if (error.response && error.response.status === 404) {
+        mostrarError("El material no fue encontrado. Puede que ya haya sido eliminado.");
+      } else {
+        mostrarError("Error al eliminar el material. Intente nuevamente más tarde.");
       }
     }
+    setModalEliminar({ visible: false, id: null, nombre: null });
   };
 
   const irAOtroComponente = () => {
@@ -116,7 +124,7 @@ export default function TablaMateriales() {
                         <td style={{ width: "100px", textAlign: "center" }}>
                           <button
                             className="boton-2"
-                            onClick={() => eliminar(m.id, m.nombre)}
+                            onClick={() => handleEliminarClick(m.id, m.nombre)}
                           >
                             Eliminar
                           </button>
@@ -136,34 +144,22 @@ export default function TablaMateriales() {
           </div>
         </div>
 
-        {/* ALERTAS */}
-        {estado === "eliminado" && (
-          <div
-            className="alert alert-success position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            Material eliminado exitosamente.
-          </div>
-        )}
-        {estado === "errorEliminar" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            Material no pudo ser eliminado.
-          </div>
-        )}
-        {estado === "errorCarga" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            No se pudieron cargar los materiales. Intente nuevamente más tarde.
-          </div>
-        )}
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
+        
+        <ModalConfirmacion
+          isVisible={modalEliminar.visible}
+          onClose={() => setModalEliminar({ visible: false, id: null, nombre: null })}
+          onConfirm={confirmarEliminar}
+          titulo="Eliminar material"
+          mensaje={`¿Estás seguro que deseas eliminar el material "${modalEliminar.nombre}"? Esta acción no se puede deshacer.`}
+          tipo="danger"
+        />
       </div>
     </>
   );

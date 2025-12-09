@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
 
 export default function FormularioMateriales() {
-  const [estado, setEstado] = useState(null);
-  const [mensaje, setMensaje] = useState("");
-
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
   const handleSubmitForm = async (data) => {
     const token = Cookies.get('access_token');
@@ -21,23 +20,15 @@ export default function FormularioMateriales() {
     };
 
     try {
-      setEstado("Cargando");
-      setMensaje("Cargando...");
-
-      await axios.post("http://localhost:9090/api/materiales", payload, {
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      });
-
+      await apiClient.post("/materiales", payload);
       reset();
-      setEstado("Exito");
-      setMensaje("Material agregado con éxito");
+      mostrarExito("Material agregado con éxito");
+      setTimeout(() => {
+        navigate("/productos/materiales");
+      }, 1500);
     } catch (error) {
       console.error("Error al agregar el material:", error);
-      setMensaje("Ocurrió un error al agregar el material");
-      setEstado("Error");
+      mostrarError("Ocurrió un error al agregar el material");
     }
   };
 
@@ -88,26 +79,19 @@ export default function FormularioMateriales() {
           <button
             className="btn w-100 text-white"
             style={{ backgroundColor: '#016add' }}
-            disabled={estado === "Cargando"}
+            type="submit"
           >
-            {estado === "Cargando" ? "Enviando..." : "Enviar"}
+            Ingresar
           </button>
         </form>
 
-        {/* Alertas dinámicas */}
-        {estado && (
-          <div
-            className={`alert ${estado === "Exito"
-              ? "alert-success"
-              : estado === "Error"
-                ? "alert-danger"
-                : "alert-info"
-              } position-absolute bottom-0 start-50 translate-middle-x mb-4`}
-            role="alert"
-          >
-            {mensaje}
-          </div>
-        )}
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
       </div>
     </>
   );

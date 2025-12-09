@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import Cookies from 'js-cookie';
-import axios from "axios"
+import { apiClient } from '../../config/axios'
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
 
 export default function MenuPlantillas({ setModalAbierto, idCliente, userName, setPlantillasUsuario }) {
     const [todasLasPlantillas, setTodasLasPlantillas] = useState([])
     const [plantillasCliente, setPlantillasCliente] = useState([])
     const [imagenes, setImagenes] = useState({});
+    const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
     useEffect(() => {
         const fetchTodasLasPlantillas = async () => {
             try {
-                const token = Cookies.get("access_token");
-                const pl = await axios.get(`http://localhost:9090/api/plantillas`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
+                const pl = await apiClient.get(`/plantillas`);
                 setTodasLasPlantillas(pl.data.data);
             } catch (e) {
                 console.log(e);
@@ -25,13 +22,7 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
 
         const fetchPlantillasCliente = async () => {
             try {
-                const token = Cookies.get("access_token");
-                const plCliente = await axios.get(`http://localhost:9090/api/plantillas/usuario/${idCliente}/habilitadas`, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
+                const plCliente = await apiClient.get(`/plantillas/usuario/${idCliente}/habilitadas`);
                 setPlantillasCliente(plCliente.data.data);
             } catch (e) {
                 console.error(e);
@@ -44,42 +35,30 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
 
     const handleClick = async () => {
         try {
-            const token = Cookies.get("access_token");
-
             const promises = plantillasCliente.map((p) => {
-                return axios.post(
-                    `http://localhost:9090/api/plantillas/${p.id}/habilitar-usuario/${idCliente}`,
-                    {}, 
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`,
-                        },
-                    }
-                );
+                return apiClient.post(`/plantillas/${p.id}/habilitar-usuario/${idCliente}`, {});
             });
             
             await Promise.all(promises);
             setPlantillasUsuario(plantillasCliente);
+            mostrarExito("Plantillas habilitadas correctamente.");
             setModalAbierto(false);
         } catch (e) {
             console.error("Error al agregar las plantillas al cliente", e);
-            alert("Error al guardar las plantillas.");
+            if (e.response && e.response.status === 403) {
+                mostrarError("No tienes permisos para habilitar plantillas. Verifica tu sesión.");
+            } else {
+                mostrarError("Error al guardar las plantillas. Intente nuevamente.");
+            }
         }
     }
 
     useEffect(() => {
         const fetchBase64Images = async () => {
-            const token = Cookies.get("access_token");
             const nuevasImagenes = {};
             for (const p of todasLasPlantillas) {
                 try {
-                    const imgRes = await axios.get(`http://localhost:9090/api/plantillas/${p.id}`, {
-                        headers: {
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`,
-                        },
-                    });
+                    const imgRes = await apiClient.get(`/plantillas/${p.id}`);
                     nuevasImagenes[p.id] = imgRes.data.data.base64Plantilla;
                 } catch (e) {
                     console.error(`Error cargando imagen de ${p.nombre}`, e);
@@ -94,19 +73,15 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
 
     const deshabilitarPlantilla = async (idPlantilla) => {
         try {
-            const token = Cookies.get("access_token");
-            await axios.delete(
-                `http://localhost:9090/api/plantillas/${idPlantilla}/deshabilitar-usuario/${idCliente}`,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                }
-            );
-            console.log(`Plantilla ${idPlantilla} deshabilitada correctamente`);
+            await apiClient.delete(`/plantillas/${idPlantilla}/deshabilitar-usuario/${idCliente}`);
+            mostrarExito("Plantilla deshabilitada correctamente.");
         } catch (e) {
             console.error(`Error al deshabilitar la plantilla ${idPlantilla}`, e);
+            if (e.response && e.response.status === 403) {
+                mostrarError("No tienes permisos para deshabilitar plantillas.");
+            } else {
+                mostrarError("Error al deshabilitar la plantilla.");
+            }
         }
     };
 
@@ -190,6 +165,14 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
             >
                 Guardar selección
             </button>
+            
+            <Notificacion
+                tipo={notificacion.tipo}
+                mensaje={notificacion.mensaje}
+                visible={notificacion.visible}
+                onClose={ocultarNotificacion}
+                duracion={notificacion.duracion}
+            />
         </div>
     )
 }

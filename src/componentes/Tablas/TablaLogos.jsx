@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Cookies from 'js-cookie';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { Link } from 'react-router-dom';
 import bolsa from '../../assets/pack designer final.png';
+import { useNotificacion } from '../../hooks/useNotificacion';
+import Notificacion from '../Notificaciones/Notificacion';
+import ModalConfirmacion from '../ModalConfirmacion';
 import "../../index.css"
+import "../../styles/main.css"
 
 export default function TablaLogos() {
   const [logos, setLogos] = useState([]);
   const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
+  const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null });
 
   useEffect(() => {
     fetchLogos();
@@ -17,7 +23,7 @@ export default function TablaLogos() {
     try {
       const id = Cookies.get("usuarioId");
       const token = Cookies.get('access_token');
-      const response = await axios.get(`http://localhost:9090/api/logos/usuario/${id}`, {
+      const response = await apiClient.get(`/logos/usuario/${id}`,{
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
@@ -29,22 +35,22 @@ export default function TablaLogos() {
     }
   };
 
-  const eliminarLogo = async (idEl) => {
-    if (window.confirm("¿Estás seguro que deseas eliminar el logo?")) {
-      try {
-        const token = Cookies.get('access_token');
-        await axios.delete(`http://localhost:9090/api/logos/${idEl}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        setLogos((prev) => prev.filter((c) => c.id !== idEl));
-      } catch (error) {
-        console.error('Error fetching logos:', error);
-      }
+  const handleEliminarClick = (idEl) => {
+    setModalEliminar({ visible: true, id: idEl });
+  };
+
+  const confirmarEliminar = async () => {
+    const idEl = modalEliminar.id;
+    try {
+      await apiClient.delete(`/logos/${idEl}`);
+      mostrarExito("Logo eliminado exitosamente.");
+      setLogos((prev) => prev.filter((c) => c.id !== idEl));
+    } catch (error) {
+      console.error('Error al eliminar logo:', error);
+      mostrarError("No se pudo eliminar el logo.");
     }
-  }
+    setModalEliminar({ visible: false, id: null });
+  };
   const handleNuevoLogo = () => {
     navigate('/logos/nuevo');
   };
@@ -77,7 +83,7 @@ export default function TablaLogos() {
                     <hr></hr>
                     <button
                       className="boton-2"
-                      onClick={() => eliminarLogo(logo.id)}
+                      onClick={() => handleEliminarClick(logo.id)}
                     >
                       Eliminar Logo
                     </button>
@@ -106,6 +112,23 @@ export default function TablaLogos() {
             </div>
           </div>
         </div>
+        
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
+        
+        <ModalConfirmacion
+          isVisible={modalEliminar.visible}
+          onClose={() => setModalEliminar({ visible: false, id: null })}
+          onConfirm={confirmarEliminar}
+          titulo="Eliminar logo"
+          mensaje="¿Estás seguro que deseas eliminar el logo? Esta acción no se puede deshacer."
+          tipo="danger"
+        />
       </div>
     </>
   )

@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { apiClient } from "../../config/axios";
+import { useNotificacion } from "../../hooks/useNotificacion";
+import Notificacion from "../Notificaciones/Notificacion";
+import ModalConfirmacion from "../ModalConfirmacion";
 
 export default function TablaDisenadores() {
   const navigate = useNavigate();
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
   const [disenadores, setDisenadores] = useState([]);
   const [disenadoresFiltrados, setDisenadoresFiltrados] = useState([]);
-  const [estado, setEstado] = useState(undefined);
   const [filtro, setFiltro] = useState("");
+  const [modalEliminar, setModalEliminar] = useState({ visible: false, nombre: null });
 
   useEffect(() => {
     fetchDisenadores();
@@ -24,42 +27,42 @@ export default function TablaDisenadores() {
   }, [filtro, disenadores]);
 
   const fetchDisenadores = async () => {
-    const token = Cookies.get("access_token");
     try {
-      const res = await axios.get(
-        "http://localhost:9090/api/usuarios/list/users/disenadores",
-        {
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await apiClient.get("/usuarios/list/users/disenadores");
       setDisenadores(res.data);
     } catch (e) {
-      setEstado("errorCarga");
+      console.error("Error al cargar diseñadores:", e);
+      mostrarError("No se pudieron cargar los diseñadores. Intente nuevamente más tarde.");
     }
   };
 
-  const eliminar = async (nombre) => {
-    if (window.confirm(`¿Seguro que desea eliminar a ${nombre}?`)) {
-      const token = Cookies.get("access_token");
-      try {
-        await axios.delete(
-          `http://localhost:9090/api/usuarios/eliminate/${nombre}`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            },
-          }
-        );
-        setEstado("eliminado");
-        setDisenadores((prev) => prev.filter((d) => d.username !== nombre));
-      } catch (error) {
-        setEstado("errorEliminar");
+  const handleEliminarClick = (nombre) => {
+    setModalEliminar({ visible: true, nombre });
+  };
+
+  const confirmarEliminar = async () => {
+    const nombre = modalEliminar.nombre;
+    if (!nombre) {
+      mostrarError("Error: No se pudo identificar el diseñador a eliminar.");
+      setModalEliminar({ visible: false, nombre: null });
+      return;
+    }
+    
+    try {
+      await apiClient.delete(`/usuarios/eliminate/${nombre}`);
+      mostrarExito("Diseñador eliminado exitosamente.");
+      setDisenadores((prev) => prev.filter((d) => d.username !== nombre));
+    } catch (error) {
+      console.error("Error al eliminar diseñador:", error);
+      if (error.response && error.response.status === 403) {
+        mostrarError("No tienes permisos para eliminar diseñadores. Verifica que tu usuario tenga el rol de administrador.");
+      } else if (error.response && error.response.status === 401) {
+        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+      } else {
+        mostrarError("No se pudo eliminar el diseñador. Intente nuevamente más tarde.");
       }
     }
+    setModalEliminar({ visible: false, nombre: null });
   };
 
   const irAOtroComponente = () => {
@@ -141,7 +144,7 @@ export default function TablaDisenadores() {
                               e.currentTarget.style.borderColor = "#016add";
                               e.currentTarget.style.transform = "scale(1)";
                             }}
-                            onClick={() => eliminar(d.username)}
+                            onClick={() => handleEliminarClick(d.username)}
                           >
                             Eliminar
                           </button>
@@ -161,34 +164,22 @@ export default function TablaDisenadores() {
           </div>
         </div>
 
-        {/* ALERTAS */}
-        {estado === "eliminado" && (
-          <div
-            className="alert alert-success position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            Diseñador eliminado exitosamente.
-          </div>
-        )}
-        {estado === "errorEliminar" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            No se pudo eliminar el diseñador.
-          </div>
-        )}
-        {estado === "errorCarga" && (
-          <div
-            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
-            role="alert"
-            style={{ zIndex: 9999 }}
-          >
-            No se pudieron cargar los diseñadores. Intente nuevamente más tarde.
-          </div>
-        )}
+        <Notificacion
+          tipo={notificacion.tipo}
+          mensaje={notificacion.mensaje}
+          visible={notificacion.visible}
+          onClose={ocultarNotificacion}
+          duracion={notificacion.duracion}
+        />
+        
+        <ModalConfirmacion
+          isVisible={modalEliminar.visible}
+          onClose={() => setModalEliminar({ visible: false, nombre: null })}
+          onConfirm={confirmarEliminar}
+          titulo="Eliminar diseñador"
+          mensaje={`¿Estás seguro que deseas eliminar a ${modalEliminar.nombre}? Esta acción no se puede deshacer.`}
+          tipo="danger"
+        />
       </div>
     </>
   );

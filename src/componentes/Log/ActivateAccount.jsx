@@ -33,7 +33,7 @@ export default function ActivateAccount() {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:9090/api/auth/activate-account', {
+      const response = await fetch('/api/auth/activate-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

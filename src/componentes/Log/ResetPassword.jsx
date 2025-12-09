@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import logo from '../../assets/pack designer final.png';
 import "../../index.css";
 
@@ -22,10 +22,7 @@ export default function ResetPassword() {
         }
 
         try {
-            await axios.post("http://localhost:9090/api/auth/reset-password", {
-                token: token,
-                newPassword: contraseñaReset
-            });
+            await apiClient.post("/auth/reset-password");
 
             setExito("true");
             setTimeout(() => navigate("/login"), 2000);

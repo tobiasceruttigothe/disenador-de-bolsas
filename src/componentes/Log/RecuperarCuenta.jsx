@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
-import axios from 'axios';
+import { apiClient } from '../../config/axios';
 import { useNavigate } from 'react-router-dom'
 import "../../index.css";
 
@@ -14,7 +14,7 @@ export default function RecuperarCuenta() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:9090/api/auth/forgot-password", { email: mail });
+      await apiClient.post("/auth/forgot-password");
       setExito(true);
       reset();
     } catch (error) {
@@ -44,8 +44,8 @@ export default function RecuperarCuenta() {
 
           <h2 className="text-center mb-4">Recuperar Cuenta</h2>
           <hr></hr>
-          <p className="my-4" style={{color: "black"}}>Para recuperar su cuenta, se le enviará un correo al mail que proporcione. Siga 
-            las instrucciones para restablecer la contraseña. 
+          <p className="my-4" style={{ color: "black" }}>Para recuperar su cuenta, se le enviará un correo al mail que proporcione. Siga
+            las instrucciones para restablecer la contraseña.
           </p>
           <div className="mb-3">
             <input
