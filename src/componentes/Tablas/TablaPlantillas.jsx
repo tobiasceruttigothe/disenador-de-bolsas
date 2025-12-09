@@ -143,7 +143,7 @@ export default function TablaPlantillas() {
 
             {/* TABLA */}
             <div style={{width:"1000px"}} className="table-responsive mb-4">
-              <table style={{width:"950px"}} className="table table-bordered table-striped table-hover">
+              <table style={{width:"955px"}} className="table table-bordered table-striped table-hover">
                 <thead className="table-light">
                   <tr>
                     <th>Nombre</th>

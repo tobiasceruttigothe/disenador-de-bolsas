@@ -1,5 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react'
 import { crearPDF } from '../../services/crearPDF'
+import { apiClient } from "../../config/axios";
 import Cookies from "js-cookie"
 import axios from "axios"
 import "../../styles/main.css"

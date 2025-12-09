@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import bolsa from "../../assets/pack designer final.png";
+import materiales from "../../assets/iconos_inicio/Adm_materiales.png";
+import tipoBolsa from "../../assets/iconos_inicio/Adm_tipos_bolsa.png";
+import plantillas from "../../assets/iconos_inicio/Adm_plantillas.jpg";
+
+
 
 export default function TablaProductos({ }) {
   const navigate = useNavigate()
   const acciones = [
-    { id: 1, nombre: "Administrar materiales", ruta: "/productos/materiales", imagen: bolsa },
-    { id: 2, nombre: "Administrar plantillas", ruta: "/productos/plantillas", imagen: bolsa },
-    { id: 3, nombre: "Administrar tipos de bolsa", ruta: "/productos/tiposbolsa", imagen: bolsa },
+    { id: 1, nombre: "Administrar materiales", ruta: "/productos/materiales", imagen: materiales },
+    { id: 2, nombre: "Administrar plantillas", ruta: "/productos/plantillas", imagen: plantillas },
+    { id: 3, nombre: "Administrar tipos de bolsa", ruta: "/productos/tiposbolsa", imagen: tipoBolsa },
   ];
 
   return (
@@ -30,7 +34,7 @@ export default function TablaProductos({ }) {
       >
         ←
       </button>
-      <div style={{marginTop:"85px"}} className="container-fluid min-vh-100 py-4 bg-light fondo">
+      <div style={{ marginTop: "85px" }} className="container-fluid min-vh-100 py-4 bg-light fondo">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
             <h2>Consultar productos</h2>
@@ -43,7 +47,15 @@ export default function TablaProductos({ }) {
                       className={`card card-accion text-center py-4`}
                       style={{ cursor: "pointer" }}
                     >
-                      <img src={accion.imagen} className="card-img-top" />
+                      <img
+                        src={accion.imagen}
+                        className="card-img-top"
+                        style={{
+                          width: "120px",
+                          height: "120px",
+                          objectFit: "contain"
+                        }}
+                      />
                       <button className="btn btn-primary mt-3 w-75">
                         {accion.nombre}
                       </button>

@@ -1,14 +1,16 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import user from "../../assets/user.png";
 import bolsa from "../../assets/pack designer final.png";
+import disenador from "../../assets/iconos_inicio/Reg_disenador.png"
+import admin from "../../assets/iconos_inicio/Reg_adm_gerencial.png"
+import cliente from "../../assets/iconos_inicio/Reg_cliente.png"
 
 export default function InicioAdmin() {
   const acciones = [
-    { id: 1, nombre: "Administrar diseñadores", ruta: "/disenadores", imagen: user },
-    { id: 2, nombre: "Administrar clientes", ruta: "/clientes", imagen: user },
-    { id: 3, nombre: "Administrar adm. gerenciales", ruta: "/admins", imagen: user },
+    { id: 1, nombre: "Administrar diseñadores", ruta: "/disenadores", imagen: disenador },
+    { id: 2, nombre: "Administrar clientes", ruta: "/clientes", imagen: cliente },
+    { id: 3, nombre: "Administrar adm. gerenciales", ruta: "/admins", imagen: admin },
     { id: 4, nombre: "Administrar productos", ruta: "/productos", imagen: bolsa },
   ];
 
@@ -20,7 +22,7 @@ export default function InicioAdmin() {
 
   return (
     <>
-      <div style={{marginTop:"85px"}} className="fondo py-5">
+      <div style={{ marginTop: "85px" }} className="fondo py-5">
         <div className="container">
           <h2 className="mb-4 text-center">Seleccioná una acción</h2>
           <hr></hr>
@@ -33,7 +35,15 @@ export default function InicioAdmin() {
                     onClick={() => handleClick(accion)}
                     style={{ cursor: "pointer" }}
                   >
-                    <img src={accion.imagen} className="card-img-top"/>
+                    <img
+                      src={accion.imagen}
+                      className="card-img-top"
+                      style={{
+                        width: "120px",
+                        height: "120px",
+                        objectFit: "contain"
+                      }}
+                    />
                     <button className="btn btn-primary mt-3 w-75">
                       {accion.nombre}
                     </button>

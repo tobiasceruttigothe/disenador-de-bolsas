@@ -1,14 +1,15 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import paper from "../../assets/papersrl.png";
-import bolsa from "../../assets/pack designer final.png";
+import misLogos from "../../assets/iconos_inicio/Mis_logos.png";
+import nuevoDiseño from "../../assets/iconos_inicio/Nuevo_diseño-logo.png";
+import misDiseños from "../../assets/iconos_inicio/Mis_disenos.png";
 
 export default function InicioCliente() {
   const acciones = [
-    { id: 1, nombre: "Mis diseños", ruta: "/disenos", imagen: bolsa },
-    { id: 2, nombre: "Crear diseño", ruta: "/nuevoDiseno", imagen: bolsa },
-    { id: 3, nombre: "Mis Logos", ruta: "/logos", imagen: paper}
+    { id: 1, nombre: "Mis diseños", ruta: "/disenos", imagen: misDiseños },
+    { id: 2, nombre: "Crear diseño", ruta: "/nuevoDiseno", imagen: nuevoDiseño },
+    { id: 3, nombre: "Mis Logos", ruta: "/logos", imagen: misLogos }
   ];
 
   const [seleccionada, setSeleccionada] = useState(null);
@@ -19,7 +20,7 @@ export default function InicioCliente() {
 
   return (
     <>
-      <div style={{marginTop:"85px"}} className="fondo py-5">
+      <div style={{ marginTop: "85px" }} className="fondo py-5">
         <div className="container">
           <h2 className="mb-4 text-center">Seleccioná una acción</h2>
           <hr></hr>
@@ -32,7 +33,15 @@ export default function InicioCliente() {
                     onClick={() => handleClick(accion)}
                     style={{ cursor: "pointer" }}
                   >
-                    <img src={accion.imagen} className="card-img-top"/>
+                    <img
+                      src={accion.imagen}
+                      className="card-img-top"
+                      style={{
+                        width: "120px",
+                        height: "120px",
+                        objectFit: "contain"
+                      }}
+                    />
                     <button className="btn btn-primary mt-3 w-75">
                       {accion.nombre}
                     </button>
