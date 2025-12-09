@@ -22,7 +22,7 @@ export default function ResetPassword() {
         }
 
         try {
-            await apiClient.post("/auth/reset-password");
+            await apiClient.post("/auth/reset-password", { email: mail });
 
             setExito("true");
             setTimeout(() => navigate("/login"), 2000);
