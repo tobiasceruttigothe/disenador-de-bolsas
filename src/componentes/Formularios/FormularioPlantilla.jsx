@@ -16,28 +16,27 @@ export default function FormularioCliente() {
   const [materiales, setMateriales] = useState([]);
   const [tiposBolsa, setTiposBolsa] = useState([]);
 
+  const [estado, setEstado] = useState("");
+
   useEffect(() => {
     const fetchMateriales = async () => {
       try {
         const response = await apiClient.get("/materiales");
         setMateriales(response.data.data);
-      } catch (error) {
-        console.error("Error al obtener los materiales:", error);
-      }
+      } catch (error) { }
     };
+
     const fetchTiposBolsa = async () => {
       try {
         const response = await apiClient.get("/tipos-bolsa");
         setTiposBolsa(response.data.data);
-      } catch (error) {
-        console.error("Error al obtener los tipos de bolsa:", error);
-      }
+      } catch (error) { }
     };
 
     fetchMateriales();
     fetchTiposBolsa();
-
   }, []);
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -66,41 +65,53 @@ export default function FormularioCliente() {
       profundidad: parseFloat(data.profundidad)
     };
 
-
-
     try {
+      setEstado("Cargando");
+
       await apiClient.post("/plantillas", payload);
+
       reset();
       setBase64Plantilla("");
       mostrarExito("Plantilla agregada con éxito");
+
       setTimeout(() => {
         navigate("/productos/plantillas");
       }, 1500);
+
+      setEstado("");
     } catch (error) {
-      console.error("Error al agregar la plantilla:", error);
       mostrarError("Ocurrió un error al agregar la plantilla");
+      setEstado("");
     }
   };
 
   return (
     <>
-      <button className="align-items-center d-flex justify-content-center"
+      <button
+        className="align-items-center d-flex justify-content-center"
         style={{
-          position: "fixed", top: "85px", left: "20px",
-          margin: "20px", width: "70px", height: "40px", padding: "10px",
-          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px"
         }}
         onClick={() => navigate("/productos/plantillas")}
       >
         ←
       </button>
+
       <div className="d-flex justify-content-center align-items-center vh-100 fondo">
         <form
           onSubmit={handleSubmit(handleSubmitForm)}
           className="w-100 bg-white p-4 rounded shadow"
           style={{ maxWidth: '1000px' }}
         >
-
           <div className="text-center mb-4">
             <img
               src={logo}
@@ -113,10 +124,7 @@ export default function FormularioCliente() {
           <h2 className="text-center mb-4">Agregar plantilla</h2>
 
           <div className="row">
-            {/* Columna izquierda */}
             <div className="col-md-6">
-
-              {/* Nombre */}
               <div className="mb-3">
                 <label htmlFor="nombre" className="form-label">Nombre de la plantilla</label>
                 <input
@@ -132,7 +140,6 @@ export default function FormularioCliente() {
                 {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
               </div>
 
-              {/* Material */}
               <div className="mb-3">
                 <label className="form-label">Material</label>
                 {materiales.length > 0 ? materiales.map(m => (
@@ -153,7 +160,6 @@ export default function FormularioCliente() {
               </div>
             </div>
 
-            {/* Columna derecha */}
             <div className="col-md-6">
               <div className="mb-3">
                 <label htmlFor="base64Plantilla" className="form-label">Archivo de Plantilla</label>
@@ -165,7 +171,7 @@ export default function FormularioCliente() {
                   onChange={handleFileChange}
                 />
               </div>
-              {/* Tipo de Bolsa */}
+
               <div className="mb-3">
                 <label className="form-label">Tipo de Bolsa</label>
                 {tiposBolsa.length > 0 ? tiposBolsa.map(t => (
@@ -186,8 +192,8 @@ export default function FormularioCliente() {
               </div>
             </div>
           </div>
+
           <div className="row">
-            {/* Ancho */}
             <div className="col-md-4 mb-3">
               <label htmlFor="ancho" className="form-label">Ancho (cm)</label>
               <input
@@ -201,7 +207,6 @@ export default function FormularioCliente() {
               {errors.ancho && <div className="invalid-feedback">{errors.ancho.message}</div>}
             </div>
 
-            {/* Alto */}
             <div className="col-md-4 mb-3">
               <label htmlFor="alto" className="form-label">Alto (cm)</label>
               <input
@@ -215,7 +220,6 @@ export default function FormularioCliente() {
               {errors.alto && <div className="invalid-feedback">{errors.alto.message}</div>}
             </div>
 
-            {/* Profundidad */}
             <div className="col-md-4 mb-3">
               <label htmlFor="profundidad" className="form-label">Profundidad (cm)</label>
               <input
@@ -234,12 +238,12 @@ export default function FormularioCliente() {
             className="btn w-100 text-white mt-3"
             style={{ backgroundColor: '#016add' }}
             type="submit"
+            disabled={estado === "Cargando"}
           >
-            Ingresar
+            {estado === "Cargando" ? "Cargando..." : "Ingresar"}
           </button>
 
         </form>
-
 
         <Notificacion
           tipo={notificacion.tipo}
@@ -252,7 +256,3 @@ export default function FormularioCliente() {
     </>
   );
 }
-
-
-
-

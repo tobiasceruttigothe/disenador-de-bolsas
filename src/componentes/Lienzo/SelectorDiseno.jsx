@@ -74,7 +74,7 @@ export default function SelectorDiseno({ }) {
       setModalEliminar({ visible: false, id: null });
       return;
     }
-    
+
     try {
       await apiClient.delete(`/disenos/${id}`);
       mostrarExito("Diseño eliminado exitosamente.");
@@ -96,11 +96,19 @@ export default function SelectorDiseno({ }) {
 
   return (
     <>
-      <button className="align-items-center d-flex justify-content-center"
+      <button
+        className="align-items-center d-flex justify-content-center"
         style={{
-          position: "fixed", top: "85px", left: "20px",
-          margin: "20px", width: "70px", height: "40px", padding: "10px",
-          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px"
         }}
         onClick={() => navigate("/inicio")}
       >
@@ -177,17 +185,17 @@ export default function SelectorDiseno({ }) {
         <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
           <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuDescargar>
         </Modal>
-            <Modal isVisible={modal3d} onClose={() => { setModal3d(false); setDisenoClick() }}>
-          <Menu3d 
-            setModal3d={setModal3d} 
-            disenoClick={disenoClick} 
+        <Modal isVisible={modal3d} onClose={() => { setModal3d(false); setDisenoClick() }}>
+          <Menu3d
+            setModal3d={setModal3d}
+            disenoClick={disenoClick}
             setDisenoClick={setDisenoClick}
             onSuccess={mostrarExito}
             onError={mostrarError}
             onUpdateDisenos={fetchDisenos}
           ></Menu3d>
         </Modal>
-        
+
         <Notificacion
           tipo={notificacion.tipo}
           mensaje={notificacion.mensaje}
@@ -195,7 +203,7 @@ export default function SelectorDiseno({ }) {
           onClose={ocultarNotificacion}
           duracion={notificacion.duracion}
         />
-        
+
         <ModalConfirmacion
           isVisible={modalEliminar.visible}
           onClose={() => setModalEliminar({ visible: false, id: null })}

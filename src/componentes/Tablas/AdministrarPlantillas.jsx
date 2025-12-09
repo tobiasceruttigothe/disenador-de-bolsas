@@ -10,6 +10,7 @@ export default function AdministrarPlantillas() {
   const [plantillasUsuario, setPlantillasUsuario] = useState([]);
   const [modalAbierto, setModalAbierto] = useState(false);
   const [imagenesBase64, setImagenesBase64] = useState({});
+  const [loadingImagenes, setLoadingImagenes] = useState(true);
 
   const params = new URLSearchParams(window.location.search);
   const username = params.get('user');
@@ -25,16 +26,20 @@ export default function AdministrarPlantillas() {
         const plantillas = res.data.data;
         setPlantillasUsuario(plantillas);
 
-        plantillas.forEach(p => {
-          buscarImagenBase64(p.id).then(img => {
-            setImagenesBase64(prev => ({
-              ...prev,
-              [p.id]: img
-            }));
-          });
-        });
+        // Esperamos todas las imágenes antes de actualizar el estado final
+        const imagenes = {};
+        await Promise.all(
+          plantillas.map(async p => {
+            imagenes[p.id] = await buscarImagenBase64(p.id);
+          })
+        );
+
+        setImagenesBase64(imagenes);
+        setLoadingImagenes(false);
+
       } catch (e) {
         console.error("Error al cargar las plantillas del cliente", e);
+        setLoadingImagenes(false);
       }
     };
 
@@ -50,20 +55,28 @@ export default function AdministrarPlantillas() {
       return "";
     }
   }
+
   return (
     <>
-      <button className="align-items-center d-flex justify-content-center"
+      <button
+        className="align-items-center d-flex justify-content-center"
         style={{
-          position: "fixed", top: "85px", left: "20px",
-          margin: "20px", width: "70px", height: "40px", padding: "10px",
-          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px"
         }}
         onClick={() => navigate("/verClientes")}
       >
         ←
       </button>
-
-      <div style={{marginTop:"85px"}} className="container-fluid min-vh-100 py-4 fondo">
+      <div style={{ marginTop: "85px" }} className="container-fluid min-vh-100 py-4 fondo">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
             <h2 className="mb-4">Administrar Plantillas de {username}</h2>
@@ -84,23 +97,11 @@ export default function AdministrarPlantillas() {
                           verticalAlign: 'middle',
                           fontSize: '20px',
                           fontWeight: '500'
-                        }}>{p.nombre}</td>
+                        }}>
+                          {p.nombre}
+                        </td>
                         <td style={{ textAlign: 'center', verticalAlign: 'middle' }}>
-                          {imagenesBase64[p.id] ? (
-                            <img
-                              src={`data:image/png;base64,${imagenesBase64[p.id]}`}
-                              alt={p.nombre}
-                              style={{
-                                width: '100px',
-                                height: 'auto',
-                                display: "block",
-                                margin: "10px auto",
-                                objectFit: "contain",
-                                borderRadius: "8px",
-                                padding: "4px",
-                              }}
-                            />
-                          ) : (
+                          {loadingImagenes ? (
                             <div
                               style={{
                                 width: "100px",
@@ -119,6 +120,20 @@ export default function AdministrarPlantillas() {
                             >
                               Cargando...
                             </div>
+                          ) : (
+                            <img
+                              src={`data:image/png;base64,${imagenesBase64[p.id]}`}
+                              alt={p.nombre}
+                              style={{
+                                width: '100px',
+                                height: 'auto',
+                                display: "block",
+                                margin: "10px auto",
+                                objectFit: "contain",
+                                borderRadius: "8px",
+                                padding: "4px",
+                              }}
+                            />
                           )}
                         </td>
                       </tr>

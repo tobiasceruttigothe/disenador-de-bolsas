@@ -10,20 +10,20 @@ import { logTokenInfo } from '../../utils/decodeToken';
 
 export default function FormularioDiseñador() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
+  const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
-  // Verificar token y permisos al montar
   useEffect(() => {
     logTokenInfo();
     const rol = Cookies.get('rol');
     if (rol !== 'admin') {
-      console.warn('⚠️ Usuario no es admin. Rol actual:', rol);
       mostrarError('Solo los administradores pueden crear usuarios.');
     }
   }, []);
 
   const handleSubmitForm = async (data) => {
+    setCargando(true);
     const payload = {
       username: data.nombre,
       email: data.mail,
@@ -35,11 +35,6 @@ export default function FormularioDiseñador() {
     };
 
     try {
-      // Verificar rol antes de enviar
-      const rol = Cookies.get('rol');
-      console.log('🔐 Rol del usuario:', rol);
-      console.log('📤 Enviando petición para crear diseñador:', payload);
-
       await apiClient.post("/usuarios/create", payload);
       reset();
       mostrarExito("Diseñador agregado con éxito");
@@ -47,38 +42,44 @@ export default function FormularioDiseñador() {
         navigate("/disenadores");
       }, 1500);
     } catch (error) {
-      console.error("Error al agregar el diseñador:", error);
-      console.error("Response:", error.response?.data);
-      console.error("Status:", error.response?.status);
-      console.error("Headers enviados:", error.config?.headers);
-
       if (error.response && error.response.status === 403) {
         const rol = Cookies.get('rol');
-        mostrarError(`No tienes permisos para crear usuarios. Tu rol actual es: ${rol || 'no definido'}. Solo los administradores pueden crear usuarios.`);
+        mostrarError(`No tienes permisos para crear usuarios. Tu rol actual es: ${rol || 'no definido'}.`);
       } else if (error.response && error.response.status === 401) {
-        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
+        mostrarError("Tu sesión ha expirado. Inicia sesión nuevamente.");
       } else if (error.response && error.response.status === 409) {
         mostrarError("Nombre de usuario ya registrado");
       } else if (error.response && error.response.status === 502) {
         mostrarError("Mail ya registrado");
       } else {
-        mostrarError("Ocurrió un error al agregar el diseñador. Intente nuevamente más tarde.");
+        mostrarError("Error inesperado. Intente más tarde.");
       }
+    } finally {
+      setCargando(false);
     }
   };
 
   return (
     <>
-      <button className="align-items-center d-flex justify-content-center"
+      <button
+        className="align-items-center d-flex justify-content-center"
         style={{
-          position: "fixed", top: "85px", left: "20px",
-          margin: "20px", width: "70px", height: "40px", padding: "10px",
-          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px"
         }}
         onClick={() => navigate("/disenadores")}
       >
         ←
       </button>
+
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light fondo">
         <form
           onSubmit={handleSubmit(handleSubmitForm)}
@@ -95,7 +96,6 @@ export default function FormularioDiseñador() {
           </div>
           <h2 className="text-center mb-4">Agregar Diseñador</h2>
 
-          {/* Nombre */}
           <div className="mb-3">
             <label htmlFor="nombre" className="form-label">Nombre de usuario</label>
             <input
@@ -112,11 +112,10 @@ export default function FormularioDiseñador() {
             {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
           </div>
 
-          {/* Razon Social = NOMBRE DEL DISEÑADOR */}
           <div className="mb-3">
-            <label htmlFor="nombre" className="form-label">Nombre y apellido del empleado</label>
+            <label htmlFor="nombreApellido" className="form-label">Nombre y apellido del empleado</label>
             <input
-              id="nombre"
+              id="nombreApellido"
               placeholder="Ingrese el nombre y apellido del empleado"
               type="text"
               className={`form-control ${errors.nombreApellido ? 'is-invalid' : ''}`}
@@ -126,7 +125,7 @@ export default function FormularioDiseñador() {
             />
             {errors.nombreApellido && <div className="invalid-feedback">{errors.nombreApellido.message}</div>}
           </div>
-          {/* Mail */}
+
           <div className="mb-3">
             <label htmlFor="mail" className="form-label">Mail</label>
             <input
@@ -146,9 +145,10 @@ export default function FormularioDiseñador() {
           <button
             className="btn w-100 text-white"
             style={{ backgroundColor: '#016add' }}
+            disabled={cargando}
             type="submit"
           >
-            Ingresar
+            {cargando ? "Cargando..." : "Ingresar"}
           </button>
         </form>
 

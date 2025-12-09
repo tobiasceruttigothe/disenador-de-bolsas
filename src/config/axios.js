@@ -17,17 +17,7 @@ apiClient.interceptors.request.use(
     
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
-      // Log solo para peticiones importantes o cuando hay problemas
-      if (config.url?.includes('/disenos') || config.url?.includes('/usuarios/create')) {
-        console.log('🔐 Token agregado a la petición:', config.url);
-        console.log('🔐 Header Authorization presente:', !!config.headers.Authorization);
-        console.log('🔐 Token (primeros 50 chars):', token.substring(0, 50) + '...');
-      }
-    } else {
-      console.error('❌ No se encontró token en cookies para la petición:', config.url);
-      console.error('❌ Cookies disponibles:', document.cookie);
     }
-    
     return config;
   },
   (error) => {

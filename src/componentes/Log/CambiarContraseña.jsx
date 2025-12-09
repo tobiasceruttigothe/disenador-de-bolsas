@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
 import { apiClient } from '../../config/axios';
 import "../../index.css";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 export default function CambiarConstraseña() {
   const [mail, setMail] = useState("");
-  const [exito, setExito] = useState(null); 
+  const [exito, setExito] = useState(null);
 
   const navigate = useNavigate()
 
@@ -26,22 +26,24 @@ export default function CambiarConstraseña() {
 
   return (
     <>
-      <button className="align-items-center d-flex justify-content-center"
-            style={{
-                position: "fixed", top: "85px", left: "20px",
-                margin: "20px",
-                width: "70px", height: "40px",
-                padding: "10px",
-                backgroundColor: "white",
-                color: "#016add",
-                border: "1px solid #016add",
-                borderRadius: "7px"
-            }}
-
-            onClick={() => navigate("/perfil")}
-        >
-            ←
-        </button>
+      <button
+        className="align-items-center d-flex justify-content-center"
+        style={{
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px"
+        }}
+        onClick={() => navigate("/perfil")}
+      >
+        ←
+      </button>
       <div className="d-flex justify-content-center align-items-center vh-100 bg-light fondo">
         <form
           onSubmit={handleSubmit}

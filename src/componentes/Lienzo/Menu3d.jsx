@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import { crearPDF } from '../../services/crearPDF'
 import Cookies from "js-cookie"
 import axios from "axios"
@@ -71,30 +71,6 @@ export default function Menu3d({ setModal3d, disenoClick, setDisenoClick, onSucc
             <h2 >Generar vista 3D</h2>
             <hr />
 
-<<<<<<< HEAD
-
-            <div
-                className="p-3"
-            >
-                <div>
-                    <h5>Si lo desea, puede generar una vista 3D del diseño creado.</h5>
-                    <button onClick={handle3d} className="boton-1 ">Generar imagen 3D</button>
-                    <p className="mt-3"><i className="fa fa-info-circle fa-xs"></i> La imagen es generada por un servidor externo. Puede cometer errores. Paper SRL se desentiende del resultado conseguido.</p>
-
-                </div>
-
-            </div>
-
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button
-                    className="boton-2 w-25 mt-3 me-3"
-                    onClick={() => { setModal3d(false); setDisenoClick() }}
-                    type="submit"
-                >
-                    Volver
-                </button>
-            </div>
-=======
             <div className="p-3">
                 {!isLoading ? (
                     // --- VISTA INICIAL (LIMPIA) ---
@@ -143,7 +119,6 @@ export default function Menu3d({ setModal3d, disenoClick, setDisenoClick, onSucc
                     </button>
                 </div>
             )}
->>>>>>> c807c3012ccd8b7b9a37079c1778ef20227f0e57
         </div>
     )
 }

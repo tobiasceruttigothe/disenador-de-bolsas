@@ -2,21 +2,21 @@ import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
 import { apiClient } from '../../config/axios';
 import { useForm } from 'react-hook-form';
-import Cookies from "js-cookie";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
 export default function FormularioTipoBolsa() {
+  const [cargando, setCargando] = useState(false);
   const [estado, setEstado] = useState(null);
   const [mensaje, setMensaje] = useState("");
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
-
   const navigate = useNavigate()
 
   const handleSubmitForm = async (data) => {
     const payload = { nombre: data.nombre };
 
     try {
+      setCargando(true);
       setEstado("Cargando");
       setMensaje("Cargando...");
 
@@ -27,22 +27,35 @@ export default function FormularioTipoBolsa() {
       setMensaje("Tipo de bolsa agregado con éxito");
     } catch (error) {
       console.error("Error al agregar tipo de bolsa:", error);
-      setMensaje("Ocurrió un error al agregar el tipo de bolsa");
       setEstado("Error");
+      setMensaje("Ocurrió un error al agregar el tipo de bolsa");
+    } finally {
+      setCargando(false);
     }
   };
 
   return (
     <>
-      <button className="align-items-center d-flex justify-content-center"
-        style={{position:"fixed", top:"85px", left:"20px",
-          margin: "20px", width: "70px", height: "40px", padding: "10px",
-          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+      <button
+        className="align-items-center d-flex justify-content-center"
+        style={{
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px"
         }}
         onClick={() => navigate("/productos/tiposbolsa")}
       >
         ←
       </button>
+
+
       <div className="d-flex justify-content-center align-items-center vh-100 fondo">
         <form
           onSubmit={handleSubmit(handleSubmitForm)}
@@ -65,7 +78,7 @@ export default function FormularioTipoBolsa() {
               {...register("nombre", {
                 required: "El nombre es obligatorio",
                 maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" },
-                minLength: { value: 3, message: "Debe tener al menos 3 caracteres"}
+                minLength: { value: 3, message: "Debe tener al menos 3 caracteres" }
               })}
             />
             {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
@@ -74,9 +87,9 @@ export default function FormularioTipoBolsa() {
           <button
             className="btn w-100 text-white"
             style={{ backgroundColor: '#016add' }}
-            disabled={estado === "Cargando"}
+            disabled={cargando}
           >
-            {estado === "Cargando" ? "Enviando..." : "Enviar"}
+            {cargando ? "Cargando..." : "Enviar"}
           </button>
         </form>
 

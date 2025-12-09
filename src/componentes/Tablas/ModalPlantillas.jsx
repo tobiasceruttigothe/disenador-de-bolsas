@@ -41,7 +41,6 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
             
             await Promise.all(promises);
             setPlantillasUsuario(plantillasCliente);
-            mostrarExito("Plantillas habilitadas correctamente.");
             setModalAbierto(false);
         } catch (e) {
             console.error("Error al agregar las plantillas al cliente", e);
@@ -74,7 +73,6 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
     const deshabilitarPlantilla = async (idPlantilla) => {
         try {
             await apiClient.delete(`/plantillas/${idPlantilla}/deshabilitar-usuario/${idCliente}`);
-            mostrarExito("Plantilla deshabilitada correctamente.");
         } catch (e) {
             console.error(`Error al deshabilitar la plantilla ${idPlantilla}`, e);
             if (e.response && e.response.status === 403) {

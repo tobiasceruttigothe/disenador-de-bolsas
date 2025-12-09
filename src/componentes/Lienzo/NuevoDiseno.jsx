@@ -11,6 +11,7 @@ import { API_BASE_URL } from "../../config/api";
 import { useNotificacion } from "../../hooks/useNotificacion";
 import Notificacion from "../Notificaciones/Notificacion";
 import { logTokenInfo } from "../../utils/decodeToken";
+import ModalLogos from "./ModalLogos.jsx";
 import "../../index.css"
 
 export default function NuevoDiseno() {
@@ -22,6 +23,8 @@ export default function NuevoDiseno() {
   const [modalAbierto, setModalAbierto] = useState(false);
 
   const [plantillaBool, setPlantillaBool] = useState(false);
+  const [logosBool, setLogosBool] = useState(false);
+  const [logos, setLogos] = useState([]);
 
   const navigate = useNavigate()
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
@@ -43,6 +46,23 @@ export default function NuevoDiseno() {
     };
     fetchPlantillas();
 
+  }, []);
+
+  useEffect(() => {
+    const fetchLogos = async () => {
+      try {
+        const id = Cookies.get("usuarioId");
+        if (!id) {
+          console.error("No se encontró el ID de usuario");
+          return;
+        }
+        const res = await apiClient.get(`/logos/usuario/${id}`);
+        setLogos(res.data.data || []);
+      } catch (e) {
+        console.error("Error al cargar los logos", e);
+      }
+    };
+    fetchLogos();
   }, []);
 
   useEffect(() => {
@@ -93,35 +113,35 @@ export default function NuevoDiseno() {
       const tokenInfo = logTokenInfo();
       const token = Cookies.get("access_token");
       const rol = Cookies.get("rol");
-      
+
       if (!token) {
         mostrarError("Error: No se encontró el token de acceso. Por favor, inicia sesión nuevamente.");
         return;
       }
-      
+
       if (!tokenInfo || !tokenInfo.roles || !tokenInfo.roles.includes('DISEÑADOR') && !tokenInfo.roles.includes('CLIENTE')) {
         console.warn('⚠️ El usuario no tiene los roles necesarios para crear diseños');
         console.warn('⚠️ Roles en el token:', tokenInfo?.roles);
         console.warn('⚠️ Rol en cookie:', rol);
       }
-      
+
       const { guardarDiseno, guardarElementos } = await import("../../services/lienzoCreacion.js");
       const dataURL = guardarDiseno(canvasInstance.current);
       const elementos = JSON.stringify(guardarElementos(canvasInstance.current));
-      
+
       const usuarioId = Cookies.get("usuarioId");
       if (!usuarioId) {
         console.error('❌ usuarioId no encontrado en cookies');
         mostrarError("Error: No se encontró el ID de usuario. Por favor, inicia sesión nuevamente.");
         return;
       }
-      
+
       if (!plantillaElegida || !plantillaElegida.id) {
         console.error('❌ No se ha seleccionado una plantilla');
         mostrarError("Error: Debes seleccionar una plantilla antes de guardar el diseño.");
         return;
       }
-      
+
       const payload = {
         usuarioId: usuarioId,
         plantillaId: plantillaElegida.id,
@@ -130,7 +150,7 @@ export default function NuevoDiseno() {
         base64Diseno: elementos,
         base64Preview: dataURL
       };
-      
+
       console.log('📤 Enviando petición para guardar diseño');
       console.log('📤 Payload:', {
         usuarioId: payload.usuarioId,
@@ -143,7 +163,7 @@ export default function NuevoDiseno() {
       console.log('📤 URL completa:', API_BASE_URL + '/disenos');
       console.log('📤 Token presente:', !!token);
       console.log('📤 Rol:', rol);
-      
+
       const res = await apiClient.post("/disenos", payload);
       mostrarExito("Diseño guardado correctamente.");
       setTimeout(() => {
@@ -153,7 +173,7 @@ export default function NuevoDiseno() {
       console.error("Error al guardar el diseño:", error);
       console.error("Response:", error.response?.data);
       console.error("Status:", error.response?.status);
-      
+
       if (error.response && error.response.status === 403) {
         logTokenInfo();
         console.error('🔍 Detalles del error 403:');
@@ -181,7 +201,7 @@ export default function NuevoDiseno() {
           baseURL: error.config?.baseURL,
           headers: error.config?.headers
         }, null, 2));
-        
+
         const rol = Cookies.get('rol');
         const token = Cookies.get('access_token');
         mostrarError(`No tienes permisos para guardar diseños. Tu rol actual es: ${rol || 'no definido'}. Verifica que tu usuario tenga el rol de cliente o diseñador y que el token sea válido. Token presente: ${token ? 'Sí' : 'No'}`);
@@ -194,7 +214,7 @@ export default function NuevoDiseno() {
   };
 
   return (
-    <div className="container-fluid fondo">
+    <div className="container-fluid fondo" style={{ paddingTop: "60px", paddingBottom: "80px" }}>
       <div className="row">
         <div className="col-4 border-end">
           <MenuDiseno
@@ -208,11 +228,14 @@ export default function NuevoDiseno() {
             agregarLinea={(color) => agregarFigura("agregarLinea", color)}
             agregarTriangulo={(color) => agregarFigura("agregarTriangulo", color)}
             activarModoDibujo={activarModoDibujo}
+            setLogosBool={setLogosBool}
+            logos={logos}
           />
         </div>
-        <div className="col-8">
+        <div className="col-8" style={{ height: "760px", widht: "100%" }}>
           <Lienzo canvasRef={canvasRef} />
         </div>
+
       </div>
 
       <button
@@ -235,7 +258,10 @@ export default function NuevoDiseno() {
       <Modal isVisible={!plantillaBool} onClose={() => setPlantillaBool(false)}>
         <MenuSelectorPlantilla plantillas={plantillas} setPlantillaElegida={setPlantillaElegida} setPlantillaBool={setPlantillaBool}></MenuSelectorPlantilla>
       </Modal>
-      
+      <Modal isVisible={logosBool} onClose={() => setLogosBool(false)}>
+        <ModalLogos setLogosBool={setLogosBool} logos={logos} setLogos={setLogos}></ModalLogos>
+      </Modal>
+
       <Notificacion
         tipo={notificacion.tipo}
         mensaje={notificacion.mensaje}

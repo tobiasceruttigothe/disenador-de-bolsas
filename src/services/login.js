@@ -5,15 +5,12 @@ import { KEYCLOAK_TOKEN_URL } from '../config/api.js';
 
 export async function login(user) {
     try {
-        const link = KEYCLOAK_TOKEN_URL; // Asegúrate que sea http://localhost:8080/realms/tesina/protocol/openid-connect/token
+        const link = KEYCLOAK_TOKEN_URL; 
         const params = new URLSearchParams();
         
         // CAMBIO 1: Usar el nuevo cliente público
         params.append('client_id', 'frontend-service'); 
-        
-        // CAMBIO 2: ELIMINAR el client_secret (los clientes públicos no lo usan)
-        // params.append('client_secret', '...'); 
-        
+
         params.append('grant_type', 'password');
         params.append('username', user.mail.trim());
         params.append('password', user.contraseña);

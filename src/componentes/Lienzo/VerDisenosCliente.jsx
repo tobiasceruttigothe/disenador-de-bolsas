@@ -85,121 +85,123 @@ export default function VerDisenosCliente({ }) {
         }
     };
 
-const handleEliminarClick = (id) => {
-    setModalEliminar({ visible: true, id });
-};
+    const handleEliminarClick = (id) => {
+        setModalEliminar({ visible: true, id });
+    };
 
-const confirmarEliminar = async () => {
-    const id = modalEliminar.id;
-    try {
-        await apiClient.delete(`/disenos/${id}`);
-        mostrarExito("Diseño eliminado exitosamente.");
-        setDisenos((prev) => prev.filter((d) => d.id !== id));
-    } catch (e) {
-        console.error("Error al eliminar diseño:", e);
-        mostrarError("Surgió un error al eliminar el diseño.");
-    }
-    setModalEliminar({ visible: false, id: null });
-};
+    const confirmarEliminar = async () => {
+        const id = modalEliminar.id;
+        try {
+            await apiClient.delete(`/disenos/${id}`);
+            mostrarExito("Diseño eliminado exitosamente.");
+            setDisenos((prev) => prev.filter((d) => d.id !== id));
+        } catch (e) {
+            console.error("Error al eliminar diseño:", e);
+            mostrarError("Surgió un error al eliminar el diseño.");
+        }
+        setModalEliminar({ visible: false, id: null });
+    };
 
-return (
-    <>
-        <button className="align-items-center d-flex justify-content-center"
-            style={{
-                position: "fixed", top: "85px", left: "20px",
-                margin: "20px",
-                width: "70px", height: "40px",
-                padding: "10px",
-                backgroundColor: "white",
-                color: "#016add",
-                border: "1px solid #016add",
-                borderRadius: "7px"
-            }}
+    return (
+        <>
+            <button
+                className="align-items-center d-flex justify-content-center"
+                style={{
+                    position: "fixed",
+                    top: "9vh",
+                    left: "3vw",
+                    width: "70px",
+                    height: "40px",
+                    padding: "10px",
+                    backgroundColor: "white",
+                    color: "#016add",
+                    border: "1px solid #016add",
+                    borderRadius: "7px"
+                }}
+                onClick={() => navigate("/verClientes")}
+            >
+                ←
+            </button>
 
-            onClick={() => navigate("/verClientes")}
-        >
-            ←
-        </button>
+            <div style={{ marginTop: "85px" }} className='fondo'>
+                <div className="container">
+                    <h2 className="my-3">Diseños de {usuario.username}</h2>
+                    <div className="row">
+                        {disenos.length > 0 ? (disenos.map((diseno) => (
+                            <div
+                                key={diseno.id}
+                                className={`col-md-4 mb-4`}
+                            >
 
-        <div style={{ marginTop: "85px" }} className='fondo'>
-            <div className="container">
-                <h2 className="my-3">Diseños de {usuario.username}</h2>
-                <div className="row">
-                    {disenos.length > 0 ? (disenos.map((diseno) => (
-                        <div
-                            key={diseno.id}
-                            className={`col-md-4 mb-4`}
-                        >
+                                <div className="card h-100">
+                                    <img onClick={() => handleClick(diseno)} src={`data:image/png;base64, ${diseno.base64Preview}`} className="card-img-top" alt={diseno.nombre} />
+                                    <hr />
+                                    <div className="card-body">
+                                        <h5 className="card-title">{diseno.nombre}</h5>
+                                        <p className="card-text">{diseno.descripcion ? diseno.descripcion : <>&nbsp;</>}</p>
+                                        <div className="d-flex gap-2">
+                                            <button className="boton-2" onClick={() => handleClick(diseno)}>Editar diseño</button>
+                                            <button className="boton-1" onClick={() => handleEliminarClick(diseno.id)}>Eliminar diseño</button>
+                                            <div className="dropdown">
+                                                <button
+                                                    className="btn"
+                                                    type="button"
+                                                    data-bs-toggle="dropdown"
+                                                    aria-expanded="false"
+                                                >
+                                                    ⋮
+                                                </button>
 
-                            <div className="card h-100">
-                                <img onClick={() => handleClick(diseno)} src={`data:image/png;base64, ${diseno.base64Preview}`} className="card-img-top" alt={diseno.nombre} />
-                                <hr />
-                                <div className="card-body">
-                                    <h5 className="card-title">{diseno.nombre}</h5>
-                                    <p className="card-text">{diseno.descripcion ? diseno.descripcion : <>&nbsp;</>}</p>
-                                    <div className="d-flex gap-2">
-                                        <button className="boton-2" onClick={() => handleClick(diseno)}>Editar diseño</button>
-                                        <button className="boton-1" onClick={() => handleEliminarClick(diseno.id)}>Eliminar diseño</button>
-                                        <div className="dropdown">
-                                            <button
-                                                className="btn"
-                                                type="button"
-                                                data-bs-toggle="dropdown"
-                                                aria-expanded="false"
-                                            >
-                                                ⋮
-                                            </button>
+                                                <ul className="dropdown-menu">
+                                                    <li><button className="dropdown-item" onClick={() => handleVer(diseno)}>Ver mi diseño</button></li>
+                                                    <li><button className="dropdown-item" onClick={() => handleDescargar(diseno)}>Descargar</button></li>
+                                                    <li><button className="dropdown-item" onClick={() => handleGenerar(diseno)}>Generar vista 3D</button></li>
+                                                    <li><button className="dropdown-item" onClick={() => handleDuplicar(diseno)}>Generar duplicado</button></li>
+                                                </ul>
+                                            </div>
 
-                                            <ul className="dropdown-menu">
-                                                <li><button className="dropdown-item" onClick={() => handleVer(diseno)}>Ver mi diseño</button></li>
-                                                <li><button className="dropdown-item" onClick={() => handleDescargar(diseno)}>Descargar</button></li>
-                                                <li><button className="dropdown-item" onClick={() => handleGenerar(diseno)}>Generar vista 3D</button></li>
-                                                <li><button className="dropdown-item" onClick={() => handleDuplicar(diseno)}>Generar duplicado</button></li>
-                                            </ul>
                                         </div>
 
                                     </div>
-
                                 </div>
                             </div>
+
+                        ))) : (
+                            <p>No tienes diseños guardados. ¡Creá uno nuevo!</p>
+                        )}
+                        <hr />
+                        <div
+                            key={"nuevoDiseno"}
+                            className={`col-md-4 mb-4`}
+                        >
+                            <Link to={`/nuevoDiseno`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                                <div className="card h-100">
+                                    <img src={bolsa} className="card-img-top" alt={"nuevo diseño"} />
+                                    <hr />
+                                    <div className="card-body">
+                                        <h5 className="card-title">Nuevo diseño</h5>
+                                        <p className="card-text">Crear nuevo diseño</p>
+                                    </div>
+                                </div>
+                            </Link>
                         </div>
-
-                    ))) : (
-                        <p>No tienes diseños guardados. ¡Creá uno nuevo!</p>
-                    )}
-                    <hr />
-                    <div
-                        key={"nuevoDiseno"}
-                        className={`col-md-4 mb-4`}
-                    >
-                        <Link to={`/nuevoDiseno`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            <div className="card h-100">
-                                <img src={bolsa} className="card-img-top" alt={"nuevo diseño"} />
-                                <hr />
-                                <div className="card-body">
-                                    <h5 className="card-title">Nuevo diseño</h5>
-                                    <p className="card-text">Crear nuevo diseño</p>
-                                </div>
-                            </div>
-                        </Link>
                     </div>
                 </div>
+                <Modal isVisible={modalVer} onClose={() => { setModalVer(false); setDisenoClick() }}>
+                    <MenuVer setModalVer={setModalVer} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuVer>
+                </Modal>
+                <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
+                    <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuDescargar>
+                </Modal>
+
+                <Notificacion
+                    tipo={notificacion.tipo}
+                    mensaje={notificacion.mensaje}
+                    visible={notificacion.visible}
+                    onClose={ocultarNotificacion}
+                    duracion={notificacion.duracion}
+                />
             </div>
-            <Modal isVisible={modalVer} onClose={() => { setModalVer(false); setDisenoClick() }}>
-                <MenuVer setModalVer={setModalVer} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuVer>
-            </Modal>
-            <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
-                <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick}></MenuDescargar>
-            </Modal>
-            
-            <Notificacion
-                tipo={notificacion.tipo}
-                mensaje={notificacion.mensaje}
-                visible={notificacion.visible}
-                onClose={ocultarNotificacion}
-                duracion={notificacion.duracion}
-            />
-        </div>
-    </>
-);
+        </>
+    );
 }

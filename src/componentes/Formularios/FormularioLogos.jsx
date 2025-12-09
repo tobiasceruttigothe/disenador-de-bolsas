@@ -14,9 +14,6 @@ export default function FormularioLogos() {
 
     const navigate = useNavigate()
 
-    useEffect(() => {
-
-    }, []);
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -30,7 +27,6 @@ export default function FormularioLogos() {
     };
 
     const handleSubmitForm = async (data) => {
-        const token = Cookies.get('access_token');
 
         if (!base64Logo) {
             setMensaje("Debe seleccionar un archivo de plantilla");
@@ -43,7 +39,6 @@ export default function FormularioLogos() {
             nombre: data.nombre,
             base64Logo: base64Logo,
         };
-
 
         try {
             setEstado("Cargando");
@@ -61,7 +56,6 @@ export default function FormularioLogos() {
                 setEstado("Error");
                 return;
             }
-            console.error("Error al agregar el logo:", error);
             setMensaje("Ocurrió un error al agregar el logo");
             setEstado("Error");
         }
@@ -70,12 +64,14 @@ export default function FormularioLogos() {
     return (
         <div className="fondo position-relative" style={{ minHeight: "100vh" }}>
             <button
+                className="align-items-center d-flex justify-content-center"
                 style={{
                     position: "fixed",
-                    top: "85px",
-                    left: "20px",
+                    top: "9vh",
+                    left: "3vw",
                     width: "70px",
                     height: "40px",
+                    padding: "10px",
                     backgroundColor: "white",
                     color: "#016add",
                     border: "1px solid #016add",
@@ -103,37 +99,34 @@ export default function FormularioLogos() {
                         />
                     </div>
                     <h2 className="text-center mb-4">Agregar logo</h2>
-                    <hr></hr>
-                    {/* Nombre */}
+                    <hr />
+
                     <div className="mb-3">
                         <label htmlFor="nombre" className="form-label">Nombre</label>
                         <input
                             id="nombre"
                             type="text"
-                            accept=".jpeg, .jpg, .png"
                             placeholder="Ingrese un nombre del logo"
                             className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-                            {...register("nombre", { required: "El nombre es obligatorio",
-                                minLength: {value:3, message:"Debe tener al menos 3 caracteres"}
-                             })}
+                            {...register("nombre", {
+                                required: "El nombre es obligatorio",
+                                minLength: { value: 3, message: "Debe tener al menos 3 caracteres" }
+                            })}
                         />
                         {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
                     </div>
 
-                    {/* Archivo -> Base64 */}
                     <div className="mb-3">
                         <label htmlFor="base64Logo" className="form-label">Archivo del logo (Máximo 5Mb)</label>
                         <input
                             id="base64Logo"
                             type="file"
                             accept=".jpg,.png,.pdf,.svg"
-                            className={`form-control ${!base64Logo && estado === "Error" ? 'is-invalid' : ''}`}
+                            className="form-control"
                             onChange={handleFileChange}
                         />
-                        {!base64Logo && estado === "Error" && (
-                            <div className="invalid-feedback">Debe seleccionar un archivo</div>
-                        )}
                     </div>
+
                     {base64Logo && (
                         <>
                             <p>Vista previa del logo: </p>
@@ -147,6 +140,7 @@ export default function FormularioLogos() {
                             </div>
                         </>
                     )}
+
                     <button
                         className="btn w-100 text-white"
                         style={{ backgroundColor: '#016add' }}
@@ -156,7 +150,6 @@ export default function FormularioLogos() {
                     </button>
                 </form>
 
-                {/* Alertas dinámicas */}
                 {estado && (
                     <div
                         className={`alert ${estado === "Exito"
@@ -174,7 +167,3 @@ export default function FormularioLogos() {
         </div>
     );
 }
-
-
-
-

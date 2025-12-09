@@ -18,7 +18,7 @@ export default function TablaDisenadores() {
   }, []);
 
   useEffect(() => {
-  
+
     setDisenadoresFiltrados(
       disenadores.filter((d) =>
         d?.username.toLowerCase().includes(filtro.toLowerCase())
@@ -47,7 +47,7 @@ export default function TablaDisenadores() {
       setModalEliminar({ visible: false, nombre: null });
       return;
     }
-    
+
     try {
       await apiClient.delete(`/usuarios/eliminate/${nombre}`);
       mostrarExito("Diseñador eliminado exitosamente.");
@@ -71,16 +71,25 @@ export default function TablaDisenadores() {
 
   return (
     <>
-          <button className="align-items-center d-flex justify-content-center"
-        style={{position:"fixed", top: "85px", left:"20px",
-          margin: "20px", width: "70px", height: "40px", padding: "10px",
-          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+      <button
+        className="align-items-center d-flex justify-content-center"
+        style={{
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px"
         }}
         onClick={() => navigate("/inicio")}
       >
         ←
       </button>
-      <div style={{marginTop:"85px"}} className="container-fluid min-vh-100 py-4 bg-light fondo">
+      <div style={{ marginTop: "85px" }} className="container-fluid min-vh-100 py-4 bg-light fondo">
         <div className="row justify-content-center">
           <div className="col-12 col-md-10 col-lg-8">
             <h2>Consultar diseñadores</h2>
@@ -171,7 +180,7 @@ export default function TablaDisenadores() {
           onClose={ocultarNotificacion}
           duracion={notificacion.duracion}
         />
-        
+
         <ModalConfirmacion
           isVisible={modalEliminar.visible}
           onClose={() => setModalEliminar({ visible: false, nombre: null })}

@@ -25,21 +25,23 @@ export default function Perfil() {
             <button
                 className="align-items-center d-flex justify-content-center"
                 style={{
-                    position:"fixed", top:"85px", left:"20px",
-                    margin: "20px",
-                    width: "70px", height: "40px",
+                    position: "fixed",
+                    top: "9vh",
+                    left: "3vw",
+                    width: "70px",
+                    height: "40px",
                     padding: "10px",
                     backgroundColor: "white",
                     color: "#016add",
                     border: "1px solid #016add",
                     borderRadius: "7px"
                 }}
-                onClick={() => navigate("/inicio")}
+                onClick={() => navigate("/productos/tiposbolsa")}
             >
                 ←
             </button>
 
-            <div style={{marginTop:"85px"}} className="container-fluid vh-100 py-4 bg-light fondo">
+            <div style={{ marginTop: "85px" }} className="container-fluid vh-100 py-4 bg-light fondo">
                 <div className="row justify-content-center">
                     <div className="col-12 col-md-10 col-lg-8 border rounded p-4 shadow bg-white">
 

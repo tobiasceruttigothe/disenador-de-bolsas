@@ -5,7 +5,7 @@ import MenuFormas from "./MenuFormas";
 import MenuLogos from "./MenuLogos";
 import MenuPincel from "./MenuPincel"
 
-export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida, agregarCuadrado, agregarRectangulo, agregarCirculo, agregarEstrella, agregarLinea,
+export default function MenuDiseno({ logos, setLogosBool, agregarFoto, agregarTexto, plantillaElegida, agregarCuadrado, agregarRectangulo, agregarCirculo, agregarEstrella, agregarLinea,
           agregarTriangulo, activarModoDibujo}) {
   const [opcion, setOpcion] = useState("imagen");
 
@@ -42,7 +42,7 @@ export default function MenuDiseno({ agregarFoto, agregarTexto, plantillaElegida
           {opcion === "pincel" && <MenuPincel activarModoDibujo={activarModoDibujo}/>}
           {opcion === "formas" && <MenuFormas agregarCuadrado={agregarCuadrado} agregarRectangulo={agregarRectangulo} agregarCirculo={agregarCirculo} 
                                     agregarEstrella={agregarEstrella} agregarLinea={agregarLinea} agregarTriangulo={agregarTriangulo}></MenuFormas>}
-          {opcion === "logo" && <MenuLogos agregarFoto={agregarFoto}></MenuLogos>}
+          {opcion === "logo" && <MenuLogos logos={logos} agregarFoto={agregarFoto} setLogosBool={setLogosBool}></MenuLogos>}
         </div>
       </div>
     </div>

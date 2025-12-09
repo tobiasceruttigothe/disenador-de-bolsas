@@ -3,11 +3,20 @@
 // En producción (Docker), usa rutas relativas que serán proxy por Nginx
 
 // URL base del backend API
-export const API_BASE_URL = '/api';
+//export const API_BASE_URL = '/api';
 
 // URL base de Keycloak
-export const KEYCLOAK_BASE_URL = '/keycloak';
+//export const KEYCLOAK_BASE_URL = '/keycloak';
+
+// URL completa de Keycloak token endpoint
+//export const KEYCLOAK_TOKEN_URL = `${KEYCLOAK_BASE_URL}/realms/tesina/protocol/openid-connect/token`;
+
+export const API_BASE_URL = 'http://localhost:9090/api/';
+
+// URL base de Keycloak
+export const KEYCLOAK_BASE_URL = 'http://localhost:8080/';
 
 // URL completa de Keycloak token endpoint
 export const KEYCLOAK_TOKEN_URL = `${KEYCLOAK_BASE_URL}/realms/tesina/protocol/openid-connect/token`;
+
 

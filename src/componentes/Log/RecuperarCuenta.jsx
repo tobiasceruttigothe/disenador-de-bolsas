@@ -6,20 +6,21 @@ import "../../index.css";
 
 export default function RecuperarCuenta() {
   const [mail, setMail] = useState("");
-  const [exito, setExito] = useState(null);
+  const [estado, setEstado] = useState(null);
   const navigate = useNavigate()
 
   const reset = () => setMail("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setEstado("Cargando");
     try {
       await apiClient.post("/auth/forgot-password", { email: mail });
-      setExito(true);
+      setEstado("Exito");
       reset();
     } catch (error) {
       console.error("Error al enviar el mail:", error);
-      setExito(false);
+      setEstado("Error");
     }
   };
 
@@ -70,18 +71,18 @@ export default function RecuperarCuenta() {
 
             <button
               type="submit"
-              disabled={mail === ""}
+              disabled={mail === "" || estado === "Cargando"}
               className="btn text-white"
               style={{ backgroundColor: '#016add', flex: 5 }}
             >
-              Enviar
+              {estado === "Cargando" ? "Cargando..." : "Enviar"}
             </button>
           </div>
 
         </form>
       </div>
 
-      {exito === true && (
+      {estado === "Exito" && (
         <div
           className="alert alert-success position-fixed bottom-0 start-50 translate-middle-x mb-4"
           role="alert"
@@ -91,7 +92,7 @@ export default function RecuperarCuenta() {
         </div>
       )}
 
-      {exito === false && (
+      {estado === "Error" && (
         <div
           className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4"
           role="alert"

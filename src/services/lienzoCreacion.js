@@ -9,12 +9,26 @@ export function initCanvas(canvasElement, imageUrl) {
   const imgElement = new Image();
   imgElement.src = imageUrl;
   imgElement.onload = () => {
-    const bg = new fabric.Image(imgElement, { selectable: false, evented: false });
+
+    const MAX_W = 1250;
+    const MAX_H = 600;
+
     canvas.setDimensions({
-      width: imgElement.width,
-      height: imgElement.height
+      width: MAX_W,
+      height: MAX_H
     });
-    canvas.backgroundImage = bg;
+
+    const bg = new fabric.Image(imgElement, { selectable: false, evented: false });
+
+    const scale = Math.min(MAX_W / imgElement.width, MAX_H / imgElement.height);
+    bg.scale(scale);
+
+    bg.set({
+      left: (MAX_W - imgElement.width * scale) / 2,
+      top: (MAX_H - imgElement.height * scale) / 2
+    });
+
+    canvas.set("backgroundImage", bg);
     canvas.renderAll();
   };
 
@@ -89,19 +103,36 @@ export function guardarElementos(canvas) {
 
 export async function cargarCanvas(canvasElement, fondo, objetos) {
 
-  const canvas = new fabric.Canvas(canvasElement, { width: 800, height: 600 });
+  const MAX_W = 1250;
+  const MAX_H = 600;
+
+  const canvas = new fabric.Canvas(canvasElement, { width: MAX_W, height: MAX_H });
 
   const imgElement = new Image();
   imgElement.src = fondo;
+
   imgElement.onload = () => {
-    const bg = new fabric.Image(imgElement, { selectable: false, evented: false });
-    canvas.setDimensions({
-      width: imgElement.width,
-      height: imgElement.height
+
+    const bg = new fabric.Image(imgElement, {
+      selectable: false,
+      evented: false
     });
-    canvas.backgroundImage = bg;
+
+    // Mantener proporción
+    const scale = Math.min(MAX_W / imgElement.width, MAX_H / imgElement.height);
+    bg.scale(scale);
+
+    // Centrar imagen
+    bg.set({
+      left: (MAX_W - imgElement.width * scale) / 2,
+      top: (MAX_H - imgElement.height * scale) / 2
+    });
+
+    // Establecer como fondo (método correcto fabric 5+)
+    canvas.set("backgroundImage", bg);
     canvas.renderAll();
   };
+
 
   for (const obj of objetos) {
     if (obj.type == "Image") {
@@ -232,8 +263,8 @@ export async function cargarCanvas(canvasElement, fondo, objetos) {
   }
 
   function handleClickOutside(e) {
-    if (!canvas) return;                     
-    const canvasEl = canvas.upperCanvasEl;  
+    if (!canvas) return;
+    const canvasEl = canvas.upperCanvasEl;
 
     if (canvasEl && !canvasEl.contains(e.target) && canvas.getActiveObject()) {
       canvas.discardActiveObject();

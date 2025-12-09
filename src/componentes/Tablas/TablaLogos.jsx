@@ -56,10 +56,19 @@ export default function TablaLogos() {
   };
   return (
     <>
-      <button className="align-items-center d-flex justify-content-center"
-        style={{ position:"fixed", top:"85px", left:"20px",
-          margin: "20px",  width: "70px", height: "40px", padding: "10px",
-          backgroundColor: "white", color: "#016add", border: "1px solid #016add", borderRadius: "7px"
+      <button
+        className="align-items-center d-flex justify-content-center"
+        style={{
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px"
         }}
         onClick={() => navigate("/inicio")}
       >
