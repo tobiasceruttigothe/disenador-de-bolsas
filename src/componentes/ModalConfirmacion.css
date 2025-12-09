@@ -29,6 +29,7 @@
   width: 90%;
   animation: slideUp 0.3s ease;
   overflow: hidden;
+  font-family: 'Rubik', sans-serif;
 }
 
 @keyframes slideUp {
@@ -48,12 +49,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: 'Rubik', sans-serif;
 }
 
-.modal-confirmacion-header h3 {
+.modal-confirmacion-header h2 {
   margin: 0;
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 300;
   color: #1f2937;
 }
 
@@ -80,11 +82,12 @@
 
 .modal-confirmacion-body {
   padding: 20px;
+  font-size: 18px;
 }
 
 .modal-confirmacion-body p {
   margin: 0;
-  color: #4b5563;
+  color: #272626;
   line-height: 1.6;
 }
 

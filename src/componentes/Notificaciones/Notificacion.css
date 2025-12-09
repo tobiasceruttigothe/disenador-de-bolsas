@@ -15,7 +15,7 @@
   transform: translateX(400px);
   opacity: 0;
   transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  border-left: 4px solid var(--color-notificacion);
+  border-left: 2px solid #016bdda1;
 }
 
 .notificacion-visible {
@@ -76,7 +76,7 @@
 .notificacion-progreso {
   position: absolute;
   bottom: 0;
-  left: 0;
+  left: 5px;
   height: 3px;
   background: var(--color-notificacion);
   border-radius: 0 0 12px 12px;
@@ -85,7 +85,7 @@
 
 @keyframes progreso {
   from {
-    width: 100%;
+    width: 95%;
   }
   to {
     width: 0%;
@@ -94,7 +94,7 @@
 
 /* Variantes de tipo */
 .notificacion-success {
-  --color-notificacion: #10b981;
+  --color-notificacion: #016add;
 }
 
 .notificacion-error {

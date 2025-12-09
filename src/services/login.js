@@ -48,7 +48,6 @@ export async function login(user) {
           Cookies.set('razonSocial', payload.razonSocial, { ...cookieOptions, expires: 7 });
         }
         
-        console.log('✅ Cookies guardadas después del login');
 
         return {
             access_token: data.access_token,

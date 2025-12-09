@@ -7,14 +7,6 @@ export function debugAuth() {
   const nombre = Cookies.get('nombre');
   const usuarioId = Cookies.get('usuarioId');
   
-  console.group('🔐 Estado de Autenticación');
-  console.log('Token:', token ? `✅ Presente (${token.substring(0, 20)}...)` : '❌ Ausente');
-  console.log('Rol:', rol || '❌ No definido');
-  console.log('Nombre:', nombre || '❌ No definido');
-  console.log('Usuario ID:', usuarioId || '❌ No definido');
-  console.log('Todas las cookies:', document.cookie);
-  console.groupEnd();
-  
   return {
     hasToken: !!token,
     rol,

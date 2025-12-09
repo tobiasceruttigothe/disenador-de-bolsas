@@ -21,7 +21,7 @@ const Notificacion = ({ tipo, mensaje, visible, onClose, duracion = 5000 }) => {
   };
 
   const colores = {
-    success: '#10b981',
+    success: '#016add',
     error: '#ef4444',
     warning: '#f59e0b',
     info: '#3b82f6'
