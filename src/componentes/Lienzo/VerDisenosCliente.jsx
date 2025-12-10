@@ -74,25 +74,7 @@ export default function VerDisenosCliente() {
     console.log("Generar 3D", diseno);
   };
 
-  const handleDuplicar = async (diseno) => {
-    try {
-      const payload = {
-        usuarioId: Cookies.get("usuarioId"), // OJO: ¿Duplicas para ti o para el cliente? Revisar lógica de negocio.
-        plantillaId: diseno.plantillaId,
-        nombre: `Duplicado de ${diseno.nombre}`,
-        descripcion: diseno.descripcion,
-        base64Diseno: diseno.base64Diseno,
-        base64Preview: diseno.base64Preview
-      };
-      await apiClient.post("/disenos", payload);
-      mostrarExito("Diseño duplicado correctamente.");
-      // Recargar diseños para ver el nuevo
-      // fetchDisenos(); 
-    } catch (error) {
-      console.error("Error al duplicar:", error);
-      mostrarError("Error al duplicar el diseño.");
-    }
-  };
+
 
   const handleEliminarClick = (id) => {
     setModalEliminar({ visible: true, id });
