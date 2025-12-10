@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams, Link } from 'react-router-dom';
-import Header from '../Header&Footer/HeaderLog'; // header semántico y fijo
+import Header from '../Header&Footer/HeaderLog';
 import logo from '../../assets/pack designer final.png';
-import '../../styles/log.css';
+import { apiClient } from '../../config/axios'; // Usamos apiClient para consistencia
+
+// Estilos
+import '../../styles/log.css'; // Asegúrate de que .fondo esté aquí o en index.css
+import "../../index.css";
 
 export default function ActivateAccount() {
   const navigate = useNavigate();
@@ -12,50 +16,45 @@ export default function ActivateAccount() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(''); // Guardará el mensaje de error
   const [success, setSuccess] = useState(false);
+
+  const primaryColor = "#016add";
 
   const handleActivate = async (e) => {
     e.preventDefault();
+    setError('');
 
-    // Validaciones del frontend
+    // Validaciones
     if (password !== confirmPassword) {
-      setError('Las contraseñas no coinciden');
+      setError('Las contraseñas no coinciden.');
       return;
     }
 
     if (password.length < 8) {
-      setError('La contraseña debe tener al menos 8 caracteres');
+      setError('La contraseña debe tener al menos 8 caracteres.');
       return;
     }
 
     setLoading(true);
-    setError('');
 
     try {
-      const response = await fetch('/api/auth/activate-account', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          token: token,
-          newPassword: password,
-        }),
+      // Usamos apiClient en lugar de fetch para mantener consistencia
+      await apiClient.post('/auth/activate-account', {
+        token: token,
+        newPassword: password,
       });
 
-      const data = await response.text();
+      setSuccess(true);
+      setTimeout(() => {
+        navigate('/login');
+      }, 3000);
 
-      if (response.ok) {
-        setSuccess(true);
-        // Redirigir al login después de 3 segundos
-        setTimeout(() => {
-          navigate('/login');
-        }, 3000);
-      } else {
-        setError(data || 'No se pudo activar la cuenta');
-      }
     } catch (err) {
       console.error('Error activando cuenta:', err);
-      setError('Error de conexión con el servidor');
+      // Intentamos leer el mensaje del backend, si no, mensaje genérico
+      const msg = err.response?.data || 'No se pudo activar la cuenta. El token puede haber expirado.';
+      setError(typeof msg === 'string' ? msg : 'Error de conexión con el servidor.');
     } finally {
       setLoading(false);
     }
@@ -65,72 +64,124 @@ export default function ActivateAccount() {
     <>
       <Header />
 
-      <main style={{ paddingTop: '76px', minHeight: 'calc(100vh - 76px)' }} className="d-flex justify-content-center align-items-center bg-light fondo">
-        {success ? (
-          <div className="w-100 bg-white p-4 rounded shadow text-center" style={{ maxWidth: '400px' }}>
-            <div style={{ fontSize: '64px', marginBottom: '10px' }}>✅</div>
-            <h2 style={{ color: '#27ae60' }}>¡Cuenta activada correctamente!</h2>
-            <p>Ya podés iniciar sesión con tu nueva contraseña.</p>
-            <p style={{ fontStyle: 'italic', color: '#666' }}>Redirigiendo al login...</p>
-          </div>
-        ) : (
-          <form onSubmit={handleActivate} className="w-100 bg-white p-4 rounded shadow" style={{ maxWidth: '400px' }}>
-            <div className="text-center mb-4">
-              <img src={logo} alt="Logo" className="img-fluid" style={{ width: '80px', height: '80px' }} />
-            </div>
-
-            <div className="mb-3">
-              <input
-                id="newPassword"
-                type="password"
-                placeholder="Nueva contraseña (mínimo 8 caracteres)"
-                className={`form-control ${error && error.includes('contraseña') ? 'is-invalid' : ''}`}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                minLength={8}
-                disabled={loading}
-              />
-            </div>
-
-            <div className="mb-3">
-              <input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirmar contraseña"
-                className={`form-control ${error && error.includes('coinciden') ? 'is-invalid' : ''}`}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
-                disabled={loading}
-              />
-            </div>
-
-            {error && (
-              <div className="alert alert-danger" role="alert">
-                {error}
+      {/* Contenedor Principal con Fondo */}
+      <div 
+        className="d-flex justify-content-center align-items-center min-vh-100 fondo" 
+        style={{ paddingTop: '76px' }}
+      >
+        
+        <div 
+          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          style={{ width: "100%", maxWidth: "450px" }}
+        >
+          
+          {/* --- ESTADO DE ÉXITO --- */}
+          {success ? (
+            <div className="text-center py-4 animate-scale-in">
+              <div className="mb-3">
+                <i className="fa fa-check-circle text-success" style={{ fontSize: '4rem' }}></i>
               </div>
-            )}
-
-            <button type="submit" className="btn w-100 text-white" style={{ backgroundColor: '#016add' }} disabled={loading}>
-              {loading ? 'Activando...' : 'Activar cuenta'}
-            </button>
-
-            <div className="mt-3 text-center" style={{ fontSize: '14px', color: '#666' }}>
-              ¿El link expiró?{' '}
-              <Link to="/resend-activation" className="" style={{ color: '#016add', textDecoration: 'underline' }}>
-                Solicitar nuevo link
-              </Link>
+              <h3 className="fw-bold text-dark mb-3">¡Cuenta Activada!</h3>
+              <p className="text-muted mb-4">
+                Tu contraseña ha sido establecida correctamente.
+              </p>
+              <div className="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+              <span className="text-primary small fw-bold">Redirigiendo al login...</span>
             </div>
-          </form>
-        )}
-      </main>
+          ) : (
+            /* --- FORMULARIO DE ACTIVACIÓN --- */
+            <>
+              <div className="text-center mb-4">
+                <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
+                  <img 
+                    src={logo} 
+                    alt="Logo" 
+                    className="img-fluid" 
+                    style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+                  />
+                </div>
+                <h3 className="fw-bold text-dark mb-1">Activar Cuenta</h3>
+                <p className="text-muted small">Configura tu contraseña para comenzar</p>
+              </div>
 
-      {error === 'error' && (
-        <div className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4" role="alert" style={{ zIndex: 9999 }}>
-          Ocurrió un error, intente nuevamente.
+              <form onSubmit={handleActivate}>
+                
+                <div className="mb-3">
+                  <label htmlFor="newPassword" className="form-label text-muted small fw-bold text-uppercase">Nueva Contraseña</label>
+                  <input
+                    id="newPassword"
+                    type="password"
+                    placeholder="Mínimo 8 caracteres"
+                    className={`form-control form-control-lg bg-light border-0 ${error && error.includes('contraseña') ? 'is-invalid' : ''}`}
+                    style={{ fontSize: '0.95rem' }}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="mb-4">
+                  <label htmlFor="confirmPassword" className="form-label text-muted small fw-bold text-uppercase">Confirmar Contraseña</label>
+                  <input
+                    id="confirmPassword"
+                    type="password"
+                    placeholder="Repite la contraseña"
+                    className={`form-control form-control-lg bg-light border-0 ${error && error.includes('coinciden') ? 'is-invalid' : ''}`}
+                    style={{ fontSize: '0.95rem' }}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    required
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="d-grid mt-4">
+                  <button
+                    type="submit"
+                    className="btn btn-lg rounded-pill fw-bold shadow-sm text-white"
+                    style={{ backgroundColor: primaryColor, border: `1px solid ${primaryColor}` }}
+                    disabled={loading}
+                  >
+                    {loading ? (
+                      <>
+                        <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        Activando...
+                      </>
+                    ) : (
+                      "Activar Cuenta"
+                    )}
+                  </button>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <p className="text-muted small mb-1">¿El link expiró o no funciona?</p>
+                  <Link 
+                    to="/resend-activation" 
+                    className="text-decoration-none fw-bold" 
+                    style={{ color: primaryColor }}
+                  >
+                    Solicitar nuevo link
+                  </Link>
+                </div>
+
+              </form>
+            </>
+          )}
         </div>
-      )}
+
+        {/* ALERTA DE ERROR FLOTANTE */}
+        {error && (
+          <div
+            className="alert alert-danger position-fixed bottom-0 start-50 translate-middle-x mb-4 shadow fw-bold px-4 rounded-pill animate-fade-in-up"
+            role="alert"
+            style={{ zIndex: 1050 }}
+          >
+            <i className="fa fa-exclamation-triangle me-2"></i> {error}
+          </div>
+        )}
+
+      </div>
     </>
   );
 }

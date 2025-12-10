@@ -5,6 +5,9 @@ import { useNotificacion } from "../../hooks/useNotificacion";
 import Notificacion from "../Notificaciones/Notificacion";
 import ModalConfirmacion from "../ModalConfirmacion";
 
+import "../../index.css";
+import "../../styles/main.css";
+
 export default function TablaClientes() {
   const navigate = useNavigate();
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
@@ -13,12 +16,13 @@ export default function TablaClientes() {
   const [filtro, setFiltro] = useState("");
   const [modalEliminar, setModalEliminar] = useState({ visible: false, nombre: null });
 
+  const primaryColor = "#016add";
+
   useEffect(() => {
     fetchClientes();
   }, []);
 
   useEffect(() => {
-    // Filtra en tiempo real al cambiar el filtro o la lista de clientes
     setClientesFiltrados(
       clientes.filter((c) =>
         c?.username.toLowerCase().includes(filtro.toLowerCase())
@@ -32,7 +36,7 @@ export default function TablaClientes() {
       setClientes(res.data);
     } catch (e) {
       console.error("Error al cargar clientes:", e);
-      mostrarError("No se pudieron cargar los clientes. Intente nuevamente más tarde.");
+      mostrarError("No se pudieron cargar los clientes.");
     }
   };
 
@@ -42,25 +46,15 @@ export default function TablaClientes() {
 
   const confirmarEliminar = async () => {
     const nombre = modalEliminar.nombre;
-    if (!nombre) {
-      mostrarError("Error: No se pudo identificar el cliente a eliminar.");
-      setModalEliminar({ visible: false, nombre: null });
-      return;
-    }
+    if (!nombre) return;
     
     try {
       await apiClient.delete(`/usuarios/eliminate/${nombre}`);
       mostrarExito("Cliente eliminado exitosamente.");
       setClientes((prev) => prev.filter((c) => c.username !== nombre));
     } catch (error) {
-      console.error("Error al eliminar cliente:", error);
-      if (error.response && error.response.status === 403) {
-        mostrarError("No tienes permisos para eliminar clientes. Verifica que tu usuario tenga el rol de administrador.");
-      } else if (error.response && error.response.status === 401) {
-        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
-      } else {
-        mostrarError("No se pudo eliminar el cliente. Intente nuevamente más tarde.");
-      }
+      console.error("Error al eliminar:", error);
+      mostrarError("No se pudo eliminar el cliente.");
     }
     setModalEliminar({ visible: false, nombre: null });
   };
@@ -74,120 +68,96 @@ export default function TablaClientes() {
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
-          position: "fixed",
-          top: "9vh",
-          left: "3vw",
-          width: "70px",
-          height: "40px",
-          padding: "10px",
-          backgroundColor: "white",
-          color: "#016add",
-          border: "1px solid #016add",
-          borderRadius: "7px"
+          position: "fixed", top: "9vh", left: "3vw", width: "70px", height: "40px",
+          padding: "10px", backgroundColor: "white", color: "#016add",
+          border: "1px solid #016add", borderRadius: "7px", zIndex: 1000
         }}
         onClick={() => navigate("/inicio")}
       >
         ←
       </button>
-      <div style={{marginTop: "85px"}}className="container-fluid min-vh-100 py-4 bg-light fondo">
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-10 col-lg-8">
-            <h2>Consultar clientes</h2>
-            <hr />
-            <div className="mb-4">
-              <label htmlFor="nombreFiltro" className="form-label">
-                Ingrese nombre para buscar
-              </label>
-              <input
-                type="text"
-                className="form-control mb-2"
-                id="nombreFiltro"
-                placeholder="Ingrese nombre de usuario para buscar..."
-                value={filtro}
-                onChange={(e) => setFiltro(e.target.value)}
-              />
-              <button className="btn btn-primary" onClick={irAOtroComponente}>
-                Nuevo cliente
-              </button>
-            </div>
 
-            {/* TABLA */}
-            <div className="table-responsive mb-4">
-              <table className="table table-bordered table-striped table-hover" style={{ tableLayout: 'auto' }}>
-                <thead className="table-light">
-                  <tr>
-                    <th>Nombre de Usuario</th>
-                    <th>Mail</th>
-                    <th>Razón Social</th>
-                    <th style={{ width: "110px", whiteSpace: "nowrap" }}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {clientesFiltrados.length > 0 ? (
-                    clientesFiltrados.map((c, index) => (
-                      <tr key={index}>
-                        <td>{c.username}</td>
-                        <td>{c.email}</td>
-                        <td>{c.razonSocial}</td>
-                        <td style={{ width: "110px", whiteSpace: "nowrap" }}>
-                          <button
-                            className="btn m-1"
-                            style={{
-                              backgroundColor: "#016add",
-                              color: "#fff",
-                              border: "2px solid #016add",
-                              fontWeight: "500",
-                              padding: "0.375rem 0.75rem",
-                              borderRadius: "0.375rem",
-                              cursor: "pointer",
-                              transition: "all 0.3s ease",
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = "#014bb5";
-                              e.currentTarget.style.borderColor = "#014bb5";
-                              e.currentTarget.style.transform = "scale(1.05)";
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = "#016add";
-                              e.currentTarget.style.borderColor = "#016add";
-                              e.currentTarget.style.transform = "scale(1)";
-                            }}
-                            onClick={() => handleEliminarClick(c.username)}
-                          >
-                            Eliminar
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="text-center">
-                        No hay clientes para mostrar
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+      <div className="min-vh-100 fondo" style={{ paddingTop: "100px", paddingBottom: "80px" }}>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-12 col-lg-10">
+              
+              <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div className="card-header bg-white py-4 px-4 px-md-5 border-bottom-0">
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                      <h2 className="fw-bold text-dark mb-1">Clientes</h2>
+                      <p className="text-muted mb-0">Gestión de usuarios clientes</p>
+                    </div>
+                    <button 
+                      className="btn btn-primary px-4 py-2 fw-bold shadow-sm rounded-pill"
+                      style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
+                      onClick={irAOtroComponente}
+                    >
+                      <i className="fa fa-user-plus me-2"></i> Nuevo Cliente
+                    </button>
+                  </div>
+                  
+                  <div className="position-relative">
+                    <i className="fa fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg ps-5 bg-light border-0"
+                      placeholder="Buscar cliente por usuario..."
+                      value={filtro}
+                      onChange={(e) => setFiltro(e.target.value)}
+                      style={{ fontSize: '0.95rem' }}
+                    />
+                  </div>
+                </div>
+
+                <div className="card-body p-0">
+                  <div className="table-responsive">
+                    <table className="table table-hover align-middle mb-0">
+                      <thead className="bg-light">
+                        <tr>
+                          <th className="py-3 ps-5 text-muted small fw-bold text-uppercase">Usuario</th>
+                          <th className="py-3 text-muted small fw-bold text-uppercase">Email</th>
+                          <th className="py-3 text-muted small fw-bold text-uppercase">Razón Social</th>
+                          <th className="py-3 pe-5 text-end text-muted small fw-bold text-uppercase">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {clientesFiltrados.length > 0 ? (
+                          clientesFiltrados.map((c, index) => (
+                            <tr key={index}>
+                              <td className="ps-5 fw-bold text-dark">{c.username}</td>
+                              <td className="text-muted">{c.email}</td>
+                              <td>{c.razonSocial || "-"}</td>
+                              <td className="pe-5 text-end">
+                                <button
+                                  className="btn btn-sm btn-outline-danger fw-bold"
+                                  onClick={() => handleEliminarClick(c.username)}
+                                  style={{ border: "1px solid #dc3545", color: "#dc3545" }}
+                                >
+                                  <i className="fa fa-trash-alt me-1"></i> Eliminar
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr><td colSpan="4" className="text-center py-5 text-muted">No se encontraron clientes.</td></tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div className="card-footer bg-white border-top-0 py-3 text-center">
+                  <small className="text-muted">Total: {clientesFiltrados.length} clientes</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
 
-        <Notificacion
-          tipo={notificacion.tipo}
-          mensaje={notificacion.mensaje}
-          visible={notificacion.visible}
-          onClose={ocultarNotificacion}
-          duracion={notificacion.duracion}
-        />
-        
-        <ModalConfirmacion
-          isVisible={modalEliminar.visible}
-          onClose={() => setModalEliminar({ visible: false, nombre: null })}
-          onConfirm={confirmarEliminar}
-          titulo="Eliminar cliente"
-          mensaje={`¿Estás seguro que deseas eliminar a ${modalEliminar.nombre}? Esta acción no se puede deshacer.`}
-          tipo="danger"
-        />
+        <Notificacion tipo={notificacion.tipo} mensaje={notificacion.mensaje} visible={notificacion.visible} onClose={ocultarNotificacion} />
+        <ModalConfirmacion isVisible={modalEliminar.visible} onClose={() => setModalEliminar({ visible: false, nombre: null })} onConfirm={confirmarEliminar} titulo="Eliminar Cliente" mensaje={`¿Estás seguro que deseas eliminar a ${modalEliminar.nombre}?`} tipo="danger" />
       </div>
     </>
   );

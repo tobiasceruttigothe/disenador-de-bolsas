@@ -3,11 +3,10 @@ import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import logo from '../../assets/pack designer blanco.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiLogOut, FiUser, FiMenu } from 'react-icons/fi';
-
+import { FiLogOut, FiUser, FiMenu, FiChevronDown } from 'react-icons/fi';
 
 export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     setNombre(Cookies.get('nombre') || "");
@@ -23,36 +22,51 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
     setLogeado(false);
   };
 
+  // Helper para generar items de menú limpios
+  const MenuItem = ({ to, label }) => (
+    <NavDropdown.Item 
+      as={Link} 
+      to={to} 
+      className="py-2 px-3"
+      style={{ fontSize: '0.95rem', color: '#495057' }}
+    >
+      {label}
+    </NavDropdown.Item>
+  );
+
   const renderMenuItems = () => {
     switch (tipoUsuario) {
       case "cliente":
         return (
           <>
-            <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/disenos">Mis diseños</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/logos">Mis logos</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
+            <MenuItem to="/" label="Inicio" />
+            <MenuItem to="/disenos" label="Mis diseños" />
+            <MenuItem to="/nuevoDiseno" label="Nuevo diseño" />
+            <MenuItem to="/logos" label="Mis logos" />
+            <NavDropdown.Divider />
+            <MenuItem to="/perfil" label="Mi Perfil" />
           </>
         );
       case "disenador":
         return (
           <>
-            <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/verClientes">Clientes</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/nuevoDiseno">Nuevo diseño</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
+            <MenuItem to="/" label="Inicio" />
+            <MenuItem to="/verClientes" label="Ver Clientes" />
+            <MenuItem to="/nuevoDiseno" label="Nuevo diseño" />
+            <NavDropdown.Divider />
+            <MenuItem to="/perfil" label="Mi Perfil" />
           </>
         );
       case "admin":
         return (
           <>
-            <NavDropdown.Item as={Link} to="/">Inicio</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/disenadores">Diseñadores</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/clientes">Clientes</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/admins">Adm. gerenciales</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/productos">Productos</NavDropdown.Item>
-            <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
+            <MenuItem to="/" label="Inicio" />
+            <MenuItem to="/disenadores" label="Diseñadores" />
+            <MenuItem to="/clientes" label="Clientes" />
+            <MenuItem to="/admins" label="Administradores" />
+            <MenuItem to="/productos" label="Productos" />
+            <NavDropdown.Divider />
+            <MenuItem to="/perfil" label="Mi Perfil" />
           </>
         );
       default:
@@ -64,55 +78,87 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
     <Navbar
       expand="lg"
       fixed="top"
-      className="shadow-sm"
+      className="shadow"
       style={{
-        background: "#016bddff",
-        padding: "0.8rem 1.2rem"
+        background: "linear-gradient(90deg, #016add 0%, #015bbd 100%)", // Gradiente sutil
+        padding: "0.6rem 0",
+        zIndex: 1030
       }}
     >
-      <Container className="d-flex justify-content-between align-items-center">
+      <Container fluid className="px-4">
 
-        <Nav className="d-flex align-items-center me-auto">
+        {/* IZQUIERDA: Menú Hamburguesa */}
+        <Nav className="me-auto">
           <NavDropdown
-            title={<FiMenu size={26} color="white" />}
+            title={<FiMenu size={28} color="white" />}
             id="nav-dropdown"
-            menuVariant="white"
+            menuVariant="light"
+            className="no-arrow-dropdown" // Clase para quitar la flechita nativa si molesta
+            style={{ marginLeft: '-10px' }}
           >
+            <div className="px-3 py-2 text-muted small fw-bold text-uppercase bg-light border-bottom mb-2">
+              Navegación
+            </div>
             {renderMenuItems()}
           </NavDropdown>
         </Nav>
 
-        <div style={{
-          cursor: "pointer",
-        }} onClick={() => navigate("/inicio")} className="text-center flex-grow-1 d-flex align-items-center justify-content-center">
+        {/* CENTRO: Logo y Título */}
+        <div 
+          className="position-absolute start-50 translate-middle-x d-flex align-items-center"
+          style={{ cursor: "pointer" }} 
+          onClick={() => navigate("/inicio")}
+        >
           <img
             src={logo}
-            alt="Logo"
-            width="45"
-            height="45"
+            alt="Pack Designer Logo"
+            height="40"
             className="me-2"
+            style={{ filter: "drop-shadow(0px 2px 2px rgba(0,0,0,0.1))" }}
           />
-          <h4 className="m-0 text-white fw-bold">
-            {nombre ? `Bienvenido, ${nombre}` : "Pack Designer"}
-          </h4>
+          <h5 className="m-0 text-white fw-bold d-none d-sm-block" style={{ letterSpacing: '0.5px' }}>
+            Pack Designer
+          </h5>
         </div>
 
-        <Nav className="d-flex align-items-center ms-auto">
+        {/* DERECHA: Perfil de Usuario */}
+        <Nav className="ms-auto align-items-center">
+          <span className="text-white me-2 d-none d-md-block small opacity-75">
+            {nombre || "Usuario"}
+          </span>
           <NavDropdown
             align="end"
-            title={<FiUser size={24} color="white" />}
+            title={
+              <div className="d-flex align-items-center bg-white bg-opacity-25 rounded-circle p-2 hover-effect">
+                <FiUser size={20} color="white" />
+              </div>
+            }
             id="user-dropdown"
-            menuVariant="white"
+            menuVariant="light"
           >
-            <NavDropdown.Item as={Link} to="/perfil">Perfil</NavDropdown.Item>
+            <div className="px-4 py-2 text-center border-bottom mb-2">
+              <strong className="d-block text-primary">{nombre}</strong>
+              <small className="text-muted text-uppercase" style={{fontSize: '0.7rem'}}>{tipoUsuario}</small>
+            </div>
+            
+            <MenuItem to="/perfil" label="Ver Perfil" />
+            
             <NavDropdown.Divider />
-            <NavDropdown.Item onClick={cerrarSesion} className="text-danger">
-              <FiLogOut className="me-2" /> Cerrar sesión
+            
+            <NavDropdown.Item onClick={cerrarSesion} className="text-danger py-2 px-3 fw-bold">
+              <FiLogOut className="me-2" /> Salir
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>
 
       </Container>
+      
+      {/* Estilos CSS locales para pulir detalles de Bootstrap */}
+      <style>{`
+        .dropdown-toggle::after { display: none !important; } /* Ocultar flechas default feas */
+        .hover-effect:hover { background-color: rgba(255,255,255,0.4) !important; transition: 0.3s; }
+        .dropdown-menu { border: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; margin-top: 12px; }
+      `}</style>
     </Navbar>
   );
 }

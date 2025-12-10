@@ -1,18 +1,15 @@
-import React from 'react'
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 export default function MenuImagen({ agregarFoto }) {
     const [imagen, setImagen] = useState(null);
+    const inputImgRef = useRef(null);
 
-    const inputImgRef = useRef(null)
-
-    const handleAddImagen = (e) => {
+    const handleAddImagen = () => {
         if (!imagen) return;
-        e.target.value = null;
         agregarFoto(imagen);
         setImagen(null);
         if (inputImgRef.current) inputImgRef.current.value = null;
-    }
+    };
 
     const onChangeImagen = (e) => {
         let file = e.target.files[0];
@@ -26,25 +23,71 @@ export default function MenuImagen({ agregarFoto }) {
     };
 
     return (
-        <div className="p-3 mt-2 bg-light" style={{ height: "650px",
-            borderTopRightRadius: "8px",
-            borderBottomRightRadius: "8px",
-            border: "1px solid #00000013",
-            borderleft: "none"
-         }}>
-            <h2 className="mb-3 mx-2">Agregar Imagen</h2>
-            <div className="input-group m-1">
-                <input id="inputArchivo" accept='.jpg, .jpeg, .png' type="file" className="form-control" style={{ display: "none" }} onChange={onChangeImagen} ref={inputImgRef} />
-                <label htmlFor="inputArchivo" className="btn" style={{border: "2px solid rgb(0,0,0,0.3)", borderTopLeftRadius: "5px", borderBottomLeftRadius: "5px"}}> Elegir Imagen</label>
-                <button className={`btn btn-secondary  ${imagen ? "" : "disabled"}`} onClick={handleAddImagen}>Agregar Imagen</button>
-            </div>
-            <hr></hr>
-            {imagen &&
-                <div className="mt-5">
-                    <p>Vista previa de la imagen: </p>
-                    <img src={imagen} style={{ maxWidth: "100%", maxHeight: "400px", marginTop: "10px", border: "2px ridge rgba(0, 0, 0, 0.1)", borderRadius: "8px" }} />
+        <div className="p-4 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
+            
+            <h4 className="mb-4 text-primary fw-bold">Agregar Imagen</h4>
+
+            <div className="mb-4">
+                <label className="form-label text-muted small fw-bold">SUBIR ARCHIVO</label>
+                <div className="d-grid gap-2">
+                    <input 
+                        id="inputArchivo" 
+                        accept='.jpg, .jpeg, .png' 
+                        type="file" 
+                        className="form-control" 
+                        onChange={onChangeImagen} 
+                        ref={inputImgRef} 
+                    />
+                    <div className="form-text small text-muted">
+                        Formatos soportados: JPG, JPEG, PNG.
+                    </div>
                 </div>
-            }
+            </div>
+
+            <hr className="text-muted opacity-25 my-4" />
+
+            {/* VISTA PREVIA */}
+            {imagen ? (
+                <div className="mb-4">
+                    <label className="form-label text-muted small fw-bold mb-2">VISTA PREVIA</label>
+                    <div 
+                        className="d-flex justify-content-center align-items-center bg-light border rounded p-3"
+                        style={{ minHeight: "150px" }}
+                    >
+                        <img 
+                            src={imagen} 
+                            alt="Vista previa" 
+                            style={{ 
+                                maxWidth: "100%", 
+                                maxHeight: "200px", 
+                                objectFit: "contain",
+                                borderRadius: "4px",
+                                boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
+                            }} 
+                        />
+                    </div>
+                </div>
+            ) : (
+                <div className="alert alert-light text-center border-0 py-4 text-muted small">
+                    <i className="fa fa-image fs-3 mb-2 d-block opacity-50"></i>
+                    No hay imagen seleccionada
+                </div>
+            )}
+
+            {/* BOTÓN DE ACCIÓN */}
+            <button 
+                className="btn btn-primary w-100 py-2 fw-bold shadow-sm mt-3"
+                onClick={handleAddImagen}
+                disabled={!imagen}
+                style={{
+                    backgroundColor: "#016add",
+                    borderColor: "#016add",
+                    opacity: !imagen ? 0.6 : 1
+                }}
+            >
+                <i className="fa fa-plus-circle me-2"></i> Añadir al Diseño
+            </button>
+
         </div>
     );
 }

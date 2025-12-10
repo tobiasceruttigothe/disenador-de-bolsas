@@ -1,18 +1,22 @@
 import React, { useState } from 'react';
 import logo from '../../assets/pack designer final.png';
 import { apiClient } from '../../config/axios';
-import { useForm} from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import Cookies from "js-cookie";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useNotificacion } from '../../hooks/useNotificacion';
 import Notificacion from '../Notificaciones/Notificacion';
+
+// Estilos
+import "../../index.css";
+import "../../styles/main.css";
 
 export default function FormularioAdmin() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const navigate = useNavigate();
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion(); 
-
   const [cargando, setCargando] = useState(false);
+  const primaryColor = "#016add";
 
   const handleSubmitForm = async (data) => {
     try {
@@ -37,10 +41,9 @@ export default function FormularioAdmin() {
       }, 1500);
 
     } catch (error) {
-
       if (error.response && error.response.status === 403) {
         const rol = Cookies.get('rol');
-        mostrarError(`No tienes permisos para crear usuarios. Tu rol actual es: ${rol || 'no definido'}. Solo los administradores pueden crear usuarios.`);
+        mostrarError(`No tienes permisos para crear usuarios. Tu rol actual es: ${rol || 'no definido'}.`);
       } else if (error.response && error.response.status === 401) {
         mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
       } else if (error.response && error.response.status === 409) {
@@ -48,9 +51,8 @@ export default function FormularioAdmin() {
       } else if (error.response && error.response.status === 502) {
         mostrarError("Mail ya registrado");
       } else {
-        mostrarError("Ocurrió un error al agregar el administrador. Intente nuevamente más tarde.");
+        mostrarError("Error inesperado. Intente nuevamente más tarde.");
       }
-
     } finally {
       setCargando(false);
     }
@@ -58,6 +60,7 @@ export default function FormularioAdmin() {
 
   return (
     <>
+      {/* --- BOTÓN VOLVER (FIJO) --- */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
@@ -70,85 +73,109 @@ export default function FormularioAdmin() {
           backgroundColor: "white",
           color: "#016add",
           border: "1px solid #016add",
-          borderRadius: "7px"
+          borderRadius: "7px",
+          zIndex: 1000
         }}
         onClick={() => navigate("/admins")}
       >
         ←
       </button>
 
-      <div className="d-flex justify-content-center align-items-center fondo">
-        <form
-          onSubmit={handleSubmit(handleSubmitForm)}
-          className=" bg-white p-3 rounded shadow"
-          style={{ width: '500px' }}
+      {/* --- CONTENEDOR PRINCIPAL CON FONDO --- */}
+      <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
+        
+        <div 
+          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          style={{ width: "100%", maxWidth: "500px" }}
         >
+          
+          {/* Cabecera */}
           <div className="text-center mb-4">
-            <img
-              src={logo}
-              alt="Logo"
-              className="img-fluid"
-              style={{ width: '80px', height: '80px' }}
-            />
-          </div>
-          <h2 className="text-center mb-4">Agregar Administradores Gerenciales</h2>
-
-          <div className="mb-3">
-            <label htmlFor="nombre" className="form-label">Nombre de usuario</label>
-            <input
-              id="nombre"
-              placeholder="Ingrese un nombre de usuario"
-              type="text"
-              className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-              {...register("nombre", {
-                required: "El nombre es obligatorio",
-                minLength: { value: 5, message: "El nombre de usuario debe tener al menos 5 caracteres" },
-                maxLength: { value: 50, message: "El nombre de usuario debe tener menos de 50 caracteres" }
-              })}
-            />
-            {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
+              <img 
+                src={logo} 
+                alt="Logo" 
+                className="img-fluid" 
+                style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+              />
+            </div>
+            <h3 className="fw-bold text-dark mb-1">Nuevo Administrador</h3>
+            <p className="text-muted small">Registrar un nuevo usuario con permisos gerenciales</p>
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="nombre" className="form-label">Nombre y apellido del empleado</label>
-            <input
-              id="nombre"
-              placeholder="Ingrese el nombre y apellido del empleado"
-              type="text"
-              className={`form-control ${errors.nombreApellido ? 'is-invalid' : ''}`}
-              {...register("nombreApellido", { required: "El nombre y apellido del empleado es obligatorio" })}
-            />
-            {errors.nombreApellido && <div className="invalid-feedback">{errors.nombreApellido.message}</div>}
-          </div>
+          <form onSubmit={handleSubmit(handleSubmitForm)}>
+            
+            {/* Usuario */}
+            <div className="mb-3">
+              <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario</label>
+              <input
+                id="nombre"
+                placeholder="Ej: admin_gerente"
+                type="text"
+                className={`form-control form-control-lg bg-light border-0 ${errors.nombre ? 'is-invalid' : ''}`}
+                style={{ fontSize: '0.95rem' }}
+                {...register("nombre", {
+                  required: "El nombre es obligatorio",
+                  minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
+                  maxLength: { value: 50, message: "Debe tener menos de 50 caracteres" }
+                })}
+              />
+              {errors.nombre && <div className="invalid-feedback ps-2">{errors.nombre.message}</div>}
+            </div>
 
-          <div className="mb-3">
-            <label htmlFor="mail" className="form-label">Mail</label>
-            <input
-              id="mail"
-              type="text"
-              placeholder="Ingrese un mail"
-              className={`form-control ${errors.mail ? 'is-invalid' : ''}`}
-              {...register("mail", {
-                required: "El mail es obligatorio",
-                pattern: {
-                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                  message: "Ingrese un mail válido"
-                },
-                maxLength: { value: 100, message: "El mail debe tener menos de 100 caracteres" }
-              })}
-            />
-            {errors.mail && <div className="invalid-feedback">{errors.mail.message}</div>}
-          </div>
+            {/* Nombre y Apellido */}
+            <div className="mb-3">
+              <label htmlFor="nombreApellido" className="form-label text-muted small fw-bold text-uppercase">Nombre y Apellido</label>
+              <input
+                id="nombreApellido"
+                placeholder="Ej: María González"
+                type="text"
+                className={`form-control form-control-lg bg-light border-0 ${errors.nombreApellido ? 'is-invalid' : ''}`}
+                style={{ fontSize: '0.95rem' }}
+                {...register("nombreApellido", { required: "El nombre y apellido es obligatorio" })}
+              />
+              {errors.nombreApellido && <div className="invalid-feedback ps-2">{errors.nombreApellido.message}</div>}
+            </div>
 
-          <button
-            className="btn w-100 text-white"
-            style={{ backgroundColor: '#016add' }}
-            type="submit"
-            disabled={cargando}
-          >
-            {cargando ? "Cargando..." : "Enviar"}
-          </button>
-        </form>
+            {/* Mail */}
+            <div className="mb-4">
+              <label htmlFor="mail" className="form-label text-muted small fw-bold text-uppercase">Correo Electrónico</label>
+              <input
+                id="mail"
+                type="text"
+                placeholder="admin@papersrl.com"
+                className={`form-control form-control-lg bg-light border-0 ${errors.mail ? 'is-invalid' : ''}`}
+                style={{ fontSize: '0.95rem' }}
+                {...register("mail", {
+                  required: "El mail es obligatorio",
+                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ingrese un mail válido" },
+                  maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" }
+                })}
+              />
+              {errors.mail && <div className="invalid-feedback ps-2">{errors.mail.message}</div>}
+            </div>
+
+            {/* Botón */}
+            <div className="d-grid mt-4">
+              <button
+                className="btn btn-lg rounded-pill fw-bold shadow-sm text-white"
+                style={{ backgroundColor: primaryColor, border: `1px solid ${primaryColor}` }}
+                disabled={cargando}
+                type="submit"
+              >
+                {cargando ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Guardando...
+                  </>
+                ) : (
+                  "Registrar Administrador"
+                )}
+              </button>
+            </div>
+
+          </form>
+        </div>
 
         <Notificacion
           tipo={notificacion.tipo}

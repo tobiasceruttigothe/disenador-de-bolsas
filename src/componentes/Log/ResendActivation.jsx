@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import Header from '../Header&Footer/HeaderLog';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/pack designer final.png';
-import '../../styles/log.css';
+import { apiClient } from '../../config/axios'; // Usamos apiClient
+
+// Estilos
+import '../../styles/log.css'; 
+import "../../index.css";
+import "../../styles/main.css";
 
 export default function ResendActivation() {
   const navigate = useNavigate();
@@ -11,6 +15,8 @@ export default function ResendActivation() {
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
 
+  const primaryColor = "#016add";
+
   const handleResend = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -18,20 +24,17 @@ export default function ResendActivation() {
     setIsError(false);
 
     try {
-      const response = await fetch('/api/auth/resend-activation',  {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-
-      const data = await response.text();
-      setMessage(data);
-      setIsError(!response.ok);
-
-      if (response.ok) setEmail('');
+      // Usamos apiClient para mantener consistencia
+      const response = await apiClient.post('/auth/resend-activation', { email });
+      
+      // Si el backend devuelve texto plano o un objeto, nos adaptamos
+      setMessage(response.data || "Enlace enviado. Revisa tu correo.");
+      setEmail('');
+      
     } catch (err) {
       console.error('Error reenviando activación:', err);
-      setMessage('Error de conexión con el servidor');
+      const msg = err.response?.data || 'Error de conexión con el servidor.';
+      setMessage(typeof msg === 'string' ? msg : 'Error al procesar la solicitud.');
       setIsError(true);
     } finally {
       setLoading(false);
@@ -40,65 +43,111 @@ export default function ResendActivation() {
 
   return (
     <>
-      <Header />
-
-      <main
-        style={{ paddingTop: '76px', minHeight: 'calc(100vh - 76px)' }}
-        className="d-flex justify-content-center align-items-center bg-light fondo"
+      {/* --- BOTÓN VOLVER (FIJO) --- */}
+      <button
+        className="align-items-center d-flex justify-content-center"
+        style={{
+          position: "fixed",
+          top: "9vh",
+          left: "3vw",
+          width: "70px",
+          height: "40px",
+          padding: "10px",
+          backgroundColor: "white",
+          color: "#016add",
+          border: "1px solid #016add",
+          borderRadius: "7px",
+          zIndex: 1000
+        }}
+        onClick={() => navigate("/login")}
       >
-        <form
-          onSubmit={handleResend}
-          className="w-100 bg-white p-4 rounded shadow"
-          style={{ maxWidth: '400px' }}
+        ←
+      </button>
+
+      {/* --- CONTENEDOR PRINCIPAL CON FONDO --- */}
+      <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
+        
+        <div 
+          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          style={{ width: "100%", maxWidth: "450px" }}
         >
+          
+          {/* Cabecera */}
           <div className="text-center mb-4">
-            <img
-              src={logo}
-              alt="Logo"
-              className="img-fluid"
-              style={{ width: '80px', height: '80px' }}
-            />
-          </div>
-
-          <h5 className="text-center mb-3">Solicitar nuevo link de activación</h5>
-          <p className="text-center text-muted" style={{ fontSize: '14px' }}>
-            Si tu link expiró, ingresá tu email para recibir uno nuevo.
-          </p>
-
-          <div className="mb-3">
-            <input
-              type="email"
-              placeholder="Ingresa tu mail"
-              className="form-control"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              disabled={loading}
-            />
-          </div>
-
-          {message && (
-            <div className={`alert ${isError ? 'alert-danger' : 'alert-success'}`} role="alert">
-              {message}
+            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
+              <img 
+                src={logo} 
+                alt="Logo" 
+                className="img-fluid" 
+                style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+              />
             </div>
-          )}
-
-          <button
-            type="submit"
-            className="btn w-100 text-white"
-            style={{ backgroundColor: '#016add' }}
-            disabled={loading}
-          >
-            {loading ? 'Enviando...' : 'Enviar nuevo link'}
-          </button>
-
-          <div className="mt-3 text-center">
-            <Link to="/login" style={{ color: '#016add', textDecoration: 'underline' }}>
-              ← Volver al login
-            </Link>
+            <h3 className="fw-bold text-dark mb-2">Reenviar Activación</h3>
+            <p className="text-muted small px-2">
+              Si tu link expiró, ingresá tu email para recibir uno nuevo.
+            </p>
           </div>
-        </form>
-      </main>
+
+          <form onSubmit={handleResend}>
+            
+            {/* Input Email */}
+            <div className="mb-4">
+              <label htmlFor="email" className="form-label text-muted small fw-bold text-uppercase">Correo Electrónico</label>
+              <div className="input-group">
+                <span className="input-group-text bg-light border-0 ps-3 text-muted">
+                  <i className="fa fa-envelope"></i>
+                </span>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="tu@email.com"
+                  className="form-control form-control-lg bg-light border-0"
+                  style={{ fontSize: '0.95rem' }}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                />
+              </div>
+            </div>
+
+            {/* Botón Enviar */}
+            <div className="d-grid mt-4">
+              <button
+                type="submit"
+                className="btn btn-lg rounded-pill fw-bold shadow-sm text-white"
+                style={{ backgroundColor: primaryColor, border: `1px solid ${primaryColor}` }}
+                disabled={loading || !email}
+              >
+                {loading ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Enviando...
+                  </>
+                ) : (
+                  "Enviar Nuevo Link"
+                )}
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        {/* ALERTAS FLOTANTES */}
+        {message && (
+          <div
+            className={`alert ${
+              isError ? "alert-danger" : "alert-success"
+            } position-fixed bottom-0 start-50 translate-middle-x mb-4 shadow-sm fw-bold px-4 rounded-pill animate-fade-in-up`}
+            style={{ zIndex: 1050 }}
+            role="alert"
+          >
+            {isError ? <i className="fa fa-exclamation-triangle me-2"></i> : <i className="fa fa-check-circle me-2"></i>}
+            {message}
+          </div>
+        )}
+
+      </div>
     </>
   );
 }

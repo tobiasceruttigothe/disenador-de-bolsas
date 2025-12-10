@@ -1,13 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../../assets/pack designer final.png';
-import { apiClient } from '../../config/axios';
 import { useForm } from 'react-hook-form';
-import Cookies from "js-cookie";
 import { useNavigate } from 'react-router-dom';
+
+// Configuración y Componentes
+import { apiClient } from '../../config/axios';
 import { useNotificacion } from '../../hooks/useNotificacion';
 import Notificacion from '../Notificaciones/Notificacion';
+import logo from '../../assets/pack designer final.png';
 
-export default function FormularioCliente() {
+// Estilos
+import "../../index.css";
+import "../../styles/main.css";
+
+export default function FormularioPlantilla() {
   const [base64Plantilla, setBase64Plantilla] = useState("");
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const navigate = useNavigate();
@@ -15,26 +20,25 @@ export default function FormularioCliente() {
 
   const [materiales, setMateriales] = useState([]);
   const [tiposBolsa, setTiposBolsa] = useState([]);
+  const [estado, setEstado] = useState(""); // "", "Cargando", "Exito", "Error"
 
-  const [estado, setEstado] = useState("");
+  const primaryColor = "#016add";
 
   useEffect(() => {
-    const fetchMateriales = async () => {
+    const fetchData = async () => {
       try {
-        const response = await apiClient.get("/materiales");
-        setMateriales(response.data.data);
-      } catch (error) { }
+        const [resMat, resTipo] = await Promise.all([
+          apiClient.get("/materiales"),
+          apiClient.get("/tipos-bolsa")
+        ]);
+        setMateriales(resMat.data.data);
+        setTiposBolsa(resTipo.data.data);
+      } catch (error) {
+        console.error("Error al cargar datos:", error);
+        mostrarError("Error al cargar las opciones del formulario.");
+      }
     };
-
-    const fetchTiposBolsa = async () => {
-      try {
-        const response = await apiClient.get("/tipos-bolsa");
-        setTiposBolsa(response.data.data);
-      } catch (error) { }
-    };
-
-    fetchMateriales();
-    fetchTiposBolsa();
+    fetchData();
   }, []);
 
   const handleFileChange = (e) => {
@@ -43,6 +47,7 @@ export default function FormularioCliente() {
 
     const reader = new FileReader();
     reader.onloadend = () => {
+      // Extraer solo la parte base64 después de la coma
       const base64String = reader.result.split(',')[1];
       setBase64Plantilla(base64String);
     };
@@ -51,7 +56,7 @@ export default function FormularioCliente() {
 
   const handleSubmitForm = async (data) => {
     if (!base64Plantilla) {
-      mostrarError("Debe seleccionar un archivo de plantilla");
+      mostrarError("Debe seleccionar un archivo de imagen para la plantilla.");
       return;
     }
 
@@ -67,26 +72,27 @@ export default function FormularioCliente() {
 
     try {
       setEstado("Cargando");
-
       await apiClient.post("/plantillas", payload);
 
+      mostrarExito("Plantilla agregada con éxito.");
       reset();
       setBase64Plantilla("");
-      mostrarExito("Plantilla agregada con éxito");
+      setEstado("Exito");
 
       setTimeout(() => {
         navigate("/productos/plantillas");
       }, 1500);
 
-      setEstado("");
     } catch (error) {
-      mostrarError("Ocurrió un error al agregar la plantilla");
-      setEstado("");
+      console.error(error);
+      mostrarError("Ocurrió un error al agregar la plantilla.");
+      setEstado("Error");
     }
   };
 
   return (
     <>
+      {/* --- BOTÓN VOLVER (FIJO) --- */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
@@ -99,151 +105,167 @@ export default function FormularioCliente() {
           backgroundColor: "white",
           color: "#016add",
           border: "1px solid #016add",
-          borderRadius: "7px"
+          borderRadius: "7px",
+          zIndex: 1000
         }}
         onClick={() => navigate("/productos/plantillas")}
       >
         ←
       </button>
 
-      <div className="d-flex justify-content-center align-items-center vh-100 fondo">
-        <form
-          onSubmit={handleSubmit(handleSubmitForm)}
-          className="w-100 bg-white p-4 rounded shadow"
-          style={{ maxWidth: '1000px' }}
-        >
-          <div className="text-center mb-4">
-            <img
-              src={logo}
-              alt="Logo"
-              className="img-fluid"
-              style={{ width: '80px', height: '80px' }}
-            />
+      {/* --- CONTENEDOR PRINCIPAL --- */}
+      <div className="min-vh-100 fondo d-flex justify-content-center align-items-center py-5" style={{ marginTop: "60px" }}>
+        
+        <div className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white w-100" style={{ maxWidth: '900px' }}>
+          
+          {/* Cabecera */}
+          <div className="text-center mb-5">
+            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
+              <img 
+                src={logo} 
+                alt="Logo" 
+                className="img-fluid" 
+                style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+              />
+            </div>
+            <h3 className="fw-bold text-dark">Nueva Plantilla</h3>
+            <p className="text-muted">Ingresa los detalles técnicos para registrar la plantilla base</p>
           </div>
 
-          <h2 className="text-center mb-4">Agregar plantilla</h2>
+          <form onSubmit={handleSubmit(handleSubmitForm)}>
+            <div className="row g-4">
+              
+              {/* COLUMNA IZQUIERDA: Datos Generales */}
+              <div className="col-12 col-md-6">
+                
+                {/* Nombre */}
+                <div className="mb-3">
+                  <label className="form-label text-muted small fw-bold text-uppercase">Nombre de la Plantilla</label>
+                  <input
+                    type="text"
+                    className={`form-control form-control-lg bg-light border-0 ${errors.nombre ? 'is-invalid' : ''}`}
+                    placeholder="Ej: Bolsa Kraft Mediana"
+                    style={{ fontSize: '0.95rem' }}
+                    {...register("nombre", {
+                      required: "El nombre es obligatorio",
+                      minLength: { value: 3, message: "Mínimo 3 caracteres" }
+                    })}
+                  />
+                  {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+                </div>
 
-          <div className="row">
-            <div className="col-md-6">
-              <div className="mb-3">
-                <label htmlFor="nombre" className="form-label">Nombre de la plantilla</label>
-                <input
-                  id="nombre"
-                  type="text"
-                  placeholder="Ingrese un nombre de plantilla"
-                  className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-                  {...register("nombre", {
-                    required: "El nombre es obligatorio",
-                    minLength: { value: 3, message: "Debe tener al menos 3 caracteres." }
-                  })}
-                />
-                {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+                {/* Material (Select) */}
+                <div className="mb-3">
+                  <label className="form-label text-muted small fw-bold text-uppercase">Material</label>
+                  <select
+                    className={`form-select form-select-lg bg-light border-0 ${errors.materialId ? 'is-invalid' : ''}`}
+                    style={{ fontSize: '0.95rem', cursor: 'pointer' }}
+                    {...register("materialId", { required: "Selecciona un material" })}
+                  >
+                    <option value="">Seleccionar material...</option>
+                    {materiales.map(m => (
+                      <option key={m.id} value={m.id}>{m.nombre}</option>
+                    ))}
+                  </select>
+                  {errors.materialId && <div className="invalid-feedback">{errors.materialId.message}</div>}
+                </div>
+
+                {/* Tipo de Bolsa (Select) */}
+                <div className="mb-3">
+                  <label className="form-label text-muted small fw-bold text-uppercase">Tipo de Bolsa</label>
+                  <select
+                    className={`form-select form-select-lg bg-light border-0 ${errors.tipoBolsaId ? 'is-invalid' : ''}`}
+                    style={{ fontSize: '0.95rem', cursor: 'pointer' }}
+                    {...register("tipoBolsaId", { required: "Selecciona un tipo" })}
+                  >
+                    <option value="">Seleccionar tipo...</option>
+                    {tiposBolsa.map(t => (
+                      <option key={t.id} value={t.id}>{t.nombre}</option>
+                    ))}
+                  </select>
+                  {errors.tipoBolsaId && <div className="invalid-feedback">{errors.tipoBolsaId.message}</div>}
+                </div>
+
               </div>
 
-              <div className="mb-3">
-                <label className="form-label">Material</label>
-                {materiales.length > 0 ? materiales.map(m => (
-                  <div key={m.id} className="form-check">
+              {/* COLUMNA DERECHA: Archivo y Medidas */}
+              <div className="col-12 col-md-6">
+                
+                {/* Archivo */}
+                <div className="mb-4">
+                  <label className="form-label text-muted small fw-bold text-uppercase">Imagen de Plantilla</label>
+                  <input
+                    type="file"
+                    accept=".jpg,.png,.jpeg"
+                    className="form-control form-control-lg bg-light border-0"
+                    style={{ fontSize: '0.9rem' }}
+                    onChange={handleFileChange}
+                  />
+                  {!base64Plantilla && <div className="form-text text-danger small mt-1">* La imagen es obligatoria</div>}
+                </div>
+
+                <label className="form-label text-muted small fw-bold text-uppercase d-block mb-2">Dimensiones (cm)</label>
+                <div className="row g-2">
+                  <div className="col-4">
                     <input
-                      id={`material-${m.id}`}
-                      type="radio"
-                      value={m.id}
-                      className={`form-check-input ${errors.materialId ? 'is-invalid' : ''}`}
-                      {...register("materialId", { required: "El material es obligatorio" })}
+                      type="number"
+                      step="0.01"
+                      placeholder="Ancho"
+                      className={`form-control bg-light border-0 text-center ${errors.ancho ? 'is-invalid' : ''}`}
+                      {...register("ancho", { required: true, min: 0 })}
                     />
-                    <label htmlFor={`material-${m.id}`} className="form-check-label">
-                      {m.nombre}
-                    </label>
+                    <div className="text-center small text-muted mt-1">Ancho</div>
                   </div>
-                )) : <p>Cargando materiales...</p>}
-                {errors.materialId && <div className="invalid-feedback">{errors.materialId.message}</div>}
-              </div>
-            </div>
-
-            <div className="col-md-6">
-              <div className="mb-3">
-                <label htmlFor="base64Plantilla" className="form-label">Archivo de Plantilla</label>
-                <input
-                  id="base64Plantilla"
-                  type="file"
-                  accept=".jpg,.png, .jpeg"
-                  className="form-control"
-                  onChange={handleFileChange}
-                />
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Tipo de Bolsa</label>
-                {tiposBolsa.length > 0 ? tiposBolsa.map(t => (
-                  <div key={t.id} className="form-check">
+                  <div className="col-4">
                     <input
-                      id={`tipoBolsa-${t.id}`}
-                      type="radio"
-                      value={t.id}
-                      className={`form-check-input ${errors.tipoBolsaId ? 'is-invalid' : ''}`}
-                      {...register("tipoBolsaId", { required: "El tipo de bolsa es obligatorio" })}
+                      type="number"
+                      step="0.01"
+                      placeholder="Alto"
+                      className={`form-control bg-light border-0 text-center ${errors.alto ? 'is-invalid' : ''}`}
+                      {...register("alto", { required: true, min: 0 })}
                     />
-                    <label htmlFor={`tipoBolsa-${t.id}`} className="form-check-label">
-                      {t.nombre}
-                    </label>
+                    <div className="text-center small text-muted mt-1">Alto</div>
                   </div>
-                )) : <p>Cargando tipos de bolsa...</p>}
-                {errors.tipoBolsaId && <div className="invalid-feedback">{errors.tipoBolsaId.message}</div>}
+                  <div className="col-4">
+                    <input
+                      type="number"
+                      step="0.01"
+                      placeholder="Prof."
+                      className={`form-control bg-light border-0 text-center ${errors.profundidad ? 'is-invalid' : ''}`}
+                      {...register("profundidad", { required: true, min: 0 })}
+                    />
+                    <div className="text-center small text-muted mt-1">Prof.</div>
+                  </div>
+                </div>
+                {(errors.ancho || errors.alto || errors.profundidad) && (
+                  <div className="text-danger small mt-2">Todas las dimensiones son obligatorias.</div>
+                )}
+
               </div>
             </div>
-          </div>
 
-          <div className="row">
-            <div className="col-md-4 mb-3">
-              <label htmlFor="ancho" className="form-label">Ancho (cm)</label>
-              <input
-                id="ancho"
-                type="number"
-                step="0.01"
-                placeholder="Ingrese el ancho"
-                className={`form-control ${errors.ancho ? 'is-invalid' : ''}`}
-                {...register("ancho", { required: "El ancho es obligatorio", min: 0 })}
-              />
-              {errors.ancho && <div className="invalid-feedback">{errors.ancho.message}</div>}
+            <hr className="my-4 text-muted opacity-25" />
+
+            <div className="d-grid">
+              <button
+                type="submit"
+                className="btn btn-lg rounded-pill fw-bold shadow-sm text-white"
+                style={{ backgroundColor: primaryColor, border: `1px solid ${primaryColor}` }}
+                disabled={estado === "Cargando"}
+              >
+                {estado === "Cargando" ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Guardando...
+                  </>
+                ) : (
+                  "Registrar Plantilla"
+                )}
+              </button>
             </div>
 
-            <div className="col-md-4 mb-3">
-              <label htmlFor="alto" className="form-label">Alto (cm)</label>
-              <input
-                id="alto"
-                type="number"
-                step="0.01"
-                placeholder="Ingrese el alto"
-                className={`form-control ${errors.alto ? 'is-invalid' : ''}`}
-                {...register("alto", { required: "El alto es obligatorio", min: 0 })}
-              />
-              {errors.alto && <div className="invalid-feedback">{errors.alto.message}</div>}
-            </div>
-
-            <div className="col-md-4 mb-3">
-              <label htmlFor="profundidad" className="form-label">Profundidad (cm)</label>
-              <input
-                id="profundidad"
-                type="number"
-                step="0.01"
-                placeholder="Ingrese la profundidad"
-                className={`form-control ${errors.profundidad ? 'is-invalid' : ''}`}
-                {...register("profundidad", { required: "La profundidad es obligatoria", min: 0 })}
-              />
-              {errors.profundidad && <div className="invalid-feedback">{errors.profundidad.message}</div>}
-            </div>
-          </div>
-
-          <button
-            className="btn w-100 text-white mt-3"
-            style={{ backgroundColor: '#016add' }}
-            type="submit"
-            disabled={estado === "Cargando"}
-          >
-            {estado === "Cargando" ? "Cargando..." : "Ingresar"}
-          </button>
-
-        </form>
+          </form>
+        </div>
 
         <Notificacion
           tipo={notificacion.tipo}

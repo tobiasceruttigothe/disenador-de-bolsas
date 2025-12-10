@@ -5,6 +5,10 @@ import { useNotificacion } from "../../hooks/useNotificacion";
 import Notificacion from "../Notificaciones/Notificacion";
 import ModalConfirmacion from "../ModalConfirmacion";
 
+// Estilos
+import "../../index.css";
+import "../../styles/main.css";
+
 export default function TablaAdmins() {
   const navigate = useNavigate();
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
@@ -12,6 +16,8 @@ export default function TablaAdmins() {
   const [adminsFiltrados, setAdminsFiltrados] = useState([]);
   const [filtro, setFiltro] = useState("");
   const [modalEliminar, setModalEliminar] = useState({ visible: false, nombre: null });
+
+  const primaryColor = "#016add";
 
   useEffect(() => {
     fetchAdmins();
@@ -31,7 +37,7 @@ export default function TablaAdmins() {
       setAdmins(res.data);
     } catch (e) {
       console.error("Error al cargar administradores:", e);
-      mostrarError("No se pudieron cargar los administradores. Intente nuevamente más tarde.");
+      mostrarError("No se pudieron cargar los administradores.");
     }
   };
 
@@ -41,25 +47,15 @@ export default function TablaAdmins() {
 
   const confirmarEliminar = async () => {
     const nombre = modalEliminar.nombre;
-    if (!nombre) {
-      mostrarError("Error: No se pudo identificar el administrador a eliminar.");
-      setModalEliminar({ visible: false, nombre: null });
-      return;
-    }
+    if (!nombre) return;
     
     try {
       await apiClient.delete(`/usuarios/eliminate/${nombre}`);
       mostrarExito("Administrador eliminado exitosamente.");
       setAdmins((prev) => prev.filter((a) => a.username !== nombre));
     } catch (error) {
-      console.error("Error al eliminar administrador:", error);
-      if (error.response && error.response.status === 403) {
-        mostrarError("No tienes permisos para eliminar administradores. Verifica que tu usuario tenga el rol de administrador.");
-      } else if (error.response && error.response.status === 401) {
-        mostrarError("Tu sesión ha expirado. Por favor, inicia sesión nuevamente.");
-      } else {
-        mostrarError("No se pudo eliminar el administrador. Intente nuevamente más tarde.");
-      }
+      console.error("Error al eliminar:", error);
+      mostrarError("No se pudo eliminar el administrador.");
     }
     setModalEliminar({ visible: false, nombre: null });
   };
@@ -68,9 +64,9 @@ export default function TablaAdmins() {
     navigate("/admins/nuevo");
   };
 
-
   return (
     <>
+      {/* Botón Volver ORIGINAL */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
@@ -83,106 +79,112 @@ export default function TablaAdmins() {
           backgroundColor: "white",
           color: "#016add",
           border: "1px solid #016add",
-          borderRadius: "7px"
+          borderRadius: "7px",
+          zIndex: 1000
         }}
         onClick={() => navigate("/inicio")}
       >
         ←
       </button>
-      <div style={{marginTop:"85px"}} className="container-fluid min-vh-100 py-4 bg-light fondo">
 
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-10 col-lg-8">
-            <h2>Consultar Administradores gerenciales</h2>
-            <hr />
-            <div className="mb-4">
-              <input
-                type="text"
-                className="form-control mb-2"
-                placeholder="Ingrese nombre de usuario para buscar..."
-                value={filtro}
-                onChange={(e) => setFiltro(e.target.value)}
-              />
-              <button className="btn btn-primary" onClick={irAOtroComponente}>
-                Nuevo administrador
-              </button>
-            </div>
+      {/* Contenedor con FONDO */}
+      <div className="min-vh-100 fondo" style={{ paddingTop: "100px", paddingBottom: "80px" }}>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-12 col-lg-10">
+              
+              {/* Tarjeta Principal */}
+              <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+                
+                {/* Cabecera */}
+                <div className="card-header bg-white py-4 px-4 px-md-5 border-bottom-0">
+                  <div className="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                      <h2 className="fw-bold text-dark mb-1">Administradores</h2>
+                      <p className="text-muted mb-0">Gestión de usuarios con permisos gerenciales</p>
+                    </div>
+                    <button 
+                      className="btn btn-primary px-4 py-2 fw-bold shadow-sm rounded-pill"
+                      style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
+                      onClick={irAOtroComponente}
+                    >
+                      <i className="fa fa-user-plus me-2"></i> Nuevo Admin
+                    </button>
+                  </div>
+                  
+                  {/* Buscador */}
+                  <div className="position-relative">
+                    <i className="fa fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg ps-5 bg-light border-0"
+                      placeholder="Buscar administrador por usuario..."
+                      value={filtro}
+                      onChange={(e) => setFiltro(e.target.value)}
+                      style={{ fontSize: '0.95rem' }}
+                    />
+                  </div>
+                </div>
 
-            {/* TABLA */}
-            <div className="table-responsive mb-4">
-              <table className="table table-bordered table-striped table-hover" style={{ tableLayout: 'auto' }}>
-                <thead className="table-light">
-                  <tr>
-                    <th>Nombre de Usuario</th>
-                    <th>Mail</th>
-                    <th>Nombre y apellido</th>
-                    <th style={{ width: "110px", whiteSpace: "nowrap" }}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {adminsFiltrados.length > 0 ? (
-                    adminsFiltrados.map((a, index) => (
-                      <tr key={index}>
-                        <td>{a.username}</td>
-                        <td>{a.email}</td>
-                        <td>{a.razonSocial}</td>
-                        <td style={{ width: "110px", whiteSpace: "nowrap" }}>
-                          <button
-                            className="btn m-1"
-                            style={{
-                              backgroundColor: "#016add",
-                              color: "#fff",
-                              border: "2px solid #016add",
-                              fontWeight: "500",
-                              padding: "0.375rem 0.75rem",
-                              borderRadius: "0.375rem",
-                              cursor: "pointer",
-                              transition: "all 0.3s ease",
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = "#014bb5";
-                              e.currentTarget.style.borderColor = "#014bb5";
-                              e.currentTarget.style.transform = "scale(1.05)";
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = "#016add";
-                              e.currentTarget.style.borderColor = "#016add";
-                              e.currentTarget.style.transform = "scale(1)";
-                            }}
-                            onClick={() => handleEliminarClick(a.username)}
-                          >
-                            Eliminar
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="text-center">
-                        No hay administradores para mostrar
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                {/* Tabla */}
+                <div className="card-body p-0">
+                  <div className="table-responsive">
+                    <table className="table table-hover align-middle mb-0">
+                      <thead className="bg-light">
+                        <tr>
+                          <th className="py-3 ps-5 text-muted small fw-bold text-uppercase">Usuario</th>
+                          <th className="py-3 text-muted small fw-bold text-uppercase">Email</th>
+                          <th className="py-3 text-muted small fw-bold text-uppercase">Nombre</th>
+                          <th className="py-3 pe-5 text-end text-muted small fw-bold text-uppercase">Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {adminsFiltrados.length > 0 ? (
+                          adminsFiltrados.map((a, index) => (
+                            <tr key={index}>
+                              <td className="ps-5 fw-bold text-dark">{a.username}</td>
+                              <td className="text-muted">{a.email}</td>
+                              <td>{a.razonSocial || "-"}</td>
+                              <td className="pe-5 text-end">
+                                <button
+                                  className="btn btn-sm btn-outline-danger fw-bold"
+                                  onClick={() => handleEliminarClick(a.username)}
+                                  style={{ border: "1px solid #dc3545", color: "#dc3545" }}
+                                >
+                                  <i className="fa fa-trash-alt me-1"></i> Eliminar
+                                </button>
+                              </td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="4" className="text-center py-5 text-muted">
+                              No se encontraron administradores.
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div className="card-footer bg-white border-top-0 py-3 text-center">
+                  <small className="text-muted">Total: {adminsFiltrados.length} administradores</small>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>
 
-        <Notificacion
-          tipo={notificacion.tipo}
-          mensaje={notificacion.mensaje}
-          visible={notificacion.visible}
-          onClose={ocultarNotificacion}
-          duracion={notificacion.duracion}
-        />
+        <Notificacion tipo={notificacion.tipo} mensaje={notificacion.mensaje} visible={notificacion.visible} onClose={ocultarNotificacion} />
         
         <ModalConfirmacion
           isVisible={modalEliminar.visible}
           onClose={() => setModalEliminar({ visible: false, nombre: null })}
           onConfirm={confirmarEliminar}
-          titulo="Eliminar administrador"
-          mensaje={`¿Estás seguro que deseas eliminar a ${modalEliminar.nombre}? Esta acción no se puede deshacer.`}
+          titulo="Eliminar Administrador"
+          mensaje={`¿Estás seguro que deseas eliminar a ${modalEliminar.nombre}?`}
           tipo="danger"
         />
       </div>

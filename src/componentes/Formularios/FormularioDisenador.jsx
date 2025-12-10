@@ -8,11 +8,16 @@ import { useNotificacion } from '../../hooks/useNotificacion';
 import Notificacion from '../Notificaciones/Notificacion';
 import { logTokenInfo } from '../../utils/decodeToken';
 
+// Estilos
+import "../../index.css"; 
+import "../../styles/main.css";
+
 export default function FormularioDiseñador() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const [cargando, setCargando] = useState(false);
   const navigate = useNavigate();
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
+  const primaryColor = "#016add";
 
   useEffect(() => {
     logTokenInfo();
@@ -61,6 +66,7 @@ export default function FormularioDiseñador() {
 
   return (
     <>
+      {/* --- BOTÓN VOLVER (FIJO) --- */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
@@ -73,84 +79,111 @@ export default function FormularioDiseñador() {
           backgroundColor: "white",
           color: "#016add",
           border: "1px solid #016add",
-          borderRadius: "7px"
+          borderRadius: "7px",
+          zIndex: 1000
         }}
         onClick={() => navigate("/disenadores")}
       >
         ←
       </button>
 
-      <div className="d-flex justify-content-center align-items-center vh-100 bg-light fondo">
-        <form
-          onSubmit={handleSubmit(handleSubmitForm)}
-          className="w-100 bg-white p-4 rounded shadow"
-          style={{ maxWidth: '400px' }}
+      {/* --- CONTENEDOR PRINCIPAL CON FONDO --- */}
+      <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
+        
+        <div 
+          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          style={{ width: "100%", maxWidth: "500px" }}
         >
+          
+          {/* Cabecera */}
           <div className="text-center mb-4">
-            <img
-              src={logo}
-              alt="Logo"
-              className="img-fluid"
-              style={{ width: '80px', height: '80px' }}
-            />
-          </div>
-          <h2 className="text-center mb-4">Agregar Diseñador</h2>
-
-          <div className="mb-3">
-            <label htmlFor="nombre" className="form-label">Nombre de usuario</label>
-            <input
-              id="nombre"
-              placeholder="Ingrese un nombre de usuario"
-              type="text"
-              className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-              {...register("nombre", {
-                required: "El nombre es obligatorio",
-                minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
-                maxLength: { value: 50, message: "Debe tener menos de 50 caracteres" }
-              })}
-            />
-            {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
+              <img 
+                src={logo} 
+                alt="Logo" 
+                className="img-fluid" 
+                style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+              />
+            </div>
+            <h3 className="fw-bold text-dark mb-1">Nuevo Diseñador</h3>
+            <p className="text-muted small">Registrar un nuevo miembro del equipo de diseño</p>
           </div>
 
-          <div className="mb-3">
-            <label htmlFor="nombreApellido" className="form-label">Nombre y apellido del empleado</label>
-            <input
-              id="nombreApellido"
-              placeholder="Ingrese el nombre y apellido del empleado"
-              type="text"
-              className={`form-control ${errors.nombreApellido ? 'is-invalid' : ''}`}
-              {...register("nombreApellido", {
-                required: "El nombre y apellido del empleado es obligatorio",
-              })}
-            />
-            {errors.nombreApellido && <div className="invalid-feedback">{errors.nombreApellido.message}</div>}
-          </div>
+          <form onSubmit={handleSubmit(handleSubmitForm)}>
+            
+            {/* Usuario */}
+            <div className="mb-3">
+              <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario</label>
+              <input
+                id="nombre"
+                placeholder="Ej: disenador123"
+                type="text"
+                className={`form-control form-control-lg bg-light border-0 ${errors.nombre ? 'is-invalid' : ''}`}
+                style={{ fontSize: '0.95rem' }}
+                {...register("nombre", {
+                  required: "El nombre es obligatorio",
+                  minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
+                  maxLength: { value: 50, message: "Debe tener menos de 50 caracteres" }
+                })}
+              />
+              {errors.nombre && <div className="invalid-feedback ps-2">{errors.nombre.message}</div>}
+            </div>
 
-          <div className="mb-3">
-            <label htmlFor="mail" className="form-label">Mail</label>
-            <input
-              id="mail"
-              type="text"
-              placeholder="Ingrese un mail"
-              className={`form-control ${errors.mail ? 'is-invalid' : ''}`}
-              {...register("mail", {
-                required: "El mail es obligatorio",
-                pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ingrese un mail válido" },
-                maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" }
-              })}
-            />
-            {errors.mail && <div className="invalid-feedback">{errors.mail.message}</div>}
-          </div>
+            {/* Nombre y Apellido */}
+            <div className="mb-3">
+              <label htmlFor="nombreApellido" className="form-label text-muted small fw-bold text-uppercase">Nombre y Apellido</label>
+              <input
+                id="nombreApellido"
+                placeholder="Ej: Juan Pérez"
+                type="text"
+                className={`form-control form-control-lg bg-light border-0 ${errors.nombreApellido ? 'is-invalid' : ''}`}
+                style={{ fontSize: '0.95rem' }}
+                {...register("nombreApellido", {
+                  required: "El nombre y apellido es obligatorio",
+                })}
+              />
+              {errors.nombreApellido && <div className="invalid-feedback ps-2">{errors.nombreApellido.message}</div>}
+            </div>
 
-          <button
-            className="btn w-100 text-white"
-            style={{ backgroundColor: '#016add' }}
-            disabled={cargando}
-            type="submit"
-          >
-            {cargando ? "Cargando..." : "Ingresar"}
-          </button>
-        </form>
+            {/* Mail */}
+            <div className="mb-4">
+              <label htmlFor="mail" className="form-label text-muted small fw-bold text-uppercase">Correo Electrónico</label>
+              <input
+                id="mail"
+                type="text"
+                placeholder="ejemplo@papersrl.com"
+                className={`form-control form-control-lg bg-light border-0 ${errors.mail ? 'is-invalid' : ''}`}
+                style={{ fontSize: '0.95rem' }}
+                {...register("mail", {
+                  required: "El mail es obligatorio",
+                  pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ingrese un mail válido" },
+                  maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" }
+                })}
+              />
+              {errors.mail && <div className="invalid-feedback ps-2">{errors.mail.message}</div>}
+            </div>
+
+            {/* Botón */}
+            <div className="d-grid mt-4">
+              <button
+                className="btn btn-lg rounded-pill fw-bold shadow-sm text-white"
+                style={{ backgroundColor: primaryColor, border: `1px solid ${primaryColor}` }}
+                disabled={cargando}
+                type="submit"
+              >
+                {cargando ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Guardando...
+                  </>
+                ) : (
+                  "Registrar Diseñador"
+                )}
+              </button>
+            </div>
+
+          </form>
+        </div>
 
         <Notificacion
           tipo={notificacion.tipo}

@@ -1,22 +1,27 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { apiClient } from "../../config/axios";
 import { useNotificacion } from "../../hooks/useNotificacion";
 import Notificacion from "../Notificaciones/Notificacion";
 
+// Importa estilos
+import "../../index.css";
+import "../../styles/main.css";
+
 export default function ConsultaClientes() {
-  const [clientes, setClientes] = useState([])
-  const [clientesFiltrados, setClientesFiltrados] = useState([])
-  const [filtro, setFiltro] = useState("")
+  const [clientes, setClientes] = useState([]);
+  const [clientesFiltrados, setClientesFiltrados] = useState([]);
+  const [filtro, setFiltro] = useState("");
   const navigate = useNavigate();
   const { notificacion, mostrarError, ocultarNotificacion } = useNotificacion();
+
+  const primaryColor = "#016add";
 
   useEffect(() => {
     fetchClientes();
   }, []);
 
   useEffect(() => {
-    // Filtra en tiempo real al cambiar el filtro o la lista de clientes
     if (filtro.trim() === "") {
       setClientesFiltrados(clientes);
     } else {
@@ -39,8 +44,9 @@ export default function ConsultaClientes() {
   };
 
   const handleClick = (id) => () => {
-    navigate(`/disenos/cliente/${id}`)
-  }
+    // Redirige a la lista de diseños de este cliente específico
+    navigate(`/disenos/cliente/${id}`);
+  };
 
   const plantillas = (nombre, id) => {
     navigate(`/verClientes/plantillas?id=${id}&user=${nombre}`);
@@ -48,6 +54,7 @@ export default function ConsultaClientes() {
 
   return (
     <>
+      {/* --- BOTÓN VOLVER ORIGINAL (FIJO) --- */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
@@ -60,111 +67,121 @@ export default function ConsultaClientes() {
           backgroundColor: "white",
           color: "#016add",
           border: "1px solid #016add",
-          borderRadius: "7px"
+          borderRadius: "7px",
+          zIndex: 1000
         }}
         onClick={() => navigate("/inicio")}
       >
         ←
       </button>
-      <div style={{ marginTop: "85px" }} className="container-fluid min-vh-100 py-4 bg-light fondo">
-        <div className="row justify-content-center">
-          <div className="col-12 col-md-10 col-lg-8">
-            <h2 className="mb-4">Consultar Clientes</h2>
-            <hr></hr>
-            <div className="mb-4">
-              <input
-                type="text"
-                className="form-control mb-2"
-                id="nombreFiltro"
-                placeholder="Ingrese el nombre de usuario del cliente..."
-                value={filtro}
-                onChange={(e) => setFiltro(e.target.value)}
-              />
-            </div>
 
-            <div className="table-responsive mb-4">
-              <table className="table table-bordered table-striped table-hover" style={{ tableLayout: 'auto' }}>
-                <thead className="table-light">
-                  <tr>
-                    <th>Nombre de Usuario</th>
-                    <th>Mail</th>
-                    <th>Razon Social</th>
-                    <th style={{ width: "440px", whiteSpace: "nowrap" }}></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {clientesFiltrados.length > 0 ? (
-                    clientesFiltrados.map((c, index) => (
-                      <tr key={index}>
-                        <td>{c.username}</td>
-                        <td>{c.email}</td>
-                        <td>{c.razonSocial}</td>
-                        <td>
-                          <button
-                            className="btn m-1"
-                            style={{
-                              backgroundColor: "#016add",
-                              color: "#fff",
-                              border: "2px solid #016add",
-                              fontWeight: "500",
-                              padding: "0.375rem 0.75rem",
-                              borderRadius: "0.375rem",
-                              cursor: "pointer",
-                              transition: "all 0.3s ease"
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = "#014bb5";
-                              e.currentTarget.style.borderColor = "#014bb5";
-                              e.currentTarget.style.transform = "scale(1.05)";
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = "#016add";
-                              e.currentTarget.style.borderColor = "#016add";
-                              e.currentTarget.style.transform = "scale(1)";
-                            }}
-                            onClick={handleClick(c.id)}
-                          >
-                            Ver diseños del cliente
-                          </button>
+      {/* CONTENEDOR PRINCIPAL CON FONDO DE CÍRCULOS */}
+      <div className="min-vh-100 fondo" style={{ paddingTop: "100px", paddingBottom: "80px" }}>
+        <div className="container">
+          <div className="row justify-content-center">
+            <div className="col-12 col-xl-10">
+              
+              {/* TARJETA MODERNA */}
+              <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+                
+                {/* Cabecera y Buscador */}
+                <div className="card-header bg-white py-4 px-4 px-md-5 border-bottom-0">
+                  <h2 className="fw-bold text-dark mb-1">Consultar Clientes</h2>
+                  <p className="text-muted mb-4">Gestiona los diseños y plantillas de tus clientes</p>
+                  
+                  <div className="position-relative">
+                    <i className="fa fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                    <input
+                      type="text"
+                      className="form-control form-control-lg ps-5 bg-light border-0"
+                      placeholder="Buscar cliente por nombre de usuario..."
+                      value={filtro}
+                      onChange={(e) => setFiltro(e.target.value)}
+                      style={{ fontSize: '0.95rem' }}
+                    />
+                  </div>
+                </div>
 
-                          <button
-                            className="btn m-1"
-                            style={{
-                              border: "2px solid #016add",
-                              backgroundColor: "transparent",
-                              color: "#016add",
-                              fontWeight: "500",
-                              padding: "0.375rem 0.75rem",
-                              borderRadius: "0.375rem",
-                              cursor: "pointer",
-                              transition: "all 0.3s ease"
-                            }}
-                            onMouseOver={(e) => {
-                              e.currentTarget.style.backgroundColor = "#016add";
-                              e.currentTarget.style.color = "#fff";
-                              e.currentTarget.style.transform = "scale(1.05)";
-                            }}
-                            onMouseOut={(e) => {
-                              e.currentTarget.style.backgroundColor = "transparent";
-                              e.currentTarget.style.color = "#016add";
-                              e.currentTarget.style.transform = "scale(1)";
-                            }}
-                            onClick={() => plantillas(c.username, c.id)}
-                          >
-                            Administrar sus plantillas
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="4" className="text-center">
-                        No hay clientes para mostrar
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+                {/* Tabla Estilizada */}
+                <div className="card-body p-0">
+                  <div className="table-responsive">
+                    <table className="table table-hover align-middle mb-0" style={{ minWidth: "800px" }}>
+                      <thead className="bg-light">
+                        <tr>
+                          <th className="py-3 ps-4 ps-md-5 text-muted small fw-bold text-uppercase" style={{ width: "25%" }}>Usuario</th>
+                          <th className="py-3 text-muted small fw-bold text-uppercase" style={{ width: "25%" }}>Email</th>
+                          <th className="py-3 text-muted small fw-bold text-uppercase" style={{ width: "20%" }}>Razón Social</th>
+                          <th className="py-3 pe-4 pe-md-5 text-end text-muted small fw-bold text-uppercase" style={{ width: "30%" }}>Acciones</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {clientesFiltrados.length > 0 ? (
+                          clientesFiltrados.map((c, index) => (
+                            <tr key={index} style={{ transition: "background-color 0.2s" }}>
+                              
+                              {/* Usuario con Avatar */}
+                              <td className="py-3 ps-4 ps-md-5">
+                                <div className="d-flex align-items-center">
+                                  <div className="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold me-3" 
+                                       style={{ width: "40px", height: "40px", fontSize: "1.2rem" }}>
+                                    {c.username.charAt(0).toUpperCase()}
+                                  </div>
+                                  <span className="fw-bold text-dark">{c.username}</span>
+                                </div>
+                              </td>
+                              
+                              <td className="text-muted">{c.email}</td>
+                              
+                              <td>
+                                <span className="badge bg-light text-dark border fw-normal px-3 py-2">
+                                  {c.razonSocial || "N/A"}
+                                </span>
+                              </td>
+                              
+                              {/* Botones de Acción */}
+                              <td className="pe-4 pe-md-5 text-end">
+                                <div className="d-flex justify-content-end gap-2">
+                                  <button
+                                    className="btn btn-sm btn-outline-primary fw-bold"
+                                    onClick={handleClick(c.id)}
+                                    title="Ver todos los diseños de este cliente"
+                                  >
+                                    <i className="fa fa-paint-brush me-1"></i> Diseños
+                                  </button>
+                                  
+                                  <button
+                                    className="btn btn-sm btn-primary fw-bold text-white"
+                                    style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
+                                    onClick={() => plantillas(c.username, c.id)}
+                                    title="Administrar Plantillas Habilitadas"
+                                  >
+                                    <i className="fa fa-layer-group me-1"></i> Plantillas
+                                  </button>
+                                </div>
+                              </td>
+
+                            </tr>
+                          ))
+                        ) : (
+                          <tr>
+                            <td colSpan="4" className="text-center py-5">
+                              <div className="opacity-50 mb-2">
+                                <i className="fa fa-users-slash fa-3x text-muted"></i>
+                              </div>
+                              <p className="text-muted mb-0">No se encontraron clientes</p>
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div className="card-footer bg-white border-top-0 py-3 text-center">
+                  <small className="text-muted">Mostrando {clientesFiltrados.length} clientes</small>
+                </div>
+
+              </div>
             </div>
           </div>
         </div>

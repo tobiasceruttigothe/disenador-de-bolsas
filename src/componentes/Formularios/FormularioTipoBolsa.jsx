@@ -4,13 +4,18 @@ import { apiClient } from '../../config/axios';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+// Asegúrate de importar tus estilos globales
+import "../../index.css"; 
+import "../../styles/main.css";
+
 export default function FormularioTipoBolsa() {
   const [cargando, setCargando] = useState(false);
   const [estado, setEstado] = useState(null);
   const [mensaje, setMensaje] = useState("");
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const primaryColor = "#016add";
 
   const handleSubmitForm = async (data) => {
     const payload = { nombre: data.nombre };
@@ -18,13 +23,17 @@ export default function FormularioTipoBolsa() {
     try {
       setCargando(true);
       setEstado("Cargando");
-      setMensaje("Cargando...");
+      setMensaje("Guardando...");
 
       await apiClient.post("/tipos-bolsa", payload);
 
       reset();
       setEstado("Exito");
       setMensaje("Tipo de bolsa agregado con éxito");
+      
+      // Opcional: Redirigir después de un éxito
+      // setTimeout(() => navigate("/productos/tiposbolsa"), 1500);
+
     } catch (error) {
       console.error("Error al agregar tipo de bolsa:", error);
       setEstado("Error");
@@ -36,6 +45,7 @@ export default function FormularioTipoBolsa() {
 
   return (
     <>
+      {/* --- BOTÓN VOLVER ORIGINAL (FIJO) --- */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
@@ -48,60 +58,94 @@ export default function FormularioTipoBolsa() {
           backgroundColor: "white",
           color: "#016add",
           border: "1px solid #016add",
-          borderRadius: "7px"
+          borderRadius: "7px",
+          zIndex: 1000
         }}
         onClick={() => navigate("/productos/tiposbolsa")}
       >
         ←
       </button>
 
-
-      <div className="d-flex justify-content-center align-items-center vh-100 fondo">
-        <form
-          onSubmit={handleSubmit(handleSubmitForm)}
-          className="w-100 bg-white p-4 rounded shadow"
-          style={{ maxWidth: '400px' }}
+      {/* --- CONTENEDOR PRINCIPAL CON FONDO --- */}
+      <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
+        
+        <div 
+          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          style={{ width: "100%", maxWidth: "450px" }}
         >
+          
+          {/* Cabecera de la Tarjeta */}
           <div className="text-center mb-4">
-            <img src={logo} alt="Logo" className="img-fluid" style={{ width: '80px', height: '80px' }} />
-          </div>
-          <h2 className="text-center mb-4">Agregar tipo de bolsa</h2>
-
-          {/* Nombre */}
-          <div className="mb-3">
-            <label htmlFor="nombre" className="form-label">Nombre</label>
-            <input
-              id="nombre"
-              type="text"
-              placeholder="Ingrese el nombre del tipo de bolsa"
-              className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
-              {...register("nombre", {
-                required: "El nombre es obligatorio",
-                maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" },
-                minLength: { value: 3, message: "Debe tener al menos 3 caracteres" }
-              })}
-            />
-            {errors.nombre && <div className="invalid-feedback">{errors.nombre.message}</div>}
+            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "100px", height: "100px" }}>
+              <img 
+                src={logo} 
+                alt="Logo" 
+                className="img-fluid" 
+                style={{ width: '60px', height: '60px', objectFit: 'contain' }} 
+              />
+            </div>
+            <h3 className="fw-bold text-dark mb-1">Nuevo Tipo de Bolsa</h3>
+            <p className="text-muted small">Ingresa los datos para registrar la categoría</p>
           </div>
 
-          <button
-            className="btn w-100 text-white"
-            style={{ backgroundColor: '#016add' }}
-            disabled={cargando}
-          >
-            {cargando ? "Cargando..." : "Enviar"}
-          </button>
-        </form>
+          <form onSubmit={handleSubmit(handleSubmitForm)}>
+            
+            {/* Input Nombre */}
+            <div className="mb-4">
+              <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre del Tipo</label>
+              <input
+                id="nombre"
+                type="text"
+                placeholder="Ej: Riñonera, Camiseta..."
+                className={`form-control form-control-lg bg-light border-0 ${errors.nombre ? 'is-invalid' : ''}`}
+                style={{ fontSize: '0.95rem' }}
+                {...register("nombre", {
+                  required: "El nombre es obligatorio",
+                  maxLength: { value: 100, message: "Máximo 100 caracteres" },
+                  minLength: { value: 3, message: "Mínimo 3 caracteres" }
+                })}
+              />
+              {errors.nombre && <div className="invalid-feedback ps-2">{errors.nombre.message}</div>}
+            </div>
 
-        {/* Alertas dinámicas */}
+            {/* Botón Submit */}
+            <div className="d-grid mt-5">
+              <button
+                type="submit"
+                className="btn btn-lg rounded-pill fw-bold shadow-sm text-white"
+                style={{ backgroundColor: primaryColor, border: `1px solid ${primaryColor}` }}
+                disabled={cargando}
+              >
+                {cargando ? (
+                  <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Guardando...
+                  </>
+                ) : (
+                  "Guardar Tipo"
+                )}
+              </button>
+            </div>
+
+          </form>
+        </div>
+
+        {/* Alertas Flotantes */}
         {estado && (
           <div
-            className={`alert ${estado === "Exito" ? "alert-success" : estado === "Error" ? "alert-danger" : "alert-info"} position-absolute bottom-0 start-50 translate-middle-x mb-4`}
+            className={`alert ${
+              estado === "Exito" ? "alert-success" : 
+              estado === "Error" ? "alert-danger" : "alert-primary"
+            } position-fixed bottom-0 start-50 translate-middle-x mb-4 shadow-sm fw-bold px-4 rounded-pill`}
+            style={{ zIndex: 1050 }}
             role="alert"
           >
+            {estado === "Exito" && <i className="fa fa-check-circle me-2"></i>}
+            {estado === "Error" && <i className="fa fa-exclamation-triangle me-2"></i>}
             {mensaje}
           </div>
         )}
+
       </div>
     </>
   );
