@@ -7,6 +7,7 @@ import ModalConfirmacion from "../ModalConfirmacion";
 
 export default function TablaPlantillas() {
   const navigate = useNavigate();
+
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
   const [plantillas, setPlantillas] = useState([]);
   const [plantillasFiltradas, setPlantillasFiltradas] = useState([]);
@@ -33,6 +34,28 @@ export default function TablaPlantillas() {
 
   const handleEliminarClick = (id, nombre) => { setModalEliminar({ visible: true, id, nombre }); };
 
+  const handleVerPlantilla = async (id) => {
+    try {
+      const res = await apiClient.get("plantillas/" + id);
+      const base64 = res.data.data.base64Plantilla;
+
+      const byteCharacters = atob(base64);
+      const byteNumbers = new Array(byteCharacters.length)
+        .fill()
+        .map((_, i) => byteCharacters.charCodeAt(i));
+      const byteArray = new Uint8Array(byteNumbers);
+
+      const blob = new Blob([byteArray], { type: "image/png" });
+
+      const url = URL.createObjectURL(blob);
+
+      window.open(url, "_blank");
+
+    } catch (e) {
+      console.error("Error al cargar la plantilla:", e);
+      mostrarError("No se pudo cargar la plantilla.");
+    }
+  }
   const confirmarEliminar = async () => {
     const { id } = modalEliminar;
     if (!id) return;
@@ -74,7 +97,7 @@ export default function TablaPlantillas() {
                       <h2 className="fw-bold text-dark mb-1">Plantillas</h2>
                       <p className="text-muted mb-0">Gestión de plantillas base</p>
                     </div>
-                    <button 
+                    <button
                       className="btn btn-primary px-4 py-2 fw-bold shadow-sm rounded-pill"
                       style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
                       onClick={irAOtroComponente}
@@ -121,12 +144,46 @@ export default function TablaPlantillas() {
                               <td className="text-center">{p.profundidad} cm</td>
                               <td className="pe-4 text-end">
                                 <button
-                                  className="btn btn-sm btn-outline-danger fw-bold"
+                                  className="btn btn-sm fw-bold me-1"
+                                  onClick={() => handleVerPlantilla(p.id)}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = "#016add";
+                                    e.currentTarget.style.color = "white";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = "transparent";
+                                    e.currentTarget.style.color = "#016add";
+                                  }}
+                                  style={{
+                                    border: "1px solid #016add",
+                                    color: "#016add",
+                                    backgroundColor: "transparent"
+                                  }}
+                                >
+                                  <i className="fa fa-eye"></i>
+                                </button>
+
+                                <button
+                                  className="btn btn-sm fw-bold"
                                   onClick={() => handleEliminarClick(p.id, p.nombre)}
-                                  style={{ border: "1px solid #dc3545", color: "#dc3545" }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = "#dc3545";
+                                    e.currentTarget.style.color = "white";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = "transparent";
+                                    e.currentTarget.style.color = "#dc3545";
+                                  }}
+                                  style={{
+                                    border: "1px solid #dc3545",
+                                    color: "#dc3545",
+                                    backgroundColor: "transparent"
+                                  }}
                                 >
                                   <i className="fa fa-trash-alt"></i>
                                 </button>
+
+
                               </td>
                             </tr>
                           ))
@@ -136,6 +193,9 @@ export default function TablaPlantillas() {
                       </tbody>
                     </table>
                   </div>
+                </div>
+                <div className="card-footer bg-white border-top-0 py-3 text-center">
+                  <small className="text-muted">Total: {plantillasFiltradas.length} plantillas</small>
                 </div>
               </div>
             </div>

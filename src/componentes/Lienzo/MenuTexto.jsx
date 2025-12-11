@@ -24,9 +24,9 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
     const esTextoSeleccionado = objetoSeleccionado && (objetoSeleccionado.type === 'i-text' || objetoSeleccionado.type === 'text');
 
     return (
-        <div className="p-3 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
+        <div className="p-4 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
             
-            <h5 className="mb-3 text-primary fw-bold">Agregar Texto</h5>
+            <h4 className="mb-3 text-primary fw-bold">Agregar Texto</h4>
 
             <div className="mb-3">
                 <label className="form-label text-muted small fw-bold mb-1">CONTENIDO</label>

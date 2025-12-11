@@ -19,15 +19,15 @@ export default function MenuPincel({ activarModoDibujo }) {
 
     return (
         <div className="p-4 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
-            
+
             <h4 className="mb-4 text-primary fw-bold">Pincel</h4>
 
             {/* SECCIÓN DE COLOR CON PALETA */}
             <div className="mb-4 bg-light p-3 rounded border">
-                <label className="form-label text-muted small fw-bold mb-2">COLOR</label>
+                <label className="form-label text-muted small fw-bold mb-2">COLOR DEL PINCEL</label>
                 <div className="d-flex align-items-center gap-2 mb-3">
                     <div className="d-flex align-items-center bg-white p-1 rounded border flex-grow-1">
-                        <input type="color" value={color} onChange={(e) => setColor(e.target.value)} 
+                        <input type="color" value={color} onChange={(e) => setColor(e.target.value)}
                             className="form-control form-control-color border-0 p-0 shadow-none me-2"
                             style={{ width: "35px", height: "35px", cursor: "pointer", backgroundColor: 'transparent' }} />
                         <span className="text-muted small fw-bold text-uppercase">{color}</span>
@@ -36,15 +36,32 @@ export default function MenuPincel({ activarModoDibujo }) {
                         <i className="fa fa-plus"></i>
                     </button>
                 </div>
-                
-                {/* Paleta */}
-                <div className="d-flex flex-wrap gap-2">
-                    {coloresGuardados.map((c, idx) => (
-                        <div key={idx} onClick={() => setColor(c)} className="rounded-circle border"
-                            style={{ width: "25px", height: "25px", backgroundColor: c, cursor: "pointer",
-                            boxShadow: color === c ? "0 0 0 2px white, 0 0 0 4px #016add" : "none" }} />
-                    ))}
-                </div>
+
+                {coloresGuardados.length > 0 && (
+                    <div>
+                        <label className="form-label text-muted small fw-bold mb-1" style={{ fontSize: '0.7rem' }}>MIS COLORES</label>
+                        <div className="d-flex flex-wrap gap-2">
+                            {coloresGuardados.map((c, idx) => (
+                                <div
+                                    key={idx}
+                                    onClick={() => setColor(c)}
+                                    className="rounded-circle border position-relative"
+                                    style={{
+                                        width: "25px",
+                                        height: "25px",
+                                        backgroundColor: c,
+                                        cursor: "pointer",
+                                        boxShadow: color === c ? "0 0 0 2px white, 0 0 0 4px #016add" : "none", // Resaltar seleccionado
+                                        transition: "transform 0.1s"
+                                    }}
+                                    title={c}
+                                    onContextMenu={(e) => { e.preventDefault(); borrarColor(c, e); }} // Click derecho borra
+                                />
+                            ))}
+                        </div>
+                        <small className="text-muted d-block mt-2" style={{ fontSize: '0.65rem' }}>* Click para usar, Click derecho para borrar.</small>
+                    </div>
+                )}
             </div>
 
             <hr className="text-muted opacity-25 my-4" />
@@ -77,7 +94,7 @@ export default function MenuPincel({ activarModoDibujo }) {
 
             {/* VISTA PREVIA */}
             <div className="p-3 bg-light rounded border text-center">
-                <small className="text-muted d-block mb-2 text-uppercase fw-bold" style={{fontSize: '0.7rem'}}>Vista previa</small>
+                <small className="text-muted d-block mb-2 text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>Vista previa</small>
                 <div className="d-flex justify-content-center align-items-center bg-white rounded border" style={{ height: "60px" }}>
                     <div style={{ width: grosor, height: grosor, borderRadius: "50%", backgroundColor: color, boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }} />
                 </div>

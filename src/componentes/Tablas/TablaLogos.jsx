@@ -34,11 +34,11 @@ function ModalSubirLogo({ isVisible, onClose, onSuccess, mostrarError }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
+
     // Validar tamaño (ej. 5MB)
     if (file.size > 5 * 1024 * 1024) {
-        mostrarError("La imagen excede los 5Mb");
-        return;
+      mostrarError("La imagen excede los 5Mb");
+      return;
     }
 
     const reader = new FileReader();
@@ -81,7 +81,7 @@ function ModalSubirLogo({ isVisible, onClose, onSuccess, mostrarError }) {
       display: 'flex', justifyContent: 'center', alignItems: 'center'
     }}>
       <div className="card border-0 shadow-lg rounded-4 p-4 bg-white animate-scale-in" style={{ width: "90%", maxWidth: "450px" }}>
-        
+
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h4 className="fw-bold text-dark mb-0">Nuevo Logo</h4>
           <button onClick={onClose} className="btn btn-close"></button>
@@ -107,6 +107,9 @@ function ModalSubirLogo({ isVisible, onClose, onSuccess, mostrarError }) {
               className="form-control bg-light border-0"
               onChange={handleFileChange}
             />
+            <div className="form-text small text-muted">
+              Formatos soportados: JPG, JPEG, PNG. (Máx 5MB)
+            </div>
           </div>
 
           {/* Previsualización */}
@@ -137,7 +140,7 @@ export default function TablaLogos() {
   const [logos, setLogos] = useState([]);
   const navigate = useNavigate();
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
-  
+
   // Estados para modales
   const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null });
   const [modalSubir, setModalSubir] = useState(false); // Estado para abrir/cerrar el modal de subida
@@ -202,7 +205,7 @@ export default function TablaLogos() {
       {/* Contenedor Principal */}
       <div className="min-vh-100 fondo" style={{ paddingTop: "100px", paddingBottom: "80px" }}>
         <div className="container">
-          
+
           <div className="d-flex justify-content-between align-items-center mb-5">
             <div>
               <h2 className="fw-bold text-dark mb-1">Mis Logos</h2>
@@ -211,12 +214,12 @@ export default function TablaLogos() {
           </div>
 
           <div className="row g-4">
-            
+
             {/* TARJETA DE "NUEVO LOGO" (Ahora abre el modal) */}
             <div className="col-12 col-md-6 col-lg-4">
-              <div 
+              <div
                 className="card h-100 border-2 border-dashed shadow-none bg-transparent d-flex align-items-center justify-content-center text-center p-5"
-                style={{ 
+                style={{
                   borderRadius: "16px", borderColor: "#dee2e6", minHeight: "350px",
                   cursor: "pointer", transition: "all 0.2s",
                   backgroundColor: "rgba(255,255,255,0.5)"
@@ -236,7 +239,6 @@ export default function TablaLogos() {
                     <i className="fa fa-cloud-upload-alt fa-4x"></i>
                   </div>
                   <h5 className="fw-bold text-primary">Subir Nuevo Logo</h5>
-                  <p className="text-muted small">Formatos: PNG, JPG, SVG</p>
                 </div>
               </div>
             </div>
@@ -246,8 +248,8 @@ export default function TablaLogos() {
               logos.map((logo) => (
                 <div key={logo.id} className="col-12 col-md-6 col-lg-4">
                   <div className="card h-100 border-0 shadow-sm overflow-hidden" style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
-                    
-                    <div 
+
+                    <div
                       className="bg-white border-bottom d-flex align-items-center justify-content-center p-4 position-relative"
                       style={{ height: "200px", backgroundColor: "#f8f9fa" }}
                     >
@@ -258,9 +260,9 @@ export default function TablaLogos() {
                         backgroundSize: '20px 20px', backgroundPosition: '0 0, 10px 10px', opacity: 0.3
                       }}></div>
 
-                      <img 
-                        src={`data:image/png;base64,${logo.base64Logo}`} 
-                        alt={logo.nombre} 
+                      <img
+                        src={`data:image/png;base64,${logo.base64Logo}`}
+                        alt={logo.nombre}
                         className="img-fluid position-relative"
                         style={{ maxHeight: "100%", maxWidth: "100%", objectFit: "contain", zIndex: 1 }}
                       />
@@ -269,8 +271,8 @@ export default function TablaLogos() {
                     <div className="card-body p-4 d-flex flex-column">
                       <h5 className="card-title fw-bold text-dark mb-3 text-truncate" title={logo.nombre}>{logo.nombre}</h5>
                       <div className="mt-auto d-grid">
-                        <button 
-                          className="btn btn-outline-danger fw-bold" 
+                        <button
+                          className="btn btn-outline-danger fw-bold"
                           onClick={() => handleEliminarClick(logo.id)}
                           style={{ border: "2px solid #dc3545", color: "#dc3545", transition: "all 0.2s" }}
                           onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = "#dc3545"; e.currentTarget.style.color = "white"; }}
@@ -289,11 +291,11 @@ export default function TablaLogos() {
         </div>
 
         {/* --- MODALES --- */}
-        
+
         {/* Modal para Subir Logo */}
-        <ModalSubirLogo 
-          isVisible={modalSubir} 
-          onClose={() => setModalSubir(false)} 
+        <ModalSubirLogo
+          isVisible={modalSubir}
+          onClose={() => setModalSubir(false)}
           onSuccess={handleLogoSubido}
           mostrarError={mostrarError}
         />

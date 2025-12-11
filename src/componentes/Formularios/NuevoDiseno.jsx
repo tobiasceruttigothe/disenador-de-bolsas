@@ -7,7 +7,6 @@ import MenuGuardado from "./MenuGuardado.jsx"
 import MenuSelectorPlantilla from "./MenuSelectorPlantilla.jsx"
 import Cookies from "js-cookie";
 import { apiClient } from "../../config/axios";
-import { API_BASE_URL } from "../../config/api";
 import { useNotificacion } from "../../hooks/useNotificacion";
 import Notificacion from "../Notificaciones/Notificacion";
 import { logTokenInfo } from "../../utils/decodeToken";
@@ -227,7 +226,7 @@ export default function NuevoDiseno() {
 
       <button
         className="boton-1"
-        style={{ backgroundColor: "white", color: "#016add", width: "150px", height: "50px", position: "fixed", bottom: "20px", right: "200px", fontWeight: "700" }}
+        style={{ color: "#016add", width: "150px", height: "50px", position: "fixed", bottom: "20px", right: "200px", fontWeight: "700" }}
         onMouseEnter={(e) => {e.target.style.backgroundColor = '#016add'; e.target.style.color = "white";}}
         onMouseLeave={(e) => {e.target.style.backgroundColor = 'white'; e.target.style.color = "#016add";}}
         onClick={() => navigate("/disenos")}

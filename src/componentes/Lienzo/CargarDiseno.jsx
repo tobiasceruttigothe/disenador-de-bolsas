@@ -7,6 +7,8 @@ import { useNotificacion } from "../../hooks/useNotificacion";
 import Notificacion from "../Notificaciones/Notificacion";
 import "../../index.css"
 import { useParams, useNavigate } from "react-router-dom";
+import ModalLogos from "./ModalLogos.jsx";
+import Modal from "./ModalConfirmacion.jsx"
 
 
 export default function CargarDiseno() {
@@ -18,6 +20,9 @@ export default function CargarDiseno() {
     const [base64, setBase64] = useState()
     const [nombre, setNombre] = useState("")
     const [descripcion, setDescripcion] = useState("")
+
+    const [logosBool, setLogosBool] = useState(false);
+    const [logos, setLogos] = useState([]);
 
     const { id } = useParams();
 
@@ -40,6 +45,23 @@ export default function CargarDiseno() {
         };
         fetchDiseno();
     }, [id]);
+
+    useEffect(() => {
+        const fetchLogos = async () => {
+            try {
+                const id = Cookies.get("usuarioId");
+                if (!id) {
+                    console.error("No se encontró el ID de usuario");
+                    return;
+                }
+                const res = await apiClient.get(`/logos/usuario/${id}`);
+                setLogos(res.data.data || []);
+            } catch (e) {
+                console.error("Error al cargar los logos", e);
+            }
+        };
+        fetchLogos();
+    }, []);
 
     useEffect(() => {
         const cargar = async () => {
@@ -99,7 +121,7 @@ export default function CargarDiseno() {
     };
 
     return (
-        <div className="container-fluid fondo">
+        <div className="container-fluid fondo" style={{ paddingTop: "60px", paddingBottom: "80px" }}>
             <div className="row">
                 <div className="col-4 border-end">
                     <MenuDiseno
@@ -113,27 +135,37 @@ export default function CargarDiseno() {
                         agregarLinea={(color) => agregarFigura("agregarLinea", color)}
                         agregarTriangulo={(color) => agregarFigura("agregarTriangulo", color)}
                         activarModoDibujo={activarModoDibujo}
+                        setLogosBool={setLogosBool}
+                        logos={logos}
                     />
                 </div>
-                <div className="col-8">
+                <div className="col-8" style={{ height: "760px", widht: "100%" }}>
                     <Lienzo canvasRef={canvasRef} />
                 </div>
             </div>
 
             <button
-                style={{ backgroundColor: "white", color: "#016add", border: "2px solid #016add", borderRadius: "7px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "200px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
-                onClick={()=>navigate(-1)}
+                className="boton-1"
+                style={{ color: "#016add", backgroundColor: "white", width: "150px", height: "50px", position: "fixed", bottom: "20px", right: "200px", fontWeight: "700" }}
+                onMouseEnter={(e) => { e.target.style.backgroundColor = '#016add'; e.target.style.color = "white"; }}
+                onMouseLeave={(e) => { e.target.style.backgroundColor = 'white'; e.target.style.color = "#016add"; }}
+                onClick={() => navigate("/disenos")}
             >
                 Cancelar
             </button>
 
             <button
-                style={{ color: "#fff", border: "2px solid #016add", backgroundColor: "#016add", borderRadius: "5px", padding: "12px 30px", position: "fixed", bottom: "20px", right: "20px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}
+                className="boton-2"
+                style={{ width: "150px", height: "50px", position: "fixed", bottom: "20px", right: "25px", fontWeight: "700" }}
                 onClick={handleGuardarDiseno}
             >
                 Guardar diseño
             </button>
-            
+
+            <Modal isVisible={logosBool} onClose={() => setLogosBool(false)}>
+                <ModalLogos setLogosBool={setLogosBool} logos={logos} setLogos={setLogos}></ModalLogos>
+            </Modal>
+
             <Notificacion
                 tipo={notificacion.tipo}
                 mensaje={notificacion.mensaje}

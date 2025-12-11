@@ -6,7 +6,7 @@ export default function MenuGuardado({ confirmarGuardado, setModalAbierto }) {
 
 
   return (
-    <div>
+    <div style={{ padding: "20px", width: "350px" }}>
       <h2>Guardar Diseño</h2>
       <hr />
       <form onSubmit={handleSubmit((data) => {
@@ -15,7 +15,7 @@ export default function MenuGuardado({ confirmarGuardado, setModalAbierto }) {
       })}>
         {/* Nombre */}
         <div className="mb-3">
-          <label>Nombre:</label>
+          <label>Nombre del diseño *</label>
           <input
             type="text"
             className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
@@ -29,7 +29,7 @@ export default function MenuGuardado({ confirmarGuardado, setModalAbierto }) {
 
         {/* Descripción */}
         <div className="mb-3">
-          <label>Descripción:</label>
+          <label>Descripción</label>
           <textarea
             className={`form-control ${errors.descripcion ? 'is-invalid' : ''}`}
             style={{
@@ -45,29 +45,13 @@ export default function MenuGuardado({ confirmarGuardado, setModalAbierto }) {
         <div className="d-flex justify-content-end gap-2 mt-3">
           <button
             onClick={() => setModalAbierto(false)}
-            className="p-2"
-            style={{
-              width: "100px",
-              height: "40px",
-              border: "2px solid #016add",
-              color: "#016add",
-              borderRadius: "4px",
-              backgroundColor: "white"
-            }}
+            className="boton-1 w-50 p-2"
             type="button"
           >
             Volver
           </button>
           <button
-            className="p-2"
-            style={{
-              width: "100px",
-              height: "40px",
-              border: "2px solid #016add",
-              color: "white",
-              borderRadius: "4px",
-              backgroundColor: "#016add"
-            }}
+            className="boton-2 w-50 p-2"
             type="submit"
           >
             Guardar diseño

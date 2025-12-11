@@ -4,6 +4,7 @@ import MenuTexto from "./MenuTexto";
 import MenuFormas from "./MenuFormas"; // Corrected import name based on context
 import MenuLogos from "./MenuLogos";
 import MenuPincel from "./MenuPincel"
+import MenuInformacion from "./MenuInformacion";
 
 export default function MenuDiseno({ 
   logos, 
@@ -68,6 +69,13 @@ export default function MenuDiseno({
             icon="fa-icons" 
             label="Logos" 
           />
+          <NavButton 
+            active={opcion === "info"} 
+            onClick={() => setOpcion("info")}
+            icon="fa-info-circle" 
+            label="Info. técnica" 
+          />
+
         </div>
 
         {/* Content Area - This is where sub-menus render */}
@@ -99,6 +107,11 @@ export default function MenuDiseno({
               agregarFoto={agregarFoto} 
               setLogosBool={setLogosBool}
             />
+          )}
+
+          {opcion === "info" && (
+            <MenuInformacion 
+              plantilla={plantillaElegida} />
           )}
         </div>
       </div>

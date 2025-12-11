@@ -52,15 +52,6 @@ export function logTokenInfo() {
     return;
   }
   
-  console.group('🔐 Información del Token');
-  console.log('Username:', tokenInfo.username);
-  console.log('Email:', tokenInfo.email);
-  console.log('Roles en el token:', tokenInfo.roles);
-  console.log('Expira:', new Date(tokenInfo.exp * 1000).toLocaleString());
-  console.log('¿Está expirado?', tokenInfo.isExpired);
-  console.log('Rol en cookie:', Cookies.get('rol'));
-  console.groupEnd();
-  
   return tokenInfo;
 }
 

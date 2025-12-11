@@ -141,7 +141,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
               <small className="text-muted text-uppercase" style={{fontSize: '0.7rem'}}>{tipoUsuario}</small>
             </div>
             
-            <MenuItem to="/perfil" label="Ver Perfil" />
+            <MenuItem to="/perfil" label="Mi Perfil" />
             
             <NavDropdown.Divider />
             

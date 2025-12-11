@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
-import '../../index.css'; 
+import '../../index.css';
 
 export default function Perfil() {
     const [nombre, setNombre] = useState('');
@@ -32,50 +32,39 @@ export default function Perfil() {
 
     return (
         <>
-            {/* --- BOTÓN ORIGINAL FLOTANTE (Estilo recuperado) --- */}
             <button
-                className="align-items-center d-flex justify-content-center shadow-sm"
+                className="align-items-center d-flex justify-content-center"
                 style={{
-                    position: "fixed", 
-                    top: "85px", // Ajustado para estar debajo del navbar
-                    left: "20px",
-                    margin: "20px", 
-                    width: "70px", 
-                    height: "40px", 
-                    padding: "10px",
-                    backgroundColor: "white", 
-                    color: "#016add", 
-                    border: "1px solid #016add", 
-                    borderRadius: "7px",
-                    zIndex: 1000, // Asegura que quede por encima de todo
-                    cursor: "pointer"
+                    position: "fixed", top: "9vh", left: "3vw", width: "70px", height: "40px",
+                    padding: "10px", backgroundColor: "white", color: "#016add",
+                    border: "1px solid #016add", borderRadius: "7px", zIndex: 1000
                 }}
-                onClick={() => navigate("/inicio")}
+                onClick={() => navigate("/productos")}
             >
-                <span style={{ fontSize: "1.2rem", fontWeight: "bold" }}>←</span>
+                ←
             </button>
 
             {/* --- DISEÑO DE PERFIL PROFESIONAL --- */}
-            <div className="min-vh-100 bg-light pb-5" style={{ paddingTop: "150px" }}> 
-                
+            <div className="min-vh-100 fondo pb-5" style={{ paddingTop: "150px" }}>
+
                 <div className="container">
                     <div className="row justify-content-center">
                         <div className="col-12 col-md-8 col-lg-6">
-                            
+
                             {/* Tarjeta de Perfil */}
                             <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
-                                
+
                                 {/* Cabecera con color corporativo */}
-                                <div 
+                                <div
                                     className="card-header text-center py-5 position-relative"
-                                    style={{ 
-                                        backgroundColor: primaryColor, 
+                                    style={{
+                                        backgroundColor: primaryColor,
                                         color: 'white',
                                         borderBottom: '5px solid rgba(0,0,0,0.1)'
                                     }}
                                 >
                                     {/* Avatar Circular */}
-                                    <div 
+                                    <div
                                         className="d-flex justify-content-center align-items-center mx-auto shadow"
                                         style={{
                                             width: "100px",
@@ -90,7 +79,7 @@ export default function Perfil() {
                                     >
                                         {getInicial()}
                                     </div>
-                                    
+
                                     <h3 className="fw-bold mb-0 text-uppercase">
                                         {rol === "cliente" ? razonSocial : nombre}
                                     </h3>
@@ -102,12 +91,12 @@ export default function Perfil() {
                                 {/* Cuerpo de la tarjeta */}
                                 <div className="card-body p-4 p-md-5">
                                     <h5 className="text-muted mb-4 border-bottom pb-2">Información de la Cuenta</h5>
-                                    
+
                                     <div className="row g-3">
                                         {/* Nombre de Usuario */}
                                         <div className="col-12 col-md-6">
                                             <div className="p-3 bg-light rounded-3 h-100 border-start border-4 border-primary">
-                                                <small className="text-uppercase text-muted fw-bold" style={{fontSize: '0.7rem'}}>Usuario</small>
+                                                <small className="text-uppercase text-muted fw-bold" style={{ fontSize: '0.7rem' }}>Usuario</small>
                                                 <p className="mb-0 fw-bold text-dark fs-5">{nombre}</p>
                                             </div>
                                         </div>
@@ -115,7 +104,7 @@ export default function Perfil() {
                                         {/* Email */}
                                         <div className="col-12 col-md-6">
                                             <div className="p-3 bg-light rounded-3 h-100 border-start border-4 border-primary">
-                                                <small className="text-uppercase text-muted fw-bold" style={{fontSize: '0.7rem'}}>Email</small>
+                                                <small className="text-uppercase text-muted fw-bold" style={{ fontSize: '0.7rem' }}>Email</small>
                                                 <p className="mb-0 fw-bold text-dark text-break">{email}</p>
                                             </div>
                                         </div>
@@ -123,7 +112,7 @@ export default function Perfil() {
                                         {/* Dato condicional (Razón social o Nombre empleado) */}
                                         <div className="col-12">
                                             <div className="p-3 bg-light rounded-3 border-start border-4 border-primary">
-                                                <small className="text-uppercase text-muted fw-bold" style={{fontSize: '0.7rem'}}>
+                                                <small className="text-uppercase text-muted fw-bold" style={{ fontSize: '0.7rem' }}>
                                                     {rol === "cliente" ? "Razón Social / Empresa" : "Nombre del Empleado"}
                                                 </small>
                                                 <p className="mb-0 fw-bold text-dark fs-5">
@@ -141,7 +130,7 @@ export default function Perfil() {
                                                 <p className="mb-0 fw-bold text-dark">Contraseña</p>
                                                 <small className="text-muted">••••••••</small>
                                             </div>
-                                            <button 
+                                            <button
                                                 className="btn btn-outline-primary rounded-pill px-4"
                                                 onClick={handleContraseña}
                                                 style={{ borderColor: primaryColor, color: primaryColor }}
@@ -160,7 +149,7 @@ export default function Perfil() {
                                     </div>
 
                                 </div>
-                                
+
                                 {/* Footer decorativo */}
                                 <div className="card-footer text-center bg-light py-3 border-0">
                                     <small className="text-muted">Paper SRL - Perfil de Usuario</small>

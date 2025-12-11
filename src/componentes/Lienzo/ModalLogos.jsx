@@ -92,6 +92,7 @@ export default function ModalLogos({ setLogosBool, logos, setLogos }) {
                     <input
                         id="nombre"
                         type="text"
+                        accept='.jpg, .jpeg, .png' 
                         placeholder="Ingrese un nombre del logo"
                         className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
                         {...register("nombre", {
@@ -114,6 +115,9 @@ export default function ModalLogos({ setLogosBool, logos, setLogos }) {
                     {!base64Logo && estado === "Error" && (
                         <div className="invalid-feedback">Debe seleccionar un archivo</div>
                     )}
+                    <div className="form-text small text-muted">
+                        Formatos soportados: JPG, JPEG, PNG.
+                    </div>
                 </div>
 
                 {base64Logo && (
@@ -144,7 +148,7 @@ export default function ModalLogos({ setLogosBool, logos, setLogos }) {
                         disabled={estado === "Cargando"}
                         type="submit"
                     >
-                        {estado === "Cargando" ? "Enviando..." : "Enviar"}
+                        {estado === "Cargando" ? "Enviando..." : "Agregar Logo"}
                     </button>
                 </div>
             </form>

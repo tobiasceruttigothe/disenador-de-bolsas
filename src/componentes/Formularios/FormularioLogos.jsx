@@ -69,7 +69,6 @@ export default function FormularioLogos() {
 
   return (
     <>
-      {/* --- BOTÓN VOLVER (FIJO) --- */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{

@@ -53,7 +53,7 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
   return (
     <div className="p-4 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
       
-      <h4 className="mb-4 text-primary fw-bold">Formas Geométricas</h4>
+      <h4 className="mb-4 text-primary fw-bold">Formas</h4>
 
       {/* SECCIÓN DE COLOR CON PALETA */}
       <div className="mb-4 bg-light p-3 rounded border">
