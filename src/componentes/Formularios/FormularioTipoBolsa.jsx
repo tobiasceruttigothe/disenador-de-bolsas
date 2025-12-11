@@ -29,15 +29,15 @@ export default function FormularioTipoBolsa() {
 
       reset();
       setEstado("Exito");
-      setMensaje("Tipo de bolsa agregado con éxito");
+      setMensaje("Tipo de producto agregado con éxito");
       
       // Opcional: Redirigir después de un éxito
       // setTimeout(() => navigate("/productos/tiposbolsa"), 1500);
 
     } catch (error) {
-      console.error("Error al agregar tipo de bolsa:", error);
+      console.error("Error al agregar tipo de producto:", error);
       setEstado("Error");
-      setMensaje("Ocurrió un error al agregar el tipo de bolsa");
+      setMensaje("Ocurrió un error al agregar el tipo de producto");
     } finally {
       setCargando(false);
     }
@@ -70,21 +70,21 @@ export default function FormularioTipoBolsa() {
       <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
         
         <div 
-          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          className="form-card"
           style={{ width: "100%", maxWidth: "450px" }}
         >
           
           {/* Cabecera de la Tarjeta */}
           <div className="text-center mb-4">
-            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "100px", height: "100px" }}>
+            <div className="d-inline-flex align-items-center justify-content-center mb-3" style={{ width: "100px", height: "100px" }}>
               <img 
                 src={logo} 
                 alt="Logo" 
                 className="img-fluid" 
-                style={{ width: '60px', height: '60px', objectFit: 'contain' }} 
+                style={{ width: '70px', height: '70px', objectFit: 'contain' }} 
               />
             </div>
-            <h3 className="fw-bold text-dark mb-1">Nuevo Tipo de Bolsa</h3>
+            <h3 className="fw-bold text-dark mb-1">Nuevo Tipo de Producto</h3>
             <p className="text-muted small">Ingresa los datos para registrar la categoría</p>
           </div>
 
@@ -96,7 +96,7 @@ export default function FormularioTipoBolsa() {
               <input
                 id="nombre"
                 type="text"
-                placeholder="Ej: Riñonera, Camiseta..."
+                placeholder="Ej: Con Asa, Fondo Americano..."
                 className={`form-control form-control-lg bg-light border-0 ${errors.nombre ? 'is-invalid' : ''}`}
                 style={{ fontSize: '0.95rem' }}
                 {...register("nombre", {

@@ -80,15 +80,15 @@ export default function ConsultaClientes() {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-12 col-xl-10">
-              
+
               {/* TARJETA MODERNA */}
-              <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
-                
+              <div className="tabla-card border-0 shadow-lg rounded-4 overflow-hidden">
+
                 {/* Cabecera y Buscador */}
                 <div className="card-header bg-white py-4 px-4 px-md-5 border-bottom-0">
-                  <h2 className="fw-bold text-dark mb-1">Consultar Clientes</h2>
+                  <h3 className="fw-bold text-dark mb-1">Consultar Clientes</h3>
                   <p className="text-muted mb-4">Gestiona los diseños y plantillas de tus clientes</p>
-                  
+
                   <div className="position-relative">
                     <i className="fa fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
@@ -118,26 +118,23 @@ export default function ConsultaClientes() {
                         {clientesFiltrados.length > 0 ? (
                           clientesFiltrados.map((c, index) => (
                             <tr key={index} style={{ transition: "background-color 0.2s" }}>
-                              
-                              {/* Usuario con Avatar */}
+
                               <td className="py-3 ps-4 ps-md-5">
                                 <div className="d-flex align-items-center">
-                                  <div className="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold me-3" 
-                                       style={{ width: "40px", height: "40px", fontSize: "1.2rem" }}>
+                                  <div className="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold me-3"
+                                    style={{ width: "40px", height: "40px", fontSize: "1.2rem" }}>
                                     {c.username.charAt(0).toUpperCase()}
                                   </div>
-                                  <span className="fw-bold text-dark">{c.username}</span>
+                                  <span className="fw-bold">{c.username}</span>
                                 </div>
                               </td>
-                              
+
                               <td className="text-muted">{c.email}</td>
-                              
+
                               <td>
-                                <span className="badge bg-light text-dark border fw-normal px-3 py-2">
-                                  {c.razonSocial || "N/A"}
-                                </span>
+                                {c.razonSocial || "N/A"}
                               </td>
-                              
+
                               {/* Botones de Acción */}
                               <td className="pe-4 pe-md-5 text-end">
                                 <div className="d-flex justify-content-end gap-2">
@@ -148,7 +145,7 @@ export default function ConsultaClientes() {
                                   >
                                     <i className="fa fa-paint-brush me-1"></i> Diseños
                                   </button>
-                                  
+
                                   <button
                                     className="btn btn-sm btn-primary fw-bold text-white"
                                     style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
@@ -176,7 +173,7 @@ export default function ConsultaClientes() {
                     </table>
                   </div>
                 </div>
-                
+
                 <div className="card-footer bg-white border-top-0 py-3 text-center">
                   <small className="text-muted">Mostrando {clientesFiltrados.length} clientes</small>
                 </div>

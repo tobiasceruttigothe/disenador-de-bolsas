@@ -94,18 +94,18 @@ export default function FormularioCliente() {
       <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
         
         <div 
-          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          className="form-card"
           style={{ width: "100%", maxWidth: "500px" }}
         >
           
           {/* Cabecera */}
           <div className="text-center mb-4">
-            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
+            <div className="d-inline-flex align-items-center justify-content-center mb-3" style={{ width: "80px", height: "80px" }}>
               <img 
                 src={logo} 
                 alt="Logo" 
                 className="img-fluid" 
-                style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+                style={{ width: '70px', height: '70px', objectFit: 'contain' }} 
               />
             </div>
             <h3 className="fw-bold text-dark mb-1">Nuevo Cliente</h3>
@@ -116,7 +116,7 @@ export default function FormularioCliente() {
             
             {/* Usuario (Login) */}
             <div className="mb-3">
-              <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario (Login)</label>
+              <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario</label>
               <input
                 id="nombre"
                 placeholder="Ej: cliente123"
@@ -134,7 +134,7 @@ export default function FormularioCliente() {
 
             {/* Razón Social (CAMPO ÚNICO) */}
             <div className="mb-3">
-              <label htmlFor="razonSocial" className="form-label text-muted small fw-bold text-uppercase">Razón Social / Nombre Completo</label>
+              <label htmlFor="razonSocial" className="form-label text-muted small fw-bold text-uppercase">Razón Social</label>
               <input
                 id="razonSocial"
                 placeholder="Ej: Empresa S.A. o Juan Pérez"

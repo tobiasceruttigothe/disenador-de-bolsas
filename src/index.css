@@ -1,5 +1,9 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&family=Rubik:wght@300&display=swap');
 
+/* ------------------------------ */
+/* FONDO GENERAL */
+/* ------------------------------ */
+
 .fondo {
   background-image: url('./assets/fondo.png');
   background-repeat: repeat-y;
@@ -9,6 +13,10 @@
   width: 100%;
 }
 
+/* ------------------------------ */
+/* TIPOGRAFÍA */
+/* ------------------------------ */
+
 body {
   margin: 0;
   padding: 0;
@@ -16,11 +24,10 @@ body {
 }
 
 p {
-  font-family: 'Rubik', sans-serif;
   font-weight: 300;
 }
 
-h1 {
+h1, h2, h3 {
   font-family: 'PT Sans', sans-serif;
   font-weight: 700;
 }
@@ -30,6 +37,70 @@ button {
   font-weight: 700;
 }
 
+/* ------------------------------ */
+/* MODO OSCURO GENERAL */
+/* ------------------------------ */
+
+body.dark {
+  background-color: #0f172a !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4,
+body.dark h5,
+body.dark h6,
+body.dark label {
+  color: #e2e8f0 !important;
+}
+
+body.dark .text-muted{
+  color: #e2e8f0 !important;
+}
+
+body.dark .fondo {
+  background-image: url('./assets/fondo_oscuro.png');
+}
+
+/* ------------------------------ */
+/* CARDS DE OPCIONES */
+/* ------------------------------ */
+
+.card-opcion {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 16px;
+  background-color: #FCFCFC;
+  border: 1px solid #dee2e6;
+}
+
+body.dark .card-opcion {
+  background-color: #1e1e1e;
+  border: 1px solid #273b4e;
+}
+
+.card-opcion.hovered {
+  transform: translateY(-8px);
+  border: 2px solid var(--primary-color);
+}
+
+.card-opcion img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  transition: all 0.3s ease;
+}
+
+.card-opcion.hovered img {
+  filter: brightness(1.1);
+}
+
+/* ------------------------------ */
+/* NAVBAR */
+/* ------------------------------ */
+
 .mi-navbar {
   background-color: #f5f5f5 !important;
   z-index: 1000 !important;
@@ -37,7 +108,6 @@ button {
   font-family: 'PT Sans', sans-serif !important;
 }
 
-/* Links y dropdowns */
 .mi-navbar .nav-link,
 .mi-navbar .dropdown-item,
 .mi-navbar .navbar-brand {
@@ -47,51 +117,273 @@ button {
 .mi-navbar .nav-link:hover,
 .mi-navbar .dropdown-item:hover,
 .mi-navbar .navbar-brand:hover {
-  color: #000000 !important;
+  color: #000 !important;
 }
 
-/* index.css */
+/* ------------------------------ */
+/* TARJETAS DE PRODUCTOS / ACCIONES */
+/* ------------------------------ */
+
+.card-accion,
 .card-bolsa {
   height: 250px;
-  /* altura fija */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  /* separa imagen y botón */
-}
-
-.card-bolsa img {
-  height: 150px;
-  /* altura de la imagen */
-  object-fit: cover;
-  /* escala sin deformar */
-}
-
-/* Estilo para las cards de acciones */
-.card-accion {
-  height: 250px;
-  /* altura fija */
-  display: flex;
-  flex-direction: column;
-  /* columnas: imagen arriba, botón abajo */
-  justify-content: space-between;
-  /* separa imagen y botón */
   align-items: center;
-  /* centra horizontalmente */
   padding: 1rem;
-  cursor: pointer;
 }
 
-.card-accion img {
+.card-accion img,
+.card-bolsa img {
   width: 80px;
   height: 80px;
   object-fit: contain;
-  margin-top: 10px;
 }
 
-.card-accion button {
-  width: 75%;
-  margin-bottom: 10px;
-  display: block;
-  align-self: center;
+.plantilla-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  background-color: #273b4e;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  border: 1px solid #273b4e;
+}
+
+
+.tabla-card {
+  background-color: #ffffff;
+  border: 1px solid #dee2e6 !important;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+body.dark .tabla-card {
+  background-color: #1e1e1e;
+  border: 1px solid #273b4e !important;
+  color: #e9e9e9;
+}
+
+/* HEADER Y FOOTER DE LA CARD */
+.tabla-card .card-header,
+.tabla-card .card-footer {
+  background-color: #ffffff !important;
+  color: #222 !important;
+}
+
+body.dark .tabla-card .card-header,
+body.dark .tabla-card .card-footer {
+  background-color: #1e1e1e !important;
+  color: #e9e9e9 !important;
+}
+
+/* ------------------------------ */
+/* TABLA — HEADERS */
+/* ------------------------------ */
+
+/* MODO CLARO */
+.tabla-card table thead th {
+  background-color: #f0f4ff !important;
+  color: #016add !important;
+}
+
+/* MODO OSCURO */
+body.dark .tabla-card table thead th {
+  background-color: #273b4e !important;
+  color: #e2e8f0 !important;
+}
+
+/* ------------------------------ */
+/* TABLA — BODY */
+/* ------------------------------ */
+
+/* Texto normal modo claro */
+.tabla-card table tbody td {
+  background-color: #ffffff !important;
+  color: #333 !important;
+}
+
+/* Modo oscuro */
+body.dark .tabla-card table tbody td {
+  background-color: #1e2a36 !important;
+  color: #e2e8f0 !important;
+}
+
+/* HOVER (funcional en ambos modos) */
+.tabla-card table.table-hover tbody tr:hover td {
+  background-color: #e9f1ff !important;
+}
+
+body.dark .tabla-card table.table-hover tbody tr:hover td {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ------------------------------ */
+/* BUSCADOR */
+/* ------------------------------ */
+
+.tabla-card .fa-search {
+  color: #6c757d !important;
+}
+
+body.dark .tabla-card .fa-search {
+  color: #ffffff !important;
+}
+
+.tabla-card input {
+  background-color: #f8f9fa !important;
+  color: #222 !important;
+}
+
+body.dark .tabla-card input {
+  background-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark .tabla-card input::placeholder {
+  color: #bfbfbf !important;
+}
+
+/* =========================================
+   CARD PRINCIPAL DEL FORMULARIO
+========================================= */
+
+.form-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 2rem;
+  transition: 
+    background-color 0.3s ease,
+    color 0.3s ease,
+    box-shadow 0.3s ease;
+  border: 1px solid #e2e8f0;
+}
+
+/* Hover suave */
+.form-card:hover {
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+/* ICONO CIRCULAR */
+.form-card .icon-wrapper {
+  width: 80px;
+  height: 80px;
+  background-color: #f1f5f9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Texto del formulario */
+.form-card h3 {
+  font-family: 'PT Sans', sans-serif;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.form-card p {
+  font-family: 'Rubik', sans-serif;
+  font-weight: 300;
+  color: #64748b;
+}
+
+/* Labels */
+.form-card label {
+  font-family: 'PT Sans', sans-serif;
+  font-weight: 700;
+  color: #6c757d;
+}
+
+/* Inputs */
+.form-card input {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 10px !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.form-card input:focus {
+  border-color: #016add !important;
+  box-shadow: 0 0 0 0.15rem rgba(1, 106, 221, 0.2) !important;
+}
+
+/* Botón */
+.form-card button {
+  font-family: 'PT Sans', sans-serif;
+  font-weight: 700;
+  border-radius: 50px !important;
+  padding: 0.75rem !important;
+  transition: all 0.2s ease;
+}
+
+.form-card button:hover:not(:disabled) {
+  filter: brightness(1.1);
+}
+
+/* =========================================
+   MODO OSCURO
+========================================= */
+
+body.dark .form-card {
+  background-color: #1e1e1e;
+  border: 1px solid #273b4e;
+  color: #e2e8f0;
+}
+
+body.dark .form-card:hover {
+  box-shadow: 0 6px 16px rgba(255, 255, 255, 0.05);
+}
+
+body.dark .form-card .icon-wrapper {
+  background-color: #273b4e;
+}
+
+body.dark .form-card p {
+  color: #cbd5e1;
+}
+
+body.dark .form-card label {
+  color: #cbd5e1 !important;
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea {
+  background-color: #2a2a2a !important;
+  color: #e2e8f0 !important;
+  border: 1px solid #3b4252 !important;
+}
+
+body.dark input::placeholder,
+body.dark textarea::placeholder {
+  color: #cbd5e1 !important;
+}
+
+body.dark input:focus,
+body.dark select:focus,
+body.dark textarea:focus {
+  border-color: #4c8ed6 !important;
+  box-shadow: 0 0 0 0.15rem rgba(76, 142, 214, 0.2) !important;
+}
+
+/* quitar flecha del select (para que no quede clara en oscuro) */
+body.dark select {
+  background-image: none !important;
+}
+
+/* ----------- Input File ----------- */
+body.dark .archivo-input {
+  background-color: #2a2a2a !important;
+  border: 1px solid #3b4252 !important;
+  color: #e2e8f0 !important;
+}
+
+body.dark .archivo-input::file-selector-button,
+body.dark .archivo-input::-webkit-file-upload-button {
+  background-color: #394a59 !important;
+  border: 1px solid #3b4252 !important;
+  color: #e2e8f0 !important;
 }

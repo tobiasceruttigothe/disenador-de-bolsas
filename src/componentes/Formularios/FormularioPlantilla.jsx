@@ -13,6 +13,7 @@ import "../../index.css";
 import "../../styles/main.css";
 
 export default function FormularioPlantilla() {
+  const [submitAttempted, setSubmitAttempted] = useState(false);  
   const [base64Plantilla, setBase64Plantilla] = useState("");
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const navigate = useNavigate();
@@ -47,10 +48,12 @@ export default function FormularioPlantilla() {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      // Extraer solo la parte base64 después de la coma
-      const base64String = reader.result.split(',')[1];
-      setBase64Plantilla(base64String);
+      if (!reader.result) return; // evitamos romper
+
+      const base64 = reader.result.toString().split(",")[1];
+      setBase64Plantilla(base64);
     };
+
     reader.readAsDataURL(file);
   };
 
@@ -84,7 +87,6 @@ export default function FormularioPlantilla() {
       }, 1500);
 
     } catch (error) {
-      console.error(error);
       mostrarError("Ocurrió un error al agregar la plantilla.");
       setEstado("Error");
     }
@@ -115,17 +117,17 @@ export default function FormularioPlantilla() {
 
       {/* --- CONTENEDOR PRINCIPAL --- */}
       <div className="min-vh-100 fondo d-flex justify-content-center align-items-center py-5" style={{ marginTop: "60px" }}>
-        
-        <div className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white w-100" style={{ maxWidth: '900px' }}>
-          
+
+        <div className="form-card" style={{ maxWidth: '900px' }}>
+
           {/* Cabecera */}
           <div className="text-center mb-5">
-            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
-              <img 
-                src={logo} 
-                alt="Logo" 
-                className="img-fluid" 
-                style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+            <div className="d-inline-flex align-items-center justify-content-center mb-3" style={{ width: "80px", height: "80px" }}>
+              <img
+                src={logo}
+                alt="Logo"
+                className="img-fluid"
+                style={{ width: '70px', height: '70px', objectFit: 'contain' }}
               />
             </div>
             <h3 className="fw-bold text-dark">Nueva Plantilla</h3>
@@ -134,10 +136,10 @@ export default function FormularioPlantilla() {
 
           <form onSubmit={handleSubmit(handleSubmitForm)}>
             <div className="row g-4">
-              
+
               {/* COLUMNA IZQUIERDA: Datos Generales */}
               <div className="col-12 col-md-6">
-                
+
                 {/* Nombre */}
                 <div className="mb-3">
                   <label className="form-label text-muted small fw-bold text-uppercase">Nombre de la Plantilla</label>
@@ -190,18 +192,21 @@ export default function FormularioPlantilla() {
 
               {/* COLUMNA DERECHA: Archivo y Medidas */}
               <div className="col-12 col-md-6">
-                
+
                 {/* Archivo */}
                 <div className="mb-4">
                   <label className="form-label text-muted small fw-bold text-uppercase">Imagen de Plantilla</label>
                   <input
                     type="file"
                     accept=".jpg,.png,.jpeg"
-                    className="form-control form-control-lg bg-light border-0"
+                    className="form-control form-control-lg archivo-input"
                     style={{ fontSize: '0.9rem' }}
                     onChange={handleFileChange}
                   />
-                  {!base64Plantilla && <div className="form-text text-danger small mt-1">* La imagen es obligatoria</div>}
+                  <div className="form-text small text-muted">
+                    Formatos soportados: JPG, JPEG, PNG. (Máx: 10MB)
+                  </div>
+                  {submitAttempted && !base64Plantilla && <div className="form-text text-danger small mt-1">La imagen es obligatoria</div>}
                 </div>
 
                 <label className="form-label text-muted small fw-bold text-uppercase d-block mb-2">Dimensiones (cm)</label>
@@ -234,7 +239,7 @@ export default function FormularioPlantilla() {
                       className={`form-control bg-light border-0 text-center ${errors.profundidad ? 'is-invalid' : ''}`}
                       {...register("profundidad", { required: true, min: 0 })}
                     />
-                    <div className="text-center small text-muted mt-1">Prof.</div>
+                    <div className="text-center small text-muted mt-1">Profundidad</div>
                   </div>
                 </div>
                 {(errors.ancho || errors.alto || errors.profundidad) && (
@@ -251,6 +256,7 @@ export default function FormularioPlantilla() {
                 type="submit"
                 className="btn btn-lg rounded-pill fw-bold shadow-sm text-white"
                 style={{ backgroundColor: primaryColor, border: `1px solid ${primaryColor}` }}
+                onClick={() => setSubmitAttempted(true)}
                 disabled={estado === "Cargando"}
               >
                 {estado === "Cargando" ? (

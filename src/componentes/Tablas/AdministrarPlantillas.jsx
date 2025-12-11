@@ -100,12 +100,12 @@ export default function AdministrarPlantillas() {
             <div className="col-12 col-lg-10">
               
               {/* Tarjeta Contenedora */}
-              <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+              <div className="tabla-card border-0 shadow-lg rounded-4 overflow-hidden">
                 
                 {/* Cabecera */}
                 <div className="card-header bg-white py-4 px-5 border-bottom-0 d-flex justify-content-between align-items-center flex-wrap gap-3">
                   <div>
-                    <h3 className="fw-bold text-dark mb-1">Administrar Plantillas</h3>
+                    <h3 className="fw-bold mb-1">Administrar Plantillas</h3>
                     <p className="text-muted mb-0">
                       Cliente: <span className="fw-bold text-primary">{username}</span>
                     </p>
@@ -145,7 +145,7 @@ export default function AdministrarPlantillas() {
                           plantillasUsuario.map((p) => (
                             <tr key={p.id} style={{ transition: "background-color 0.2s" }}>
                               <td className="ps-5">
-                                <span className="fw-bold text-dark fs-5">{p.nombre}</span>
+                                <span className="fw-bold fs-5">{p.nombre}</span>
                               </td>
                               <td className="text-center py-3">
                                 {imagenesBase64[p.id] ? (

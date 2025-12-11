@@ -70,18 +70,18 @@ export default function FormularioMateriales() {
       <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
         
         <div 
-          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          className="form-card"
           style={{ width: "100%", maxWidth: "450px" }}
         >
           
           {/* Cabecera */}
           <div className="text-center mb-4">
-            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "100px", height: "100px" }}>
+            <div className="d-inline-flex align-items-center justify-content-center mb-3" style={{ width: "100px", height: "100px" }}>
               <img 
                 src={logo} 
                 alt="Logo" 
                 className="img-fluid" 
-                style={{ width: '60px', height: '60px', objectFit: 'contain' }} 
+                style={{ width: '70px', height: '70px', objectFit: 'contain' }} 
               />
             </div>
             <h3 className="fw-bold text-dark mb-1">Nuevo Material</h3>

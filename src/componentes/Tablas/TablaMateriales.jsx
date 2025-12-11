@@ -78,11 +78,11 @@ export default function TablaMateriales() {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-12 col-lg-8">
-              <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+              <div className="tabla-card border-0 shadow-lg rounded-4 overflow-hidden">
                 <div className="card-header bg-white py-4 px-4 border-bottom-0">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                      <h2 className="fw-bold text-dark mb-1">Materiales</h2>
+                      <h3 className="fw-bold text-dark mb-1">Materiales</h3>
                       <p className="text-muted mb-0">Gestión de materiales de productos</p>
                     </div>
                     <button 
@@ -90,7 +90,7 @@ export default function TablaMateriales() {
                       style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
                       onClick={irAOtroComponente}
                     >
-                      <i className="fa fa-plus me-2"></i> Nuevo
+                      <i className="fa fa-plus me-2"></i> Nuevo material
                     </button>
                   </div>
                   <div className="position-relative">
@@ -137,6 +137,9 @@ export default function TablaMateriales() {
                       </tbody>
                     </table>
                   </div>
+                </div>
+                <div className="card-footer bg-white border-top-0 py-3 text-center">
+                  <small className="text-muted">Total: {materialesFiltrados.length} materiales</small>
                 </div>
               </div>
             </div>

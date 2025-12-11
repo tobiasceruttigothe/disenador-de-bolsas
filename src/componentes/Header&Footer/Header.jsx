@@ -1,12 +1,19 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Cookies from 'js-cookie';
 import logo from '../../assets/pack designer blanco.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { FiLogOut, FiUser, FiMenu, FiChevronDown } from 'react-icons/fi';
+import { FiLogOut, FiUser, FiMenu } from 'react-icons/fi';
 
 export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }) {
   const navigate = useNavigate();
+
+  // 🔥 Dark mode
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    document.body.classList.toggle("dark", darkMode);
+  }, [darkMode]);
 
   useEffect(() => {
     setNombre(Cookies.get('nombre') || "");
@@ -19,10 +26,11 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
     Cookies.remove('rol');
     Cookies.remove('nombre');
     Cookies.remove('mail');
+    document.body.classList.toggle("dark", false);
     setLogeado(false);
+
   };
 
-  // Helper para generar items de menú limpios
   const MenuItem = ({ to, label }) => (
     <NavDropdown.Item 
       as={Link} 
@@ -80,20 +88,22 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
       fixed="top"
       className="shadow"
       style={{
-        background: "linear-gradient(90deg, #016add 0%, #015bbd 100%)", // Gradiente sutil
+        background: darkMode
+          ? "linear-gradient(90deg, #0f172a 0%, #1e293b 100%)"
+          : "linear-gradient(90deg, #016add 0%, #015bbd 100%)",
         padding: "0.6rem 0",
         zIndex: 1030
       }}
     >
       <Container fluid className="px-4">
 
-        {/* IZQUIERDA: Menú Hamburguesa */}
+        {/* IZQUIERDA: Menú */}
         <Nav className="me-auto">
           <NavDropdown
             title={<FiMenu size={28} color="white" />}
             id="nav-dropdown"
             menuVariant="light"
-            className="no-arrow-dropdown" // Clase para quitar la flechita nativa si molesta
+            className="no-arrow-dropdown"
             style={{ marginLeft: '-10px' }}
           >
             <div className="px-3 py-2 text-muted small fw-bold text-uppercase bg-light border-bottom mb-2">
@@ -103,7 +113,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
           </NavDropdown>
         </Nav>
 
-        {/* CENTRO: Logo y Título */}
+        {/* CENTRO: Logo */}
         <div 
           className="position-absolute start-50 translate-middle-x d-flex align-items-center"
           style={{ cursor: "pointer" }} 
@@ -116,16 +126,29 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
             className="me-2"
             style={{ filter: "drop-shadow(0px 2px 2px rgba(0,0,0,0.1))" }}
           />
-          <h5 className="m-0 text-white fw-bold d-none d-sm-block" style={{ letterSpacing: '0.5px' }}>
+          <h5 style={{color:"white"}} className="m-0 fw-bold d-none d-sm-block">
             Pack Designer
           </h5>
         </div>
 
-        {/* DERECHA: Perfil de Usuario */}
+        {/* DERECHA: Perfil + DarkMode */}
         <Nav className="ms-auto align-items-center">
+
+          {/* Switch Dark Mode */}
+          <label className="me-3 d-flex align-items-center" style={{ cursor: "pointer", color: "white" }}>
+            <input 
+              type="checkbox" 
+              checked={darkMode}
+              onChange={() => setDarkMode(!darkMode)}
+              style={{ marginRight: "6px" }}
+            />
+            <span className="small">Oscuro</span>
+          </label>
+
           <span className="text-white me-2 d-none d-md-block small opacity-75">
             {nombre || "Usuario"}
           </span>
+
           <NavDropdown
             align="end"
             title={
@@ -138,13 +161,13 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
           >
             <div className="px-4 py-2 text-center border-bottom mb-2">
               <strong className="d-block text-primary">{nombre}</strong>
-              <small className="text-muted text-uppercase" style={{fontSize: '0.7rem'}}>{tipoUsuario}</small>
+              <small className="text-uppercase" style={{fontSize: '0.7rem', color: "black"}}>{tipoUsuario == "admin" ? "adm. gerencial" : tipoUsuario}</small>
             </div>
-            
+
             <MenuItem to="/perfil" label="Mi Perfil" />
-            
+
             <NavDropdown.Divider />
-            
+
             <NavDropdown.Item onClick={cerrarSesion} className="text-danger py-2 px-3 fw-bold">
               <FiLogOut className="me-2" /> Salir
             </NavDropdown.Item>
@@ -152,10 +175,9 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
         </Nav>
 
       </Container>
-      
-      {/* Estilos CSS locales para pulir detalles de Bootstrap */}
+
       <style>{`
-        .dropdown-toggle::after { display: none !important; } /* Ocultar flechas default feas */
+        .dropdown-toggle::after { display: none !important; }
         .hover-effect:hover { background-color: rgba(255,255,255,0.4) !important; transition: 0.3s; }
         .dropdown-menu { border: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; margin-top: 12px; }
       `}</style>

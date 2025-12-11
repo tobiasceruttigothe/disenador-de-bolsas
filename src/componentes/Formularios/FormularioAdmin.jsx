@@ -14,7 +14,7 @@ import "../../styles/main.css";
 export default function FormularioAdmin() {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const navigate = useNavigate();
-  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion(); 
+  const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
   const [cargando, setCargando] = useState(false);
   const primaryColor = "#016add";
 
@@ -22,10 +22,12 @@ export default function FormularioAdmin() {
     try {
       setCargando(true);
 
+      const nombreCompleto = `${data.nombreReal} ${data.apellido}`;
+
       const payload = {
         username: data.nombre,
         email: data.mail,
-        razonSocial: data.nombreApellido,
+        razonSocial: nombreCompleto,
         password: "undefined",
         enabled: true,
         emailVerified: false,
@@ -83,28 +85,28 @@ export default function FormularioAdmin() {
 
       {/* --- CONTENEDOR PRINCIPAL CON FONDO --- */}
       <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
-        
-        <div 
-          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+
+        <div
+          className="form-card"
           style={{ width: "100%", maxWidth: "500px" }}
         >
-          
+
           {/* Cabecera */}
           <div className="text-center mb-4">
-            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
-              <img 
-                src={logo} 
-                alt="Logo" 
-                className="img-fluid" 
-                style={{ width: '50px', height: '50px', objectFit: 'contain' }} 
+            <div className="d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
+              <img
+                src={logo}
+                alt="Logo"
+                className="img-fluid"
+                style={{ width: '70px', height: '70px', objectFit: 'contain' }}
               />
             </div>
-            <h3 className="fw-bold text-dark mb-1">Nuevo Administrador</h3>
+            <h3 className="fw-bold text-dark mb-1">Nuevo Administrador Gerencial</h3>
             <p className="text-muted small">Registrar un nuevo usuario con permisos gerenciales</p>
           </div>
 
           <form onSubmit={handleSubmit(handleSubmitForm)}>
-            
+
             {/* Usuario */}
             <div className="mb-3">
               <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario</label>
@@ -124,17 +126,32 @@ export default function FormularioAdmin() {
             </div>
 
             {/* Nombre y Apellido */}
-            <div className="mb-3">
-              <label htmlFor="nombreApellido" className="form-label text-muted small fw-bold text-uppercase">Nombre y Apellido</label>
-              <input
-                id="nombreApellido"
-                placeholder="Ej: María González"
-                type="text"
-                className={`form-control form-control-lg bg-light border-0 ${errors.nombreApellido ? 'is-invalid' : ''}`}
-                style={{ fontSize: '0.95rem' }}
-                {...register("nombreApellido", { required: "El nombre y apellido es obligatorio" })}
-              />
-              {errors.nombreApellido && <div className="invalid-feedback ps-2">{errors.nombreApellido.message}</div>}
+            <div className="row g-3 mb-3">
+              <div className="col-md-6">
+                <label htmlFor="nombreReal" className="form-label text-muted small fw-bold text-uppercase">Nombre</label>
+                <input
+                  id="nombreReal"
+                  placeholder="Ej: Juan"
+                  type="text"
+                  className={`form-control form-control-lg bg-light border-0 ${errors.nombreReal ? 'is-invalid' : ''}`}
+                  style={{ fontSize: '0.95rem' }}
+                  {...register("nombreReal", { required: "El nombre es obligatorio" })}
+                />
+                {errors.nombreReal && <div className="invalid-feedback ps-2">{errors.nombreReal.message}</div>}
+              </div>
+
+              <div className="col-md-6">
+                <label htmlFor="apellido" className="form-label text-muted small fw-bold text-uppercase">Apellido</label>
+                <input
+                  id="apellido"
+                  placeholder="Ej: Pérez"
+                  type="text"
+                  className={`form-control form-control-lg bg-light border-0 ${errors.apellido ? 'is-invalid' : ''}`}
+                  style={{ fontSize: '0.95rem' }}
+                  {...register("apellido", { required: "El apellido es obligatorio" })}
+                />
+                {errors.apellido && <div className="invalid-feedback ps-2">{errors.apellido.message}</div>}
+              </div>
             </div>
 
             {/* Mail */}
@@ -169,7 +186,7 @@ export default function FormularioAdmin() {
                     Guardando...
                   </>
                 ) : (
-                  "Registrar Administrador"
+                  "Registrar Adm. gerencial"
                 )}
               </button>
             </div>

@@ -8,10 +8,10 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
     const [todasLasPlantillas, setTodasLasPlantillas] = useState([])
     const [plantillasCliente, setPlantillasCliente] = useState([])
     const [imagenes, setImagenes] = useState({});
-    
+
     // Estados para controlar la carga visual
     const [isSaving, setIsSaving] = useState(false); // Para el botón de guardar
-    
+
     const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
 
     // 1. Carga inicial de datos
@@ -22,7 +22,7 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
                     apiClient.get(`/plantillas`),
                     apiClient.get(`/plantillas/usuario/${idCliente}/habilitadas`)
                 ]);
-                
+
                 setTodasLasPlantillas(resTodas.data.data);
                 setPlantillasCliente(resCliente.data.data);
             } catch (e) {
@@ -56,30 +56,23 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
         if (todasLasPlantillas.length > 0) fetchBase64Images();
     }, [todasLasPlantillas]); // Quitamos 'imagenes' de dependencias para evitar loop infinito
 
-    // 3. Manejo del Guardado (SIN RECARGAR PÁGINA)
     const handleClick = async () => {
-        setIsSaving(true); // Activamos spinner del botón
+        setIsSaving(true);
         try {
             const promises = plantillasCliente.map((p) => {
                 return apiClient.post(`/plantillas/${p.id}/habilitar-usuario/${idCliente}`, {});
             });
-            
+
             await Promise.all(promises);
-            
-            // --- AQUÍ ESTÁ EL TRUCO PARA QUE NO SEA BRUSCO ---
-            // 1. Actualizamos los datos del componente padre directamente
             if (setPlantillasUsuario) {
-                setPlantillasUsuario(plantillasCliente); 
+                setPlantillasUsuario(plantillasCliente);
             }
-            
+
             mostrarExito("Plantillas actualizadas correctamente.");
-            
-            // 2. Esperamos un poco para que se lea el mensaje y cerramos el modal suavemente
+
+
             setTimeout(() => {
-                setModalAbierto(false); 
-                // ¡YA NO HACEMOS window.location.reload()! 
-                // Al actualizar el estado del padre (setPlantillasUsuario), 
-                // la pantalla de fondo se actualiza sola instantáneamente.
+                setModalAbierto(false);
             }, 1500);
 
         } catch (e) {
@@ -104,109 +97,110 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
     };
 
     return (
-        <div>
-            <h3 className="mb-4">Gestionar Plantillas de {userName}</h3>
+        <>
+            <div style={{backgroundColor:"#1e1e1e"}}>
+                <h3 className="mb-4">Gestionar Plantillas de {userName}</h3>
 
-            <div style={{ maxHeight: '60vh', overflowY: 'auto', paddingRight: '5px' }}>
-                {todasLasPlantillas.map((plantilla) => (
-                    <div
-                        key={plantilla.id}
-                        className="d-flex justify-content-between align-items-center mb-3 bg-white p-3 rounded shadow-sm border"
-                    >
-                        <div className="d-flex gap-3 align-items-center">
-                            {/* SECCIÓN IMAGEN CON CARGANDO */}
-                            <div 
-                                style={{ 
-                                    width: '80px', 
-                                    height: '80px', 
-                                    backgroundColor: '#f8f9fa', 
-                                    borderRadius: '8px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    overflow: 'hidden',
-                                    border: '1px solid #dee2e6'
-                                }}
-                            >
-                                {imagenes[plantilla.id] ? (
-                                    <img
-                                        src={`data:image/png;base64,${imagenes[plantilla.id]}`}
-                                        alt={plantilla.nombre}
-                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                    />
-                                ) : (
-                                    // SPINNER DE IMAGEN
-                                    <div className="spinner-border text-secondary spinner-border-sm" role="status">
-                                        <span className="visually-hidden">Cargando...</span>
+                <div style={{ maxHeight: '60', overflowY: 'auto', paddingRight: '5px' }}>
+                    {todasLasPlantillas.map((plantilla) => (
+                        <div
+                            key={plantilla.id}
+                            className="plantilla-card"
+                        >
+                            <div className="d-flex gap-3 align-items-center">
+                                {/* SECCIÓN IMAGEN CON CARGANDO */}
+                                <div
+                                    style={{
+                                        width: '80px',
+                                        height: '80px',
+                                        borderRadius: '8px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        overflow: 'hidden',
+                                        border: '1px solid #dee2e6'
+                                    }}
+                                >
+                                    {imagenes[plantilla.id] ? (
+                                        <img
+                                            src={`data:image/png;base64,${imagenes[plantilla.id]}`}
+                                            alt={plantilla.nombre}
+                                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                        />
+                                    ) : (
+                                        // SPINNER DE IMAGEN
+                                        <div className="spinner-border text-secondary spinner-border-sm" role="status">
+                                            <span className="visually-hidden">Cargando...</span>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* DATOS DE LA PLANTILLA */}
+                                <div>
+                                    <h5 className="mb-1 text-primary">{plantilla.nombre}</h5>
+                                    <div className="text-muted small">
+                                        <span className="me-2">📦 {plantilla.materialNombre}</span>
+                                        <span className="me-2">🏷️ {plantilla.tipoBolsaNombre}</span>
+                                        <span>📏 {plantilla.ancho}x{plantilla.alto}x{plantilla.profundidad} (cm)</span>
                                     </div>
-                                )}
-                            </div>
-
-                            {/* DATOS DE LA PLANTILLA */}
-                            <div>
-                                <h5 className="mb-1 text-primary">{plantilla.nombre}</h5>
-                                <div className="text-muted small">
-                                    <span className="me-2">📦 {plantilla.materialNombre}</span>
-                                    <span className="me-2">🏷️ {plantilla.tipoBolsaNombre}</span>
-                                    <span>📏 {plantilla.ancho}x{plantilla.alto}x{plantilla.profundidad} (cm)</span>
                                 </div>
                             </div>
-                        </div>
 
-                        {/* CHECKBOX */}
-                        <div className="form-check form-switch">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                style={{ width: '50px', height: '25px', cursor: 'pointer' }}
-                                checked={plantillasCliente.some(p => p.id === plantilla.id)}
-                                onChange={async () => {
-                                    if (plantillasCliente.some(p => p.id === plantilla.id)) {
-                                        setPlantillasCliente(plantillasCliente.filter(p => p.id !== plantilla.id));
-                                        await deshabilitarPlantilla(plantilla.id);
-                                    } else {
-                                        setPlantillasCliente([...plantillasCliente, plantilla]);
-                                    }
-                                }}
-                            />
+                            {/* CHECKBOX */}
+                            <div className="form-check form-switch">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    style={{ width: '50px', height: '25px', cursor: 'pointer' }}
+                                    checked={plantillasCliente.some(p => p.id === plantilla.id)}
+                                    onChange={async () => {
+                                        if (plantillasCliente.some(p => p.id === plantilla.id)) {
+                                            setPlantillasCliente(plantillasCliente.filter(p => p.id !== plantilla.id));
+                                            await deshabilitarPlantilla(plantilla.id);
+                                        } else {
+                                            setPlantillasCliente([...plantillasCliente, plantilla]);
+                                        }
+                                    }}
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))}
-            </div>
+                    ))}
+                </div>
 
-            <div className="mt-4 d-flex justify-content-end gap-2">
-                <button 
-                    className="btn btn-secondary"
-                    onClick={() => setModalAbierto(false)}
-                    disabled={isSaving}
-                >
-                    Cancelar
-                </button>
-                
-                <button
-                    className="btn btn-primary d-flex align-items-center gap-2"
-                    style={{ backgroundColor: "#016add", borderColor: "#016add" }}
-                    onClick={handleClick}
-                    disabled={isSaving}
-                >
-                    {isSaving ? (
-                        <>
-                            <div className="spinner-border spinner-border-sm" role="status"></div>
-                            Guardando...
-                        </>
-                    ) : (
-                        "Guardar Cambios"
-                    )}
-                </button>
+                <div className="mt-4 d-flex justify-content-end gap-2">
+                    <button
+                        className="boton-1"
+                        onClick={() => setModalAbierto(false)}
+                        disabled={isSaving}
+                    >
+                        Cancelar
+                    </button>
+
+                    <button
+                        className="boton-2"
+                        style={{ backgroundColor: "#016add", borderColor: "#016add" }}
+                        onClick={handleClick}
+                        disabled={isSaving}
+                    >
+                        {isSaving ? (
+                            <>
+                                <div className="spinner-border spinner-border-sm" role="status"></div>
+                                Guardando...
+                            </>
+                        ) : (
+                            "Guardar Cambios"
+                        )}
+                    </button>
+                </div>
+
+                <Notificacion
+                    tipo={notificacion.tipo}
+                    mensaje={notificacion.mensaje}
+                    visible={notificacion.visible}
+                    onClose={ocultarNotificacion}
+                    duracion={notificacion.duracion}
+                />
             </div>
-            
-            <Notificacion
-                tipo={notificacion.tipo}
-                mensaje={notificacion.mensaje}
-                visible={notificacion.visible}
-                onClose={ocultarNotificacion}
-                duracion={notificacion.duracion}
-            />
-        </div>
+        </>
     )
 }

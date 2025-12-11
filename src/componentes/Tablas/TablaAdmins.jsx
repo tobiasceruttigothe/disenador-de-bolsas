@@ -94,12 +94,11 @@ export default function TablaAdmins() {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-12 col-lg-10">
-              
-              <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+              <div className="tabla-card border-0 shadow-lg rounded-4 overflow-hidden">
                 <div className="card-header bg-white py-4 px-4 px-md-5 border-bottom-0">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                      <h2 className="fw-bold text-dark mb-1">Administradores</h2>
+                      <h3 className="fw-bold text-dark mb-1">Administradores gerenciales</h3>
                       <p className="text-muted mb-0">Gestión de usuarios con permisos gerenciales</p>
                     </div>
                     <button 
@@ -107,7 +106,7 @@ export default function TablaAdmins() {
                       style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
                       onClick={irAOtroComponente}
                     >
-                      <i className="fa fa-user-plus me-2"></i> Nuevo Admin
+                      <i className="fa fa-user-plus me-2"></i> Nuevo Admin. gerencial
                     </button>
                   </div>
                   
@@ -116,7 +115,7 @@ export default function TablaAdmins() {
                     <input
                       type="text"
                       className="form-control form-control-lg ps-5 bg-light border-0"
-                      placeholder="Buscar administrador por usuario..."
+                      placeholder="Buscar admin. gerencial por nombre de usuario..."
                       value={filtro}
                       onChange={(e) => setFiltro(e.target.value)}
                       style={{ fontSize: '0.95rem' }}
@@ -162,7 +161,7 @@ export default function TablaAdmins() {
                 </div>
                 
                 <div className="card-footer bg-white border-top-0 py-3 text-center">
-                  <small className="text-muted">Total: {adminsFiltrados.length} administradores</small>
+                  <small className="text-muted">Total: {adminsFiltrados.length} administradores gerenciales</small>
                 </div>
               </div>
             </div>

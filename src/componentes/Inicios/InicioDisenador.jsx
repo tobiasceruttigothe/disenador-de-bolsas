@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 // IMPORTANTE: Verifica nombres de archivos
-import nuevoDiseño from "../../assets/iconos_inicio/Nuevo_diseño-logo.png";
+import nuevoDiseño from "../../assets/iconos_inicio/Nuevo_diseño.png";
 import misDiseños from "../../assets/iconos_inicio/Mis_disenos.png"; 
 import consultarClientes from "../../assets/iconos_inicio/Consultar_clientes.png"; 
 
@@ -32,20 +32,9 @@ export default function InicioDisenador() {
             <div key={accion.id} className="col-12 col-sm-6 col-lg-4">
               <Link to={accion.ruta} style={{ textDecoration: 'none' }}>
                 <div
-                  className="card h-100 text-center py-5 px-3"
+                  className={`card h-100 text-center py-4 px-2 card-opcion ${hovered === accion.id ? "hovered" : ""}`}
                   onMouseEnter={() => setHovered(accion.id)}
                   onMouseLeave={() => setHovered(null)}
-                  style={{
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    transform: hovered === accion.id ? "translateY(-8px)" : "translateY(0)",
-                    borderRadius: "16px",
-                    backgroundColor: "#fff",
-                    // Borde gris suave visible por defecto (#dee2e6), Azul sólido al hover
-                    border: hovered === accion.id ? `2px solid ${primaryColor}` : "1px solid #dee2e6",
-                    // Sombra sutil por defecto, Resplandor al hover
-                    boxShadow: hovered === accion.id ? "0 10px 25px rgba(1, 106, 221, 0.15)" : "0 2px 5px rgba(0,0,0,0.05)"
-                  }}
                 >
                   <div className="card-body d-flex flex-column align-items-center justify-content-center">
                     
@@ -64,11 +53,9 @@ export default function InicioDisenador() {
                       />
                     </div>
 
-                    <h4 className="fw-bold mb-3" style={{ color: "#333" }}>
+                    <h3 className="titulo">
                       {accion.nombre}
-                    </h4>
-                    
-                    
+                    </h3>
 
                   </div>
                 </div>

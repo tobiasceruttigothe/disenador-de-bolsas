@@ -35,11 +35,11 @@ export default function TablaTipoBolsa() {
       const res = await apiClient.get("/tipos-bolsa");
       setTiposBolsa(res.data.data || []);
     } catch (e) {
-      console.error("Error al cargar tipos de bolsa:", e);
+      console.error("Error al cargar tipos de productos:", e);
       if (e.response && e.response.status === 403) {
-        mostrarError("No tienes permisos para ver los tipos de bolsa.");
+        mostrarError("No tienes permisos para ver los tipos de productos.");
       } else {
-        mostrarError("No se pudieron cargar los tipos de bolsa.");
+        mostrarError("No se pudieron cargar los tipos de productos.");
       }
     }
   };
@@ -88,21 +88,21 @@ export default function TablaTipoBolsa() {
           <div className="row justify-content-center">
             <div className="col-12 col-md-10 col-lg-8">
               
-              <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
+              <div className="tabla-card border-0 shadow-lg rounded-4 overflow-hidden">
                 
                 {/* Cabecera */}
                 <div className="card-header bg-white py-4 px-4 px-md-5 border-bottom-0">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                      <h3 className="fw-bold text-dark mb-1">Tipos de Bolsa</h3>
-                      <p className="text-muted mb-0">Gestión de categorías de bolsas</p>
+                      <h3 className="fw-bold text-dark mb-1">Tipos de producto</h3>
+                      <p className="text-muted mb-0">Gestión de categorías de tipos productos</p>
                     </div>
                     <button 
                       className="btn btn-primary px-4 py-2 fw-bold shadow-sm rounded-pill"
                       style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
                       onClick={irAOtroComponente}
                     >
-                      <i className="fa fa-plus me-2"></i> Nuevo Tipo
+                      <i className="fa fa-plus me-2"></i> Nuevo tipo de producto
                     </button>
                   </div>
                   
@@ -134,7 +134,7 @@ export default function TablaTipoBolsa() {
                         {tiposBolsaFiltrados.length > 0 ? (
                           tiposBolsaFiltrados.map((t, index) => (
                             <tr key={index}>
-                              <td className="ps-5 fw-bold text-dark fs-5">{t.nombre}</td>
+                              <td className="ps-4 fw-bold text-dark">{t.nombre}</td>
                               <td className="pe-5 text-end">
                                 <button
                                   className="btn btn-sm btn-outline-danger fw-bold"
@@ -149,7 +149,7 @@ export default function TablaTipoBolsa() {
                         ) : (
                           <tr>
                             <td colSpan="2" className="text-center py-5 text-muted">
-                              No hay tipos de bolsa registrados.
+                              No hay tipos de productos registrados.
                             </td>
                           </tr>
                         )}
@@ -159,7 +159,7 @@ export default function TablaTipoBolsa() {
                 </div>
                 
                 <div className="card-footer bg-white border-top-0 py-3 text-center">
-                  <small className="text-muted">Total: {tiposBolsaFiltrados.length} tipos</small>
+                  <small className="text-muted">Total: {tiposBolsaFiltrados.length} tipos de productos</small>
                 </div>
 
               </div>
