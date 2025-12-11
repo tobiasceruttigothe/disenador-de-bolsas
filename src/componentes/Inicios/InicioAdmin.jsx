@@ -78,7 +78,7 @@ export default function InicioAdmin() {
           
           <div className="text-center mb-5">
             <h2 className="fw-bold text-dark">
-              {mostrarUsuarios ? "Administrar Usuarios" : "Panel de Administración"}
+              {mostrarUsuarios ? "Panel de Sistema" : "Panel de Administración"}
             </h2>
             <div className="mx-auto" style={{ width: "60px", height: "4px", backgroundColor: primaryColor, borderRadius: "2px" }}></div>
           </div>
