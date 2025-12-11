@@ -17,7 +17,6 @@ import FormularioAdmin from "./componentes/Formularios/FormularioAdmin.jsx";
 import FormularioPlantilla from "./componentes/Formularios/FormularioPlantilla.jsx";
 import FormularioMaterial from "./componentes/Formularios/FormularioMaterial.jsx";
 import FormularioTipoBolsa from "./componentes/Formularios/FormularioTipoBolsa.jsx";
-import FormularioLogos from "./componentes/Formularios/FormularioLogos.jsx";
 
 import TablaClientes from "./componentes/Tablas/TablaClientes";
 import TablaDisenadores from "./componentes/Tablas/TablaDisenadores";
@@ -291,14 +290,6 @@ function App() {
           }
         />
 
-        <Route
-         path="/logos/nuevo"
-          element={
-            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
-              <FormularioLogos />
-            </RutaPrivadaConRol>
-          }
-        />
 
         <Route
           path="/perfil"

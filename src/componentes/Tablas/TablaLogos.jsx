@@ -80,11 +80,11 @@ function ModalSubirLogo({ isVisible, onClose, onSuccess, mostrarError }) {
       backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 1050,
       display: 'flex', justifyContent: 'center', alignItems: 'center'
     }}>
-      <div className="card border-0 shadow-lg rounded-4 p-4 bg-white animate-scale-in" style={{ width: "90%", maxWidth: "450px" }}>
+      <div className="form-card" style={{ width: "90%", maxWidth: "450px" }}>
 
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h4 className="fw-bold text-dark mb-0">Nuevo Logo</h4>
-          <button onClick={onClose} className="btn btn-close"></button>
+          <button onClick={onClose} className="btn btn-close" ></button>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -104,7 +104,7 @@ function ModalSubirLogo({ isVisible, onClose, onSuccess, mostrarError }) {
             <input
               type="file"
               accept=".jpg,.png,.jpeg,.svg"
-              className="form-control bg-light border-0"
+              className="form-control archivo-input border-0"
               onChange={handleFileChange}
             />
             <div className="form-text small text-muted">
@@ -247,13 +247,11 @@ export default function TablaLogos() {
             {logos.length > 0 ? (
               logos.map((logo) => (
                 <div key={logo.id} className="col-12 col-md-6 col-lg-4">
-                  <div className="card h-100 border-0 shadow-sm overflow-hidden" style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
-
+                  <div className="card-opcion-logo">
                     <div
                       className="bg-white border-bottom d-flex align-items-center justify-content-center p-4 position-relative"
                       style={{ height: "200px", backgroundColor: "#f8f9fa" }}
                     >
-                      {/* Fondo ajedrez */}
                       <div style={{
                         position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 0,
                         backgroundImage: 'linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee), linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee)',
@@ -269,7 +267,7 @@ export default function TablaLogos() {
                     </div>
 
                     <div className="card-body p-4 d-flex flex-column">
-                      <h5 className="card-title fw-bold text-dark mb-3 text-truncate" title={logo.nombre}>{logo.nombre}</h5>
+                      <h5 className="card-title text-center" title={logo.nombre}>{logo.nombre}</h5>
                       <div className="mt-auto d-grid">
                         <button
                           className="btn btn-outline-danger fw-bold"
