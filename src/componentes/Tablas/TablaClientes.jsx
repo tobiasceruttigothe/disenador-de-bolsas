@@ -63,6 +63,11 @@ export default function TablaClientes() {
     navigate("/clientes/nuevo");
   };
 
+  // Función para volver al submenú de usuarios en InicioAdmin
+  const handleVolver = () => {
+    navigate("/inicio", { state: { vistaUsuarios: true } });
+  };
+
   return (
     <>
       <button
@@ -72,7 +77,7 @@ export default function TablaClientes() {
           padding: "10px", backgroundColor: "white", color: "#016add",
           border: "1px solid #016add", borderRadius: "7px", zIndex: 1000
         }}
-        onClick={() => navigate("/inicio")}
+        onClick={handleVolver} // Redirige a /inicio con el panel de usuarios abierto
       >
         ←
       </button>

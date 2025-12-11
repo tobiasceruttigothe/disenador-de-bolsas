@@ -5,7 +5,6 @@ import { useNotificacion } from "../../hooks/useNotificacion";
 import Notificacion from "../Notificaciones/Notificacion";
 import ModalConfirmacion from "../ModalConfirmacion";
 
-// Estilos
 import "../../index.css";
 import "../../styles/main.css";
 
@@ -64,9 +63,13 @@ export default function TablaAdmins() {
     navigate("/admins/nuevo");
   };
 
+  // Vuelve al submenú de usuarios
+  const handleVolver = () => {
+    navigate("/inicio", { state: { vistaUsuarios: true } });
+  };
+
   return (
     <>
-      {/* Botón Volver ORIGINAL */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
@@ -82,21 +85,17 @@ export default function TablaAdmins() {
           borderRadius: "7px",
           zIndex: 1000
         }}
-        onClick={() => navigate("/inicio")}
+        onClick={handleVolver}
       >
         ←
       </button>
 
-      {/* Contenedor con FONDO */}
       <div className="min-vh-100 fondo" style={{ paddingTop: "100px", paddingBottom: "80px" }}>
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-12 col-lg-10">
               
-              {/* Tarjeta Principal */}
               <div className="card border-0 shadow-lg rounded-4 overflow-hidden">
-                
-                {/* Cabecera */}
                 <div className="card-header bg-white py-4 px-4 px-md-5 border-bottom-0">
                   <div className="d-flex justify-content-between align-items-center mb-4">
                     <div>
@@ -112,7 +111,6 @@ export default function TablaAdmins() {
                     </button>
                   </div>
                   
-                  {/* Buscador */}
                   <div className="position-relative">
                     <i className="fa fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
@@ -126,7 +124,6 @@ export default function TablaAdmins() {
                   </div>
                 </div>
 
-                {/* Tabla */}
                 <div className="card-body p-0">
                   <div className="table-responsive">
                     <table className="table table-hover align-middle mb-0">
@@ -157,11 +154,7 @@ export default function TablaAdmins() {
                             </tr>
                           ))
                         ) : (
-                          <tr>
-                            <td colSpan="4" className="text-center py-5 text-muted">
-                              No se encontraron administradores.
-                            </td>
-                          </tr>
+                          <tr><td colSpan="4" className="text-center py-5 text-muted">No se encontraron administradores.</td></tr>
                         )}
                       </tbody>
                     </table>
@@ -171,22 +164,13 @@ export default function TablaAdmins() {
                 <div className="card-footer bg-white border-top-0 py-3 text-center">
                   <small className="text-muted">Total: {adminsFiltrados.length} administradores</small>
                 </div>
-
               </div>
             </div>
           </div>
         </div>
 
         <Notificacion tipo={notificacion.tipo} mensaje={notificacion.mensaje} visible={notificacion.visible} onClose={ocultarNotificacion} />
-        
-        <ModalConfirmacion
-          isVisible={modalEliminar.visible}
-          onClose={() => setModalEliminar({ visible: false, nombre: null })}
-          onConfirm={confirmarEliminar}
-          titulo="Eliminar Administrador"
-          mensaje={`¿Estás seguro que deseas eliminar a ${modalEliminar.nombre}?`}
-          tipo="danger"
-        />
+        <ModalConfirmacion isVisible={modalEliminar.visible} onClose={() => setModalEliminar({ visible: false, nombre: null })} onConfirm={confirmarEliminar} titulo="Eliminar Administrador" mensaje={`¿Estás seguro que deseas eliminar a ${modalEliminar.nombre}?`} tipo="danger" />
       </div>
     </>
   );

@@ -148,7 +148,7 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
                                 <div className="text-muted small">
                                     <span className="me-2">📦 {plantilla.materialNombre}</span>
                                     <span className="me-2">🏷️ {plantilla.tipoBolsaNombre}</span>
-                                    <span>📏 {plantilla.ancho}x{plantilla.alto}x{plantilla.profundidad}</span>
+                                    <span>📏 {plantilla.ancho}x{plantilla.alto}x{plantilla.profundidad} (cm)</span>
                                 </div>
                             </div>
                         </div>

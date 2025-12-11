@@ -31,7 +31,7 @@ export default function FormularioCliente() {
     const payload = {
       username: data.nombre,
       email: data.mail,
-      razonSocial: data.razonSocial,
+      razonSocial: data.razonSocial, // Mantenemos Razón Social como campo único
       password: "undefined",
       enabled: true,
       emailVerified: false,
@@ -69,7 +69,7 @@ export default function FormularioCliente() {
 
   return (
     <>
-      {/* --- BOTÓN VOLVER (FIJO) --- */}
+      {/* --- BOTÓN VOLVER (Redirige a la tabla de Clientes) --- */}
       <button
         className="align-items-center d-flex justify-content-center"
         style={{
@@ -85,7 +85,7 @@ export default function FormularioCliente() {
           borderRadius: "7px",
           zIndex: 1000
         }}
-        onClick={() => navigate("/clientes")}
+        onClick={() => navigate("/clientes")} 
       >
         ←
       </button>
@@ -114,9 +114,9 @@ export default function FormularioCliente() {
 
           <form onSubmit={handleSubmit(handleSubmitForm)}>
             
-            {/* Usuario */}
+            {/* Usuario (Login) */}
             <div className="mb-3">
-              <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario</label>
+              <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario (Login)</label>
               <input
                 id="nombre"
                 placeholder="Ej: cliente123"
@@ -132,12 +132,12 @@ export default function FormularioCliente() {
               {errors.nombre && <div className="invalid-feedback ps-2">{errors.nombre.message}</div>}
             </div>
 
-            {/* Razón Social */}
+            {/* Razón Social (CAMPO ÚNICO) */}
             <div className="mb-3">
-              <label htmlFor="razonSocial" className="form-label text-muted small fw-bold text-uppercase">Razón Social</label>
+              <label htmlFor="razonSocial" className="form-label text-muted small fw-bold text-uppercase">Razón Social / Nombre Completo</label>
               <input
                 id="razonSocial"
-                placeholder="Ej: Empresa S.A."
+                placeholder="Ej: Empresa S.A. o Juan Pérez"
                 type="text"
                 className={`form-control form-control-lg bg-light border-0 ${errors.razonSocial ? 'is-invalid' : ''}`}
                 style={{ fontSize: '0.95rem' }}

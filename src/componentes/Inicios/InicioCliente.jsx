@@ -17,30 +17,34 @@ export default function InicioCliente() {
   const primaryColor = "#016add";
 
   return (
-    // CAMBIO AQUÍ: 'fondo' recuperado
     <div className="min-vh-100 fondo" style={{ paddingTop: "100px", paddingBottom: "50px" }}>
       <div className="container">
         
+        {/* Encabezado */}
         <div className="text-center mb-5">
-          <h2 className="fw-bold text-dark">Portal de Cliente</h2>
+          <h2 className="fw-bold text-dark">Panel de Cliente</h2>
+          <p className="text-muted">Gestiona tus proyectos y recursos</p>
           <div className="mx-auto" style={{ width: "60px", height: "4px", backgroundColor: primaryColor, borderRadius: "2px" }}></div>
         </div>
 
-        <div className="row justify-content-center g-4">
+        <div className="row justify-content-center g-4 animate-fade-in">
           {acciones.map((accion) => (
             <div key={accion.id} className="col-12 col-sm-6 col-lg-4">
               <Link to={accion.ruta} style={{ textDecoration: 'none' }}>
                 <div
-                  className="card h-100 border-0 shadow-sm text-center py-5 px-3"
+                  className="card h-100 text-center py-5 px-3"
                   onMouseEnter={() => setHovered(accion.id)}
                   onMouseLeave={() => setHovered(null)}
                   style={{
                     cursor: "pointer",
                     transition: "all 0.3s ease",
-                    transform: hovered === accion.id ? "translateY(-10px)" : "translateY(0)",
-                    boxShadow: hovered === accion.id ? "0 15px 30px rgba(1, 106, 221, 0.15)" : "0 4px 6px rgba(0,0,0,0.05)",
+                    transform: hovered === accion.id ? "translateY(-8px)" : "translateY(0)",
                     borderRadius: "16px",
-                    backgroundColor: "#fff"
+                    backgroundColor: "#fff",
+                    // Borde gris suave por defecto, Azul sólido al hover
+                    border: hovered === accion.id ? `2px solid ${primaryColor}` : "1px solid #dee2e6",
+                    // Sombra sutil por defecto, Resplandor al hover
+                    boxShadow: hovered === accion.id ? "0 10px 25px rgba(1, 106, 221, 0.15)" : "0 2px 5px rgba(0,0,0,0.05)"
                   }}
                 >
                   <div className="card-body d-flex flex-column align-items-center justify-content-center">
@@ -60,22 +64,12 @@ export default function InicioCliente() {
                       />
                     </div>
 
-                    <h5 className="fw-bold mb-3" style={{ color: "#333" }}>
+                    <h4 className="fw-bold mb-3" style={{ color: "#333" }}>
                       {accion.nombre}
-                    </h5>
+                    </h4>
+                    
+                    
 
-                    <button 
-                      className="btn px-4 py-2 rounded-pill fw-bold"
-                      style={{
-                        backgroundColor: hovered === accion.id ? primaryColor : "transparent",
-                        color: hovered === accion.id ? "#fff" : primaryColor,
-                        border: `2px solid ${primaryColor}`,
-                        transition: "all 0.3s ease",
-                        width: "80%"
-                      }}
-                    >
-                      Ingresar
-                    </button>
                   </div>
                 </div>
               </Link>

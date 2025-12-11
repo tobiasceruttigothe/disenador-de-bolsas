@@ -29,10 +29,14 @@ export default function FormularioDiseñador() {
 
   const handleSubmitForm = async (data) => {
     setCargando(true);
+
+    // Concatenamos nombre y apellido para enviarlo como 'razonSocial'
+    const nombreCompleto = `${data.nombreReal} ${data.apellido}`;
+
     const payload = {
-      username: data.nombre,
+      username: data.username, // Nombre de usuario para login
       email: data.mail,
-      razonSocial: data.nombreApellido,
+      razonSocial: nombreCompleto, // Nombre real del empleado
       password: "undefined",
       enabled: true,
       emailVerified: false,
@@ -47,14 +51,14 @@ export default function FormularioDiseñador() {
         navigate("/disenadores");
       }, 1500);
     } catch (error) {
-      if (error.response && error.response.status === 403) {
+      if (error.response?.status === 403) {
         const rol = Cookies.get('rol');
-        mostrarError(`No tienes permisos para crear usuarios. Tu rol actual es: ${rol || 'no definido'}.`);
-      } else if (error.response && error.response.status === 401) {
+        mostrarError(`No tienes permisos para crear usuarios. Tu rol es: ${rol || 'no definido'}.`);
+      } else if (error.response?.status === 401) {
         mostrarError("Tu sesión ha expirado. Inicia sesión nuevamente.");
-      } else if (error.response && error.response.status === 409) {
+      } else if (error.response?.status === 409) {
         mostrarError("Nombre de usuario ya registrado");
-      } else if (error.response && error.response.status === 502) {
+      } else if (error.response?.status === 502) {
         mostrarError("Mail ya registrado");
       } else {
         mostrarError("Error inesperado. Intente más tarde.");
@@ -87,12 +91,12 @@ export default function FormularioDiseñador() {
         ←
       </button>
 
-      {/* --- CONTENEDOR PRINCIPAL CON FONDO --- */}
+      {/* --- CONTENEDOR PRINCIPAL --- */}
       <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
         
         <div 
           className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
-          style={{ width: "100%", maxWidth: "500px" }}
+          style={{ width: "100%", maxWidth: "600px" }} // Aumenté el ancho un poco
         >
           
           {/* Cabecera */}
@@ -111,38 +115,51 @@ export default function FormularioDiseñador() {
 
           <form onSubmit={handleSubmit(handleSubmitForm)}>
             
-            {/* Usuario */}
+            {/* Nombre de Usuario (Login) */}
             <div className="mb-3">
-              <label htmlFor="nombre" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario</label>
+              <label htmlFor="username" className="form-label text-muted small fw-bold text-uppercase">Nombre de usuario (Login)</label>
               <input
-                id="nombre"
+                id="username"
                 placeholder="Ej: disenador123"
                 type="text"
-                className={`form-control form-control-lg bg-light border-0 ${errors.nombre ? 'is-invalid' : ''}`}
+                className={`form-control form-control-lg bg-light border-0 ${errors.username ? 'is-invalid' : ''}`}
                 style={{ fontSize: '0.95rem' }}
-                {...register("nombre", {
-                  required: "El nombre es obligatorio",
-                  minLength: { value: 5, message: "Debe tener al menos 5 caracteres" },
-                  maxLength: { value: 50, message: "Debe tener menos de 50 caracteres" }
+                {...register("username", {
+                  required: "El nombre de usuario es obligatorio",
+                  minLength: { value: 5, message: "Mínimo 5 caracteres" },
+                  maxLength: { value: 50, message: "Máximo 50 caracteres" }
                 })}
               />
-              {errors.nombre && <div className="invalid-feedback ps-2">{errors.nombre.message}</div>}
+              {errors.username && <div className="invalid-feedback ps-2">{errors.username.message}</div>}
             </div>
 
-            {/* Nombre y Apellido */}
-            <div className="mb-3">
-              <label htmlFor="nombreApellido" className="form-label text-muted small fw-bold text-uppercase">Nombre y Apellido</label>
-              <input
-                id="nombreApellido"
-                placeholder="Ej: Juan Pérez"
-                type="text"
-                className={`form-control form-control-lg bg-light border-0 ${errors.nombreApellido ? 'is-invalid' : ''}`}
-                style={{ fontSize: '0.95rem' }}
-                {...register("nombreApellido", {
-                  required: "El nombre y apellido es obligatorio",
-                })}
-              />
-              {errors.nombreApellido && <div className="invalid-feedback ps-2">{errors.nombreApellido.message}</div>}
+            {/* Fila: Nombre y Apellido */}
+            <div className="row g-3 mb-3">
+              <div className="col-md-6">
+                <label htmlFor="nombreReal" className="form-label text-muted small fw-bold text-uppercase">Nombre</label>
+                <input
+                  id="nombreReal"
+                  placeholder="Ej: Juan"
+                  type="text"
+                  className={`form-control form-control-lg bg-light border-0 ${errors.nombreReal ? 'is-invalid' : ''}`}
+                  style={{ fontSize: '0.95rem' }}
+                  {...register("nombreReal", { required: "El nombre es obligatorio" })}
+                />
+                {errors.nombreReal && <div className="invalid-feedback ps-2">{errors.nombreReal.message}</div>}
+              </div>
+              
+              <div className="col-md-6">
+                <label htmlFor="apellido" className="form-label text-muted small fw-bold text-uppercase">Apellido</label>
+                <input
+                  id="apellido"
+                  placeholder="Ej: Pérez"
+                  type="text"
+                  className={`form-control form-control-lg bg-light border-0 ${errors.apellido ? 'is-invalid' : ''}`}
+                  style={{ fontSize: '0.95rem' }}
+                  {...register("apellido", { required: "El apellido es obligatorio" })}
+                />
+                {errors.apellido && <div className="invalid-feedback ps-2">{errors.apellido.message}</div>}
+              </div>
             </div>
 
             {/* Mail */}
@@ -157,7 +174,7 @@ export default function FormularioDiseñador() {
                 {...register("mail", {
                   required: "El mail es obligatorio",
                   pattern: { value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/, message: "Ingrese un mail válido" },
-                  maxLength: { value: 100, message: "Debe tener menos de 100 caracteres" }
+                  maxLength: { value: 100, message: "Máximo 100 caracteres" }
                 })}
               />
               {errors.mail && <div className="invalid-feedback ps-2">{errors.mail.message}</div>}
