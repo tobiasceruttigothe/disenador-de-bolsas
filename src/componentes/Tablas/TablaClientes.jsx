@@ -14,12 +14,26 @@ export default function TablaClientes() {
   const [clientes, setClientes] = useState([]);
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [filtro, setFiltro] = useState("");
+  const [disenadoresMap, setDisenadoresMap] = useState({});
   const [modalEliminar, setModalEliminar] = useState({ visible: false, nombre: null });
 
   const primaryColor = "#016add";
 
+  const getNombreDisenador = async (disenadorId) => {
+    try {
+      const res = await apiClient.get(`/usuarios/list/users/disenadores`);
+      const map = {};
+      res.data.forEach(d => { map[d.id] = d.razonSocial });
+      setDisenadoresMap(map);
+    } catch (e) {
+      console.error("Error al obtener diseñador:", e);
+      return null;
+    }
+  };
+
   useEffect(() => {
     fetchClientes();
+    getNombreDisenador();
   }, []);
 
   useEffect(() => {
@@ -47,7 +61,7 @@ export default function TablaClientes() {
   const confirmarEliminar = async () => {
     const nombre = modalEliminar.nombre;
     if (!nombre) return;
-    
+
     try {
       await apiClient.delete(`/usuarios/eliminate/${nombre}`);
       mostrarExito("Cliente eliminado exitosamente.");
@@ -93,7 +107,7 @@ export default function TablaClientes() {
                       <h3 className="fw-bold text-dark mb-1">Clientes</h3>
                       <p className="text-muted mb-0">Gestión de usuarios clientes</p>
                     </div>
-                    <button 
+                    <button
                       className="btn btn-primary px-4 py-2 fw-bold shadow-sm rounded-pill"
                       style={{ backgroundColor: primaryColor, borderColor: primaryColor }}
                       onClick={irAOtroComponente}
@@ -101,7 +115,7 @@ export default function TablaClientes() {
                       <i className="fa fa-user-plus me-2"></i> Nuevo Cliente
                     </button>
                   </div>
-                  
+
                   <div className="position-relative">
                     <i className="fa fa-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
                     <input
@@ -123,6 +137,7 @@ export default function TablaClientes() {
                           <th className="py-3 ps-5 text-muted small fw-bold text-uppercase">Usuario</th>
                           <th className="py-3 text-muted small fw-bold text-uppercase">Email</th>
                           <th className="py-3 text-muted small fw-bold text-uppercase">Razón Social</th>
+                          <th className="py-3 text-muted small fw-bold text-uppercase">Diseñador asoc.</th>
                           <th className="py-3 pe-5 text-end text-muted small fw-bold text-uppercase">Acciones</th>
                         </tr>
                       </thead>
@@ -133,6 +148,7 @@ export default function TablaClientes() {
                               <td className="ps-5 fw-bold text-dark">{c.username}</td>
                               <td className="text-muted">{c.email}</td>
                               <td>{c.razonSocial || "-"}</td>
+                              <td>{disenadoresMap[c.disenadorId] || "-"}</td>
                               <td className="pe-5 text-end">
                                 <button
                                   className="btn btn-sm btn-outline-danger fw-bold"
@@ -145,13 +161,13 @@ export default function TablaClientes() {
                             </tr>
                           ))
                         ) : (
-                          <tr><td colSpan="4" className="text-center py-5 text-muted">No se encontraron clientes.</td></tr>
+                          <tr><td colSpan="5" className="text-center py-5 text-muted">No se encontraron clientes.</td></tr>
                         )}
                       </tbody>
                     </table>
                   </div>
                 </div>
-                
+
                 <div className="card-footer bg-white border-top-0 py-3 text-center">
                   <small className="text-muted">Total: {clientesFiltrados.length} clientes</small>
                 </div>

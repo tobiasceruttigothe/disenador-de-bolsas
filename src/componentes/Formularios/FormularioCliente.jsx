@@ -17,6 +17,8 @@ export default function FormularioCliente() {
   const navigate = useNavigate();
   const { notificacion, mostrarExito, mostrarError, ocultarNotificacion } = useNotificacion();
   const [cargando, setCargando] = useState(false);
+  const [diseñadores, setDiseñadores] = useState([]);
+
   const primaryColor = "#016add";
 
   useEffect(() => {
@@ -27,6 +29,27 @@ export default function FormularioCliente() {
     }
   }, []);
 
+  useEffect(() => {
+    const fetchDiseñadores = async () => {
+      try {
+        setCargando(true);
+        const res = await apiClient.get("/usuarios/list/users/disenadores");
+        setDiseñadores(res.data);
+      } catch (error) {
+        if (error.response && error.response.status === 403) {
+          const rol = Cookies.get('rol');
+          mostrarError(`No tienes permisos. Tu rol es: ${rol || 'no definido'}.`);
+        } else if (error.response && error.response.status === 401) {
+          mostrarError("Sesión expirada.");
+        }
+      } finally {
+        setCargando(false);
+      }
+    };
+
+    fetchDiseñadores();
+  }, []);
+
   const handleSubmitForm = async (data) => {
     const payload = {
       username: data.nombre,
@@ -35,6 +58,7 @@ export default function FormularioCliente() {
       password: "undefined",
       enabled: true,
       emailVerified: false,
+      disenadorId: data.disenadorId,
       rol: "CLIENTE"
     };
 
@@ -165,6 +189,24 @@ export default function FormularioCliente() {
                 })}
               />
               {errors.mail && <div className="invalid-feedback ps-2">{errors.mail.message}</div>}
+            </div>
+
+            <div className="mb-3">
+              <select
+                className={`form-select ${errors.disenadorId ? 'is-invalid' : ''}`}
+                style={{ fontSize: '0.95rem' }}
+                {...register("disenadorId",
+                  { required: "Debe seleccionar un diseñador" }
+                )}
+              >
+                <option value="">Seleccione un diseñador asignado</option>
+                {diseñadores.map((disenador) => (
+                  <option key={disenador.id} value={disenador.id}>
+                    {disenador.razonSocial} ({disenador.email})
+                  </option>
+                ))}
+              </select>
+              {errors.disenadorId && <div className="invalid-feedback ps-2">{errors.disenadorId.message}</div>}
             </div>
 
             {/* Botón */}
