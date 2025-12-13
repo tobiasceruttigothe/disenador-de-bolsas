@@ -97,61 +97,59 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
     };
 
     return (
-        <>
-            <div style={{backgroundColor:"#1e1e1e"}}>
-                <h3 className="mb-4">Gestionar Plantillas de {userName}</h3>
+        <div style={{ padding: '20px', maxWidth: '700px', minWidth: "600px", backgroundColor: 'var(--bg-modal)', borderRadius: '8px' }}>
+            <h3 className="mb-4">Gestionar Plantillas de {userName}</h3>
 
-                <div style={{ maxHeight: '60', overflowY: 'auto', paddingRight: '5px' }}>
-                    {todasLasPlantillas.map((plantilla) => (
-                        <div
-                            key={plantilla.id}
-                            className="plantilla-card"
-                        >
-                            <div className="d-flex gap-3 align-items-center">
-                                {/* SECCIÓN IMAGEN CON CARGANDO */}
-                                <div
-                                    style={{
-                                        width: '80px',
-                                        height: '80px',
-                                        borderRadius: '8px',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        overflow: 'hidden',
-                                        border: '1px solid #dee2e6'
-                                    }}
-                                >
-                                    {imagenes[plantilla.id] ? (
-                                        <img
-                                            src={`data:image/png;base64,${imagenes[plantilla.id]}`}
-                                            alt={plantilla.nombre}
-                                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
-                                        />
-                                    ) : (
-                                        // SPINNER DE IMAGEN
-                                        <div className="spinner-border text-secondary spinner-border-sm" role="status">
-                                            <span className="visually-hidden">Cargando...</span>
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* DATOS DE LA PLANTILLA */}
-                                <div>
-                                    <h5 className="mb-1 text-primary">{plantilla.nombre}</h5>
-                                    <div className="text-muted small">
-                                        <span className="me-2">📦 {plantilla.materialNombre}</span>
-                                        <span className="me-2">🏷️ {plantilla.tipoBolsaNombre}</span>
-                                        <span>📏 {plantilla.ancho}x{plantilla.alto}x{plantilla.profundidad} (cm)</span>
+            <div style={{ maxHeight: '60', overflowY: 'auto', paddingRight: '5px' }}>
+                {todasLasPlantillas.length > 0 ? (todasLasPlantillas.map((plantilla) => (
+                    <div
+                        key={plantilla.id}
+                        className="plantilla-card"
+                    >
+                        <div className="d-flex gap-3 align-items-center">
+                            {/* SECCIÓN IMAGEN CON CARGANDO */}
+                            <div
+                                style={{
+                                    width: '80px',
+                                    height: '80px',
+                                    borderRadius: '8px',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    overflow: 'hidden',
+                                    border: '1px solid #dee2e6'
+                                }}
+                            >
+                                {imagenes[plantilla.id] ? (
+                                    <img
+                                        src={`data:image/png;base64,${imagenes[plantilla.id]}`}
+                                        alt={plantilla.nombre}
+                                        style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                                    />
+                                ) : (
+                                    // SPINNER DE IMAGEN
+                                    <div className="spinner-border text-secondary spinner-border-sm" role="status">
+                                        <span className="visually-hidden">Cargando...</span>
                                     </div>
-                                </div>
+                                )}
                             </div>
 
-                            {/* CHECKBOX */}
-                            <div className="form-check form-switch">
+                            {/* DATOS DE LA PLANTILLA */}
+                            <div>
+                                <h5 className="mb-1 text-primary">{plantilla.nombre}</h5>
+                                <div className="text-muted small">
+                                    <span className="me-2">📦 {plantilla.materialNombre}</span>
+                                    <span className="me-2">🏷️ {plantilla.tipoBolsaNombre}</span>
+                                    <span>📏 {plantilla.ancho}x{plantilla.alto}x{plantilla.profundidad} (cm)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* CHECKBOX */}
+                        <div className="form-check form-switch">
+                            <label className="switch-toggle">
                                 <input
-                                    className="form-check-input"
                                     type="checkbox"
-                                    style={{ width: '50px', height: '25px', cursor: 'pointer' }}
                                     checked={plantillasCliente.some(p => p.id === plantilla.id)}
                                     onChange={async () => {
                                         if (plantillasCliente.some(p => p.id === plantilla.id)) {
@@ -162,45 +160,46 @@ export default function MenuPlantillas({ setModalAbierto, idCliente, userName, s
                                         }
                                     }}
                                 />
-                            </div>
+                                <span className="switch-slider"></span>
+                            </label>
                         </div>
-                    ))}
-                </div>
-
-                <div className="mt-4 d-flex justify-content-end gap-2">
-                    <button
-                        className="boton-1"
-                        onClick={() => setModalAbierto(false)}
-                        disabled={isSaving}
-                    >
-                        Cancelar
-                    </button>
-
-                    <button
-                        className="boton-2"
-                        style={{ backgroundColor: "#016add", borderColor: "#016add" }}
-                        onClick={handleClick}
-                        disabled={isSaving}
-                    >
-                        {isSaving ? (
-                            <>
-                                <div className="spinner-border spinner-border-sm" role="status"></div>
-                                Guardando...
-                            </>
-                        ) : (
-                            "Guardar Cambios"
-                        )}
-                    </button>
-                </div>
-
-                <Notificacion
-                    tipo={notificacion.tipo}
-                    mensaje={notificacion.mensaje}
-                    visible={notificacion.visible}
-                    onClose={ocultarNotificacion}
-                    duracion={notificacion.duracion}
-                />
+                    </div>
+                ))) : "No hay plantillas disponibles. Pídale al gerente que cree algunas."}
             </div>
-        </>
+
+            <div className="mt-4 d-flex justify-content-end gap-2">
+                <button
+                    className="boton-1"
+                    onClick={() => setModalAbierto(false)}
+                    disabled={isSaving}
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    className="boton-2"
+                    style={{ backgroundColor: "#016add", borderColor: "#016add" }}
+                    onClick={handleClick}
+                    disabled={isSaving}
+                >
+                    {isSaving ? (
+                        <>
+                            <div className="spinner-border spinner-border-sm" role="status"></div>
+                            Guardando...
+                        </>
+                    ) : (
+                        "Guardar Cambios"
+                    )}
+                </button>
+            </div>
+
+            <Notificacion
+                tipo={notificacion.tipo}
+                mensaje={notificacion.mensaje}
+                visible={notificacion.visible}
+                onClose={ocultarNotificacion}
+                duracion={notificacion.duracion}
+            />
+        </div>
     )
 }

@@ -51,12 +51,12 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
   ];
 
   return (
-    <div className="p-4 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
+    <div className="p-4 card-diseno shadow-sm h-100 overflow-auto">
       
       <h4 className="mb-4 text-primary fw-bold">Formas</h4>
 
       {/* SECCIÓN DE COLOR CON PALETA */}
-      <div className="mb-4 bg-light p-3 rounded border">
+      <div className="mb-4 fondo-menu">
         <label className="form-label text-muted small fw-bold mb-2">COLOR DEL TRAZO</label>
         
         {/* Selector y Botón Guardar */}
@@ -69,7 +69,7 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
               className="form-control form-control-color border-0 p-0 shadow-none me-2"
               style={{ width: "35px", height: "35px", cursor: "pointer", backgroundColor: 'transparent' }}
             />
-            <span className="text-muted small fw-bold text-uppercase">{color}</span>
+            <span className="fw-bold text-dark">{color}</span>
           </div>
           
           <button 
@@ -123,30 +123,13 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
           <button
             key={f.id}
             onClick={f.handler}
-            className="btn btn-outline-light text-dark p-3 d-flex flex-column align-items-center justify-content-center"
-            style={{
-              border: "1px solid #e9ecef",
-              borderRadius: "12px",
-              height: "100px",
-              backgroundColor: "#fff",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.02)",
-              transition: "all 0.2s ease"
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-3px)";
-              e.currentTarget.style.boxShadow = "0 8px 15px rgba(1, 106, 221, 0.15)";
-              e.currentTarget.style.borderColor = "#016add";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.02)";
-              e.currentTarget.style.borderColor = "#e9ecef";
-            }}
+            className="btn tarjeta-hover"
+
           >
             <div className="mb-2 transition-all">
               {f.icon(color)}
             </div>
-            <span style={{ fontSize: "0.85rem", fontWeight: "600", color: "#495057" }}>{f.name}</span>
+            <span>{f.name}</span>
           </button>
         ))}
       </div>

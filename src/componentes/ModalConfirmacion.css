@@ -32,6 +32,15 @@
   font-family: 'Rubik', sans-serif;
 }
 
+body.dark .modal-confirmacion {
+  background: #1f2937;
+  color: #d1d5db;
+}
+
+body.dark .modal-confirmacion-body p {
+  color: #d1d5db;
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(20px);

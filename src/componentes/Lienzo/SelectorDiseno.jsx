@@ -137,7 +137,7 @@ export default function SelectorDiseno() {
             {disenos.length > 0 ? (
               disenos.map((diseno) => (
                 <div key={diseno.id} className="col-12 col-md-6 col-lg-4">
-                  <div className="card h-100 border-0 shadow-sm overflow-hidden" style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
+                  <div className="card-opcion h-100 shadow-sm overflow-hidden" style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
                     
                     {/* --- CORRECCIÓN IMAGEN DEL DISEÑO --- */}
                     <div 
@@ -146,9 +146,7 @@ export default function SelectorDiseno() {
                         height: "240px", // Altura fija para el contenedor
                         width: "100%",   // Ancho total
                         cursor: "pointer", 
-                        overflow: "hidden",
-                        padding: "20px",  // Padding para que la imagen respire
-                        backgroundColor: "#f8f9fa" // Fondo gris muy suave por si la imagen tiene transparencia
+                        overflow: "hidden",// Fondo gris muy suave por si la imagen tiene transparencia
                       }}
                       onClick={() => handleClick(diseno)}
                     >
@@ -167,7 +165,6 @@ export default function SelectorDiseno() {
                         onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                       />
                     </div>
-                    {/* ------------------------------------ */}
 
                     <div className="card-body p-4">
                       <div className="d-flex justify-content-between align-items-start mb-2">
@@ -175,14 +172,14 @@ export default function SelectorDiseno() {
                         
                         {/* Menú de 3 puntos */}
                         <div className="dropdown">
-                          <button className="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
+                          <button className="btn btn-sm" type="button" data-bs-toggle="dropdown">
                             <i className="fa fa-ellipsis-v text-muted"></i>
                           </button>
-                          <ul className="dropdown-menu dropdown-menu-end shadow border-0">
-                            <li><button className="dropdown-item" onClick={() => handleVer(diseno)}><i className="fa fa-eye me-2 text-primary"></i> Ver detalles</button></li>
-                            <li><button className="dropdown-item" onClick={() => handleDescargar(diseno)}><i className="fa fa-download me-2 text-success"></i> Descargar</button></li>
-                            <li><button className="dropdown-item" onClick={() => handleGenerar(diseno)}><i className="fa fa-cube me-2 text-warning"></i> Vista 3D</button></li>
-                            <li><hr className="dropdown-divider"/></li>
+                          <ul className="menu dropdown-menu dropdown-menu-end shadow border-0">
+                            <li><button className="texto-menu dropdown-item" onClick={() => handleVer(diseno)}><i className="fa fa-eye me-2 text-primary"></i> Ver detalles</button></li>
+                            <li><button className="texto-menu dropdown-item" onClick={() => handleDescargar(diseno)}><i className="fa fa-download me-2 text-success"></i> Descargar</button></li>
+                            <li><button className="texto-menu dropdown-item" onClick={() => handleGenerar(diseno)}><i className="fa fa-cube me-2 text-warning"></i> Vista 3D</button></li>
+                            <li><hr className="divider-menu"/></li>
                             <li><button className="dropdown-item text-danger" onClick={() => handleEliminarClick(diseno.id)}><i className="fa fa-trash me-2"></i> Eliminar</button></li>
                           </ul>
                         </div>
@@ -195,9 +192,8 @@ export default function SelectorDiseno() {
                       {/* Botones de acción rápida */}
                       <div className="d-grid gap-2">
                         <button 
-                          className="btn btn-outline-primary fw-bold" 
+                          className="btn boton-cambiar" 
                           onClick={() => handleClick(diseno)}
-                          style={{ borderColor: primaryColor, color: primaryColor }}
                         >
                           <i className="fa fa-edit me-2"></i> Editar
                         </button>
@@ -219,34 +215,16 @@ export default function SelectorDiseno() {
             <div className="col-12 col-md-6 col-lg-4">
               <Link to="/nuevoDiseno" style={{ textDecoration: 'none' }}>
                 <div 
-                  className="card h-100 d-flex align-items-center justify-content-center text-center p-5 position-relative overflow-hidden"
-                  style={{ 
-                    borderRadius: "16px", 
-                    backgroundColor: "#f8faff",
-                    border: `2px solid ${primaryColor}`,
-                    minHeight: "380px",
-                    cursor: "pointer",
-                    transition: "all 0.3s ease",
-                    boxShadow: "0 4px 12px rgba(1, 106, 221, 0.1)"
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = "translateY(-5px)";
-                    e.currentTarget.style.boxShadow = "0 10px 20px rgba(1, 106, 221, 0.2)";
-                    e.currentTarget.style.backgroundColor = "#eef6ff";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = "translateY(0)";
-                    e.currentTarget.style.boxShadow = "0 4px 12px rgba(1, 106, 221, 0.1)";
-                    e.currentTarget.style.backgroundColor = "#f8faff";
-                  }}
+                  className="card-opcion h-100 d-flex align-items-center justify-content-center text-center p-5 position-relative overflow-hidden"
+
                 >
                   <div>
-                    <div className="bg-white rounded-circle shadow-sm d-flex align-items-center justify-content-center mx-auto mb-4" 
+                    <div className="d-flex align-items-center justify-content-center mx-auto mb-4" 
                          style={{ width: "100px", height: "100px" }}>
                       <img 
                         src={bolsa} 
                         alt="Nuevo Diseño" 
-                        style={{ width: "50px", height: "50px", objectFit: "contain" }} 
+                        style={{ width: "70px", height: "70px", objectFit: "contain" }} 
                       />
                     </div>
                     

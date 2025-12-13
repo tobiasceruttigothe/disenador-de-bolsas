@@ -23,7 +23,7 @@ export default function MenuImagen({ agregarFoto }) {
     };
 
     return (
-        <div className="p-4 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
+        <div className="p-4 card-diseno shadow-sm h-100 overflow-auto">
             
             <h4 className="mb-4 text-primary fw-bold">Agregar Imagen</h4>
 
@@ -34,7 +34,7 @@ export default function MenuImagen({ agregarFoto }) {
                         id="inputArchivo" 
                         accept='.jpg, .jpeg, .png' 
                         type="file" 
-                        className="form-control" 
+                        className="form-control archivo-input" 
                         onChange={onChangeImagen} 
                         ref={inputImgRef} 
                     />
@@ -51,7 +51,7 @@ export default function MenuImagen({ agregarFoto }) {
                 <div className="mb-4">
                     <label className="form-label text-muted small fw-bold mb-2">VISTA PREVIA</label>
                     <div 
-                        className="d-flex justify-content-center align-items-center bg-light border rounded p-3"
+                        className="d-flex justify-content-center align-items-center p-3"
                         style={{ minHeight: "150px" }}
                     >
                         <img 
@@ -68,7 +68,7 @@ export default function MenuImagen({ agregarFoto }) {
                     </div>
                 </div>
             ) : (
-                <div className="alert alert-light text-center border-0 py-4 text-muted small">
+                <div className="fondo-menu mb-4 d-flex flex-column justify-content-center align-items-center" style={{ minHeight: "150px", color: "#6c757d" }}>
                     <i className="fa fa-image fs-3 mb-2 d-block opacity-50"></i>
                     No hay imagen seleccionada
                 </div>

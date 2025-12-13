@@ -33,7 +33,7 @@ export default function VerDisenosCliente() {
   // --- LÓGICA DE CARGA ---
   useEffect(() => {
     if (!id) return;
-    
+
     const fetchData = async () => {
       try {
         // Cargar diseños
@@ -113,44 +113,54 @@ export default function VerDisenosCliente() {
           borderRadius: "7px",
           zIndex: 1000
         }}
-        onClick={() => navigate("/verClientes")}
+        onClick={() => navigate("/inicio")}
       >
         ←
       </button>
 
-      {/* Contenedor Principal */}
+      {/* Contenedor con FONDO DE CÍRCULOS (clase 'fondo') */}
       <div className="min-vh-100 fondo" style={{ paddingTop: "100px", paddingBottom: "80px" }}>
-        
+
         <div className="container">
-          
+
           {/* Encabezado */}
           <div className="d-flex justify-content-between align-items-center mb-5">
             <div>
-              <h2 className="fw-bold text-dark mb-1">Diseños de {usuario.username}</h2>
-              <p className="text-muted mb-0">Visualiza y gestiona los trabajos de este cliente</p>
+              <h2 className="fw-bold text-dark mb-1">Mis Diseños</h2>
+              <p className="text-muted mb-0">Gestiona y edita tus creaciones guardadas</p>
             </div>
           </div>
 
           {/* Grid de Diseños */}
           <div className="row g-4">
-            
-            {/* LISTA DE DISEÑOS */}
+
+            {/* LISTA DE DISEÑOS EXISTENTES */}
             {disenos.length > 0 ? (
               disenos.map((diseno) => (
                 <div key={diseno.id} className="col-12 col-md-6 col-lg-4">
-                  <div className="card h-100 border-0 shadow-sm overflow-hidden" style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
-                    
-                    {/* Imagen del diseño */}
-                    <div 
-                      className="position-relative bg-white border-bottom d-flex align-items-center justify-content-center"
-                      style={{ height: "220px", cursor: "pointer", overflow: "hidden" }}
+                  <div className="card-opcion h-100 shadow-sm overflow-hidden" style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
+
+                    {/* --- CORRECCIÓN IMAGEN DEL DISEÑO --- */}
+                    <div
+                      className="position-relative d-flex align-items-center justify-content-center"
+                      style={{
+                        height: "240px", // Altura fija para el contenedor
+                        width: "100%",   // Ancho total
+                        cursor: "pointer",
+                        overflow: "hidden", // Padding para que la imagen respire
+                        backgroundColor: "transparent" // Fondo gris muy suave por si la imagen tiene transparencia
+                      }}
                       onClick={() => handleClick(diseno)}
                     >
-                      <img 
-                        src={`data:image/png;base64, ${diseno.base64Preview}`} 
-                        alt={diseno.nombre} 
-                        className="img-fluid"
-                        style={{ maxHeight: "100%", maxWidth: "100%", objectFit: "contain", transition: "transform 0.3s" }}
+                      <img
+                        // FIX: Quité el espacio después de "base64,". Esto suele romper imágenes generadas.
+                        src={`data:image/png;base64,${diseno.base64Preview}`}
+                        alt={diseno.nombre}
+                        style={{
+                          width: "100%",
+                          height: "100%",  // Asegura que la imagen entera se vea sin recortes
+                          transition: "transform 0.3s"
+                        }}
                         onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
                         onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                       />
@@ -159,33 +169,31 @@ export default function VerDisenosCliente() {
                     <div className="card-body p-4">
                       <div className="d-flex justify-content-between align-items-start mb-2">
                         <h5 className="card-title fw-bold text-dark mb-0 text-truncate" title={diseno.nombre}>{diseno.nombre}</h5>
-                        
-                        {/* Menú de 3 puntos (Dropdown) */}
+
+                        {/* Menú de 3 puntos */}
                         <div className="dropdown">
-                          <button className="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
+                          <button className="btn btn-sm" type="button" data-bs-toggle="dropdown">
                             <i className="fa fa-ellipsis-v text-muted"></i>
                           </button>
-                          <ul className="dropdown-menu dropdown-menu-end shadow border-0">
-                            <li><button className="dropdown-item" onClick={() => handleVer(diseno)}><i className="fa fa-eye me-2 text-primary"></i> Ver</button></li>
-                            <li><button className="dropdown-item" onClick={() => handleDescargar(diseno)}><i className="fa fa-download me-2 text-success"></i> Descargar</button></li>
-                            <li><button className="dropdown-item" onClick={() => handleGenerar(diseno)}><i className="fa fa-cube me-2 text-warning"></i> Vista 3D</button></li>
-                            <li><button className="dropdown-item" onClick={() => handleDuplicar(diseno)}><i className="fa fa-copy me-2 text-info"></i> Duplicar</button></li>
-                            <li><hr className="dropdown-divider"/></li>
+                          <ul className="menu dropdown-menu dropdown-menu-end shadow border-0">
+                            <li><button className="texto-menu dropdown-item" onClick={() => handleVer(diseno)}><i className="fa fa-eye me-2 text-primary"></i> Ver detalles</button></li>
+                            <li><button className="texto-menu dropdown-item" onClick={() => handleDescargar(diseno)}><i className="fa fa-download me-2 text-success"></i> Descargar</button></li>
+                            <li><button className="texto-menu dropdown-item" onClick={() => handleGenerar(diseno)}><i className="fa fa-cube me-2 text-warning"></i> Vista 3D</button></li>
+                            <li><hr className="divider-menu" /></li>
                             <li><button className="dropdown-item text-danger" onClick={() => handleEliminarClick(diseno.id)}><i className="fa fa-trash me-2"></i> Eliminar</button></li>
                           </ul>
                         </div>
                       </div>
 
-                      <p className="card-text text-muted small mb-4" style={{ minHeight: "40px" }}>
+                      <p className="card-text text-muted small mb-4 text-truncate" style={{ minHeight: "20px" }}>
                         {diseno.descripcion || "Sin descripción"}
                       </p>
 
                       {/* Botones de acción rápida */}
                       <div className="d-grid gap-2">
-                        <button 
-                          className="btn btn-outline-primary fw-bold" 
+                        <button
+                          className="btn boton-cambiar"
                           onClick={() => handleClick(diseno)}
-                          style={{ borderColor: primaryColor, color: primaryColor }}
                         >
                           <i className="fa fa-edit me-2"></i> Editar
                         </button>
@@ -199,41 +207,40 @@ export default function VerDisenosCliente() {
                 <div className="mb-3 opacity-25">
                   <i className="fa fa-folder-open fa-4x text-muted"></i>
                 </div>
-                <h5 className="text-muted">Este cliente no tiene diseños guardados.</h5>
+                <h5 className="text-muted">No tienes diseños guardados aún.</h5>
               </div>
             )}
 
-            {/* TARJETA "CREAR NUEVO" (Opcional, si el diseñador puede crear para el cliente) */}
-            {/* Si no quieres que aparezca, simplemente borra este bloque div */}
+            {/* TARJETA DE "CREAR NUEVO" (DISEÑO MEJORADO CON LOGO) */}
             <div className="col-12 col-md-6 col-lg-4">
-                <Link to="/nuevoDiseno" style={{ textDecoration: 'none' }}>
-                  <div 
-                    className="card h-100 border-2 border-dashed shadow-none bg-transparent d-flex align-items-center justify-content-center text-center p-5"
-                    style={{ 
-                      borderRadius: "16px", 
-                      borderColor: "#dee2e6", 
-                      minHeight: "380px",
-                      cursor: "pointer",
-                      transition: "all 0.2s"
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.borderColor = primaryColor;
-                      e.currentTarget.style.backgroundColor = "#eef6ff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.borderColor = "#dee2e6";
-                      e.currentTarget.style.backgroundColor = "transparent";
-                    }}
-                  >
-                    <div>
-                      <div className="mb-3 text-primary">
-                        <i className="fa fa-plus-circle fa-4x"></i>
-                      </div>
-                      <h5 className="fw-bold text-primary">Crear Nuevo Diseño</h5>
-                      <p className="text-muted small">Para este cliente</p>
+              <Link to="/nuevoDiseno" style={{ textDecoration: 'none' }}>
+                <div
+                  className="card-opcion h-100 d-flex align-items-center justify-content-center text-center p-5 position-relative overflow-hidden"
+
+                >
+                  <div>
+                    <div className="d-flex align-items-center justify-content-center mx-auto mb-4"
+                      style={{ width: "100px", height: "100px" }}>
+                      <img
+                        src={bolsa}
+                        alt="Nuevo Diseño"
+                        style={{ width: "70px", height: "70px", objectFit: "contain" }}
+                      />
+                    </div>
+
+                    <h4 className="fw-bold mb-2" style={{ color: primaryColor }}>
+                      Crear Nuevo Diseño
+                    </h4>
+                    <p className="text-muted small mb-0">
+                      Comenzar desde una plantilla en blanco
+                    </p>
+
+                    <div className="mt-4 text-primary opacity-50">
+                      <i className="fa fa-plus-circle fa-2x"></i>
                     </div>
                   </div>
-                </Link>
+                </div>
+              </Link>
             </div>
 
           </div>
@@ -243,7 +250,7 @@ export default function VerDisenosCliente() {
         <Modal isVisible={modalVer} onClose={() => { setModalVer(false); setDisenoClick() }}>
           <MenuVer setModalVer={setModalVer} disenoClick={disenoClick} setDisenoClick={setDisenoClick} />
         </Modal>
-        
+
         <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
           <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick} />
         </Modal>

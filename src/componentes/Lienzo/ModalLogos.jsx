@@ -109,7 +109,7 @@ export default function ModalLogos({ setLogosBool, logos, setLogos }) {
                         id="base64Logo"
                         type="file"
                         accept=".jpg,.png,.pdf,.svg"
-                        className={`form-control ${!base64Logo && estado === "Error" ? 'is-invalid' : ''}`}
+                        className={`form-control archivo-input ${!base64Logo && estado === "Error" ? 'is-invalid' : ''}`}
                         onChange={handleFileChange}
                     />
                     {!base64Logo && estado === "Error" && (

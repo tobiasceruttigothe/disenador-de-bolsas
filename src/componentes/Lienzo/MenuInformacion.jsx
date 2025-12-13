@@ -1,84 +1,78 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { apiClient } from "../../config/axios";
 
 export default function MenuInformacion({ plantilla }) {
-    const [nombre] = useState(plantilla.nombre);
-    const [material] = useState(plantilla.materialNombre);
-    const [tipoBolsa] = useState(plantilla.tipoBolsaNombre);
-    const [ancho] = useState(plantilla.ancho);
-    const [alto] = useState(plantilla.alto);
-    const [profundidad] = useState(plantilla.profundidad);
+    const [info, setInfo] = useState(null);
+    const [material1, setMaterial] = useState(null);
+    const [tipoBolsa1, setTipoBolsa] = useState(null);
+
+    const esId = (v) =>
+        typeof v === "number" || /^\d+$/.test(v);
+
+    useEffect(() => {
+        const cargarPlantilla = async () => {
+            try {
+                if (!plantilla) return;
+
+                if (esId(plantilla)) {
+                    const res = await apiClient.get(`/plantillas/${plantilla}`);
+                    setInfo(res.data.data);
+                } else {
+                    setInfo(plantilla);
+                    setMaterial(plantilla.materialNombre);
+                    setTipoBolsa(plantilla.tipoBolsaNombre);
+                }
+            } catch (e) {
+                console.error("Error al cargar la plantilla", e);
+            }
+        };
+
+        cargarPlantilla();
+    }, [plantilla]);
+
+    useEffect(() => {
+        if (info) console.log("Plantilla cargada:", info);
+    }, [info]);
+
+    if (!info) {
+        return <div className="p-4 text-muted">Cargando información...</div>;
+    }
+
+    const {
+        nombre,
+        material,
+        tipoBolsa,
+        ancho,
+        alto,
+        profundidad,
+    } = info;
+
 
     return (
-        <div
-            className="p-4 bg-white shadow-sm h-100 overflow-auto"
-            style={{ borderRight: "1px solid #dee2e6" }}
-        >
+        <div className="p-4 card-diseno shadow-sm h-100 overflow-auto">
             <h4 className="mb-4 text-primary fw-bold">
                 Información sobre la plantilla
             </h4>
 
-            {/* NOMBRE */}
-            <div className="mb-3">
-                <label className="form-label text-muted small fw-bold">
-                    NOMBRE:
-                    <span
-                        className="ms-1"
-                        style={{ textTransform: 'capitalize', fontWeight: 600 }}
-                    >
-                        {nombre}
-                    </span>
-                </label>
-            </div>
+            <Info label="Nombre" value={nombre} />
+            <Info label="Material" value={material?.nombre ?? material1} />
+            <Info label="Tipo de producto" value={tipoBolsa?.nombre ?? tipoBolsa1} />
+            <Info label="Ancho (cm)" value={ancho} />
+            <Info label="Alto (cm)" value={alto} />
+            <Info label="Profundidad (cm)" value={profundidad} />
+        </div>
+    );
+}
 
-            {/* MATERIAL */}
-            <div className="mb-3">
-                <label className="form-label text-muted small fw-bold">
-                    MATERIAL:
-                    <span
-                        className="ms-1"
-                        style={{ textTransform: 'capitalize', fontWeight: 600 }}
-                    >
-                        {material}
-                    </span>
-                </label>
-            </div>
-
-            {/* TIPO DE BOLSA */}
-            <div className="mb-3">
-                <label className="form-label text-muted small fw-bold">
-                    TIPO DE BOLSA:
-                    <span
-                        className="ms-1"
-                        style={{ textTransform: 'capitalize', fontWeight: 600 }}
-                    >
-                        {tipoBolsa}
-                    </span>
-                </label>
-            </div>
-
-            {/* ANCHO */}
-            <div className="mb-3">
-                <label className="form-label text-muted small fw-bold">
-                    ANCHO (cm):
-                    <span className="ms-1 fw-semibold">{ancho}</span>
-                </label>
-            </div>
-
-            {/* ALTO */}
-            <div className="mb-3">
-                <label className="form-label text-muted small fw-bold">
-                    ALTO (cm):
-                    <span className="ms-1 fw-semibold">{alto}</span>
-                </label>
-            </div>
-
-            {/* PROFUNDIDAD */}
-            <div className="mb-3">
-                <label className="form-label text-muted small fw-bold">
-                    PROFUNDIDAD (cm):
-                    <span className="ms-1 fw-semibold">{profundidad}</span>
-                </label>
-            </div>
+function Info({ label, value }) {
+    return (
+        <div className="mb-3">
+            <span className="text-muted small fw-bold text-uppercase">
+                {label}:
+            </span>
+            <span className="ms-2 fw-semibold text-capitalize">
+                {value}
+            </span>
         </div>
     );
 }

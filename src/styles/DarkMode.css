@@ -1,0 +1,97 @@
+.darkmode-toggle label {
+  width: 50px;
+  height: 30px;
+  position: relative;
+  display: block;
+  background: #ebebeb;
+  border-radius: 200px;
+  box-shadow:
+    inset 0px 5px 15px rgba(0, 0, 0, 0.4),
+    inset 0px -5px 15px rgba(255,255,255,0.4);
+  cursor: pointer;
+}
+
+/* Botón */
+.darkmode-toggle label:after {
+  content: "";
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  top: 0;
+  left: -5px;
+  background: linear-gradient(180deg,#ffcc89,#d8860b);
+  border-radius: 200px;
+  box-shadow: 0px 5px 10px rgba(0,0,0,0.2);
+}
+
+/* Input oculto SIN hitbox */
+.darkmode-toggle input {
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+.darkmode-toggle input:checked + label {
+  background: #9c9c9c;
+}
+
+.darkmode-toggle input:checked + label:after {
+  left: 60px;
+  transform: translateX(-100%);
+  background: linear-gradient(180deg,#f7f7f7,#afadad);
+}
+
+.darkmode-toggle label,
+.darkmode-toggle label:after {
+  transition: 0.3s;
+}
+
+.darkmode-toggle label:active:after { 
+  width: 20px; 
+}
+
+/* ÍCONOS */
+.darkmode-toggle label svg {
+  position: absolute;
+  top: 6px;
+  width: 18px;
+  z-index: 2;
+  pointer-events: none;
+
+  opacity: 0;
+  transform: scale(0.6);
+
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease;
+}
+
+/* ☀️ sol */
+.darkmode-toggle label svg.sun {
+  left: 2px;
+  fill: #242424;
+}
+
+/* 🌙 luna */
+.darkmode-toggle label svg.moon {
+  right: -4px;
+  fill: #494949;
+}
+
+/* visible cuando NO está checked */
+.darkmode-toggle input:not(:checked) + label svg.sun {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.17s;
+}
+
+/* visible cuando está checked */
+.darkmode-toggle input:checked + label svg.moon {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.17s;
+}
+
+
+
+

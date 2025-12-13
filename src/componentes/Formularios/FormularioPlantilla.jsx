@@ -174,7 +174,7 @@ export default function FormularioPlantilla() {
 
                 {/* Tipo de Bolsa (Select) */}
                 <div className="mb-3">
-                  <label className="form-label text-muted small fw-bold text-uppercase">Tipo de Bolsa</label>
+                  <label className="form-label text-muted small fw-bold text-uppercase">Tipo de Producto</label>
                   <select
                     className={`form-select form-select-lg bg-light border-0 ${errors.tipoBolsaId ? 'is-invalid' : ''}`}
                     style={{ fontSize: '0.95rem', cursor: 'pointer' }}

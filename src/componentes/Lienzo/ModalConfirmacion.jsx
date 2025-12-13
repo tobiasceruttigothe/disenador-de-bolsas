@@ -3,6 +3,10 @@ import React from 'react';
 const Modal = ({ isVisible, onClose, children }) => {
   if (!isVisible) return null;
 
+  let esDark = document.body.classList.contains("dark");
+
+  const color = esDark ? "#2c2c2c" : "#ffffff";
+
   return (
     <div
       style={{
@@ -21,7 +25,7 @@ const Modal = ({ isVisible, onClose, children }) => {
     >
       <div
         style={{
-          backgroundColor: 'white',
+          backgroundColor: color,
           padding: '20px',
           borderRadius: '8px',
           minWidth: '300px',

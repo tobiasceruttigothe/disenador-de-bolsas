@@ -203,7 +203,7 @@ export default function NuevoDiseno() {
   return (
     <div className="container-fluid fondo" style={{ paddingTop: "60px", paddingBottom: "80px" }}>
       <div className="row">
-        <div className="col-4 border-end">
+        <div className="col-4 border-end1" >
           <MenuDiseno
             agregarFoto={(foto) => agregarFigura("agregarFoto", foto)}
             plantillaElegida={plantillaElegida}
@@ -226,10 +226,8 @@ export default function NuevoDiseno() {
       </div>
 
       <button
-        className="boton-1"
-        style={{ backgroundColor: "white", color: "#016add", width: "150px", height: "50px", position: "fixed", bottom: "20px", right: "200px", fontWeight: "700" }}
-        onMouseEnter={(e) => {e.target.style.backgroundColor = '#016add'; e.target.style.color = "white";}}
-        onMouseLeave={(e) => {e.target.style.backgroundColor = 'white'; e.target.style.color = "#016add";}}
+        className="fondo-boton"
+        style={{width: "150px", height: "50px", position: "fixed", bottom: "20px", right: "200px", fontWeight: "700" }}
         onClick={() => navigate("/disenos")}
       >
         Cancelar

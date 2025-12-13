@@ -34,6 +34,7 @@ export default function CargarDiseno() {
         const fetchDiseno = async () => {
             try {
                 const res = await apiClient.get(`/disenos/${id}`);
+                setPlantillaElegida(res.data.data.plantillaId);
                 setDiseno(res.data.data);
                 setNombre(res.data.data.nombre)
                 setDescripcion(res.data.data.descripcion)
@@ -106,7 +107,7 @@ export default function CargarDiseno() {
             const res = await apiClient.put(`/disenos/${id}`, payload);
             mostrarExito("Diseño actualizado correctamente.");
             setTimeout(() => {
-                navigate("/disenos");
+                navigate(-1);
             }, 1500);
         } catch (error) {
             console.error("Error al guardar el diseño:", error);
@@ -123,7 +124,7 @@ export default function CargarDiseno() {
     return (
         <div className="container-fluid fondo" style={{ paddingTop: "60px", paddingBottom: "80px" }}>
             <div className="row">
-                <div className="col-4 border-end">
+                <div className="col-4 border-end1">
                     <MenuDiseno
                         agregarFoto={(foto) => agregarFigura("agregarFoto", foto)}
                         plantillaElegida={plantillaElegida}
@@ -145,10 +146,8 @@ export default function CargarDiseno() {
             </div>
 
             <button
-                className="boton-1"
-                style={{ color: "#016add", backgroundColor: "white", width: "150px", height: "50px", position: "fixed", bottom: "20px", right: "200px", fontWeight: "700" }}
-                onMouseEnter={(e) => { e.target.style.backgroundColor = '#016add'; e.target.style.color = "white"; }}
-                onMouseLeave={(e) => { e.target.style.backgroundColor = 'white'; e.target.style.color = "#016add"; }}
+                className="fondo-boton"
+                style={{ width: "150px", height: "50px", position: "fixed", bottom: "20px", right: "200px", fontWeight: "700" }}
                 onClick={() => navigate("/disenos")}
             >
                 Cancelar

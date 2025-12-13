@@ -1,6 +1,6 @@
 import { useState } from "react";
 // Asegúrate de que la ruta de la imagen sea correcta
-import imagenAgregarNuevo from '../../assets/agregarLogo.png'; 
+import imagenAgregarNuevo from '../../assets/agregarLogo.png';
 
 export default function MenuLogos({ agregarFoto, setLogosBool, logos }) {
 
@@ -14,11 +14,11 @@ export default function MenuLogos({ agregarFoto, setLogosBool, logos }) {
   };
 
   return (
-    <div className="p-4 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
-      
+    <div className="p-4 card-diseno shadow-sm h-100 overflow-auto">
+
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h4 className="mb-0 text-primary fw-bold">Mis Logos</h4>
-        <span className="badge bg-light text-muted border">{logos.length} disponibles</span>
+        <span className="badge text-muted border">{logos.length} disponibles</span>
       </div>
 
       <div className="mb-3 text-muted small">
@@ -35,33 +35,19 @@ export default function MenuLogos({ agregarFoto, setLogosBool, logos }) {
         gap: "15px",
         width: "100%"
       }}>
-        
+
         {/* TARJETA: AGREGAR NUEVO */}
-        <button
+        <div
+          role="button"
           onClick={handlerNuevo}
-          className="btn btn-outline-primary d-flex flex-column align-items-center justify-content-center p-3"
-          style={{
-            border: "2px dashed #016add",
-            borderRadius: "12px",
-            height: "110px",
-            backgroundColor: "#f8f9fa",
-            transition: "all 0.2s ease",
-            cursor: "pointer"
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = "#e7f1ff";
-            e.currentTarget.style.transform = "translateY(-3px)";
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = "#f8f9fa";
-            e.currentTarget.style.transform = "translateY(0)";
-          }}
+          className="btn-crear-diseno d-flex flex-column align-items-center justify-content-center p-3"
         >
           <div className="mb-2 text-primary">
             <i className="fa fa-plus-circle fa-2x"></i>
           </div>
-          <span style={{ fontSize: "0.8rem", fontWeight: "bold" }}>Nuevo Logo</span>
-        </button>
+          <span className="texto-nuevo-logo">Nuevo Logo</span>
+        </div>
+
 
         {/* TARJETAS: LOGOS EXISTENTES */}
         {logos.map((l, index) => (
@@ -90,8 +76,8 @@ export default function MenuLogos({ agregarFoto, setLogosBool, logos }) {
             }}
             title={l.nombre || `Logo ${index + 1}`}
           >
-            <div 
-              className="d-flex align-items-center justify-content-center mb-2" 
+            <div
+              className="d-flex align-items-center justify-content-center mb-2"
               style={{ width: "100%", height: "60px" }}
             >
               <img
@@ -104,9 +90,9 @@ export default function MenuLogos({ agregarFoto, setLogosBool, logos }) {
                 }}
               />
             </div>
-            
-            <span 
-              className="text-truncate w-100 text-center" 
+
+            <span
+              className="text-truncate w-100 text-center"
               style={{ fontSize: "0.75rem", color: "#6c757d", fontWeight: "500" }}
             >
               {l.nombre || `Logo ${index + 1}`}

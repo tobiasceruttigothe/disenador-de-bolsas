@@ -45,7 +45,6 @@ export default function MenuSelectorPlantilla({ plantillas, setPlantillaElegida,
             padding: "20px",
             width: "400px",
             height: "450px",
-            backgroundColor: "white",
             borderRadius: "8px",
             display: "flex",
             flexDirection: "column"
@@ -113,55 +112,14 @@ export default function MenuSelectorPlantilla({ plantillas, setPlantillaElegida,
                 gap: "10px"
             }}>
                 <button
-                    className="btn m-1"
-                    style={{
-                        border: "2px solid #016add",
-                        backgroundColor: "transparent",
-                        color: "#016add",
-                        fontWeight: "500",
-                        padding: "0.375rem 0.75rem",
-                        borderRadius: "0.375rem",
-                        cursor: "pointer",
-                        transition: "all 0.3s ease",
-                    }}
-                    onMouseOver={(e) => {
-                        e.currentTarget.style.backgroundColor = "#016add";
-                        e.currentTarget.style.color = "#fff";
-                        e.currentTarget.style.transform = "scale(1.05)";
-                    }}
-                    onMouseOut={(e) => {
-                        e.currentTarget.style.backgroundColor = "transparent";
-                        e.currentTarget.style.color = "#016add";
-                        e.currentTarget.style.transform = "scale(1)";
-                    }}
+                    className="btn boton-1"
                     onClick={() => navigate("/disenos")}
                 >
                     Volver a Mis Diseños
                 </button>
                 {plantillas.length > 0 && (
                     <button
-                        className={`btn m-1 ${!plantillaSeleccionada ? "disabled" : ""} `}
-                        style={{
-                            backgroundColor: "#016add",
-                            color: "#fff",
-                            border: "2px solid #016add",
-                            fontWeight: "500",
-                            padding: "0.375rem 0.75rem",
-                            borderRadius: "0.375rem",
-                            cursor: "pointer",
-                            transition: "all 0.3s ease",
-                        }}
-                        onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = "#014bb5";
-                            e.currentTarget.style.borderColor = "#014bb5";
-                            e.currentTarget.style.transform = "scale(1.05)";
-                        }}
-                        onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = "#016add";
-                            e.currentTarget.style.borderColor = "#016add";
-                            e.currentTarget.style.transform = "scale(1)";
-                        }}
-
+                        className="btn boton-2"
                         onClick={handleClick}
                     >
                         Confirmar selección

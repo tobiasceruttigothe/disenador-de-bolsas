@@ -116,7 +116,7 @@ export default function MenuVer({ setModalVer, disenoClick, setDisenoClick }) {
                 <br></br>
                 <h3>Datos del diseño: </h3>
                 <div>
-                    <p className="fw-bold" style={{ color: "black" }}>Nombre:</p>
+                    <p className="fw-bold">Nombre:</p>
 
                     <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                         <input
@@ -142,7 +142,7 @@ export default function MenuVer({ setModalVer, disenoClick, setDisenoClick }) {
                         {editNombre && (
                             <FaCheck
                                 size={15}
-                                style={{ cursor: "pointer", color: "black" }}
+                                style={{ cursor: "pointer"}}
                                 onClick={handleSubmit(handleEditNombre)}
                             />
                         )}
@@ -158,7 +158,7 @@ export default function MenuVer({ setModalVer, disenoClick, setDisenoClick }) {
 
                     <br />
                     <div>
-                        <p className="fw-bold" style={{ color: "black" }}>Descripción:</p>
+                        <p className="fw-bold">Descripción:</p>
 
                         <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                             <input
@@ -180,7 +180,7 @@ export default function MenuVer({ setModalVer, disenoClick, setDisenoClick }) {
                             {editDescripcion && (
                                 <FaCheck
                                     size={15}
-                                    style={{ cursor: "pointer", color: "black" }}
+                                    style={{ cursor: "pointer"}}
                                     onClick={handleSubmit(handleEditDesc)}
                                 />
                             )}
@@ -191,22 +191,22 @@ export default function MenuVer({ setModalVer, disenoClick, setDisenoClick }) {
 
 
                     <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-                        <p style={{ color: "black", fontWeight: "bold" }}>Fecha de creación: <span style={{ fontWeight: "normal" }}>{disenoClick.fechaCreacion.split("T")[0]}</span></p>
+                        <p style={{fontWeight: "bold" }}>Fecha de creación: <span style={{ fontWeight: "normal" }}>{disenoClick.fechaCreacion.split("T")[0]}</span></p>
                     </div>
                     <br></br>
                     <div style={{ marginTop: "10px", marginBottom: "10px" }}>
                         <h3>Datos de la plantilla: </h3>
-                        <p style={{ color: "black", fontWeight: "bold" }}>Nombre: <span style={{ fontWeight: "normal" }}>{disenoClick.plantillaNombre}</span></p>
-                        <p style={{ color: "black", fontWeight: "bold" }}>Material: <span style={{ fontWeight: "normal" }}>{material}</span></p>
-                        <p style={{ color: "black", fontWeight: "bold" }}>Tipo de bolsa: <span style={{ fontWeight: "normal" }}>{tipoBolsa}</span></p>
-                        <p style={{ color: "black", fontWeight: "bold" }}>Ancho: <span style={{ fontWeight: "normal" }}>{ancho}</span></p>
-                        <p style={{ color: "black", fontWeight: "bold" }}>Alto: <span style={{ fontWeight: "normal" }}>{alto}</span></p>
-                        <p style={{ color: "black", fontWeight: "bold" }}>Profundidad: <span style={{ fontWeight: "normal" }}>{profundidad}</span></p>
+                        <p style={{fontWeight: "bold" }}>Nombre: <span style={{ fontWeight: "normal" }}>{disenoClick.plantillaNombre}</span></p>
+                        <p style={{fontWeight: "bold" }}>Material: <span style={{ fontWeight: "normal" }}>{material}</span></p>
+                        <p style={{fontWeight: "bold" }}>Tipo de bolsa: <span style={{ fontWeight: "normal" }}>{tipoBolsa}</span></p>
+                        <p style={{fontWeight: "bold" }}>Ancho: <span style={{ fontWeight: "normal" }}>{ancho}</span></p>
+                        <p style={{fontWeight: "bold" }}>Alto: <span style={{ fontWeight: "normal" }}>{alto}</span></p>
+                        <p style={{fontWeight: "bold" }}>Profundidad: <span style={{ fontWeight: "normal" }}>{profundidad}</span></p>
                     </div>
                     <br></br>
                     <div>
                         <h3 style={{ color: "black" }}> Vista previa del diseño: </h3>
-                        <img style={{ border: "1px solid rgba(200, 204, 195, 0.85)", borderRadius: "5px", maxWidth: "1000px", maxHeight: "750px" }}
+                        <img className="borde" style={{ borderRadius: "16px", maxWidth: "1000px", maxHeight: "750px" }}
                             src={`data:image/png;base64,${disenoClick.base64Preview}`} />
                     </div>
                     <br />

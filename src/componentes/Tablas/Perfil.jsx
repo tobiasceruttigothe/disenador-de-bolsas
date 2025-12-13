@@ -47,43 +47,22 @@ export default function Perfil() {
             {/* --- DISEÑO DE PERFIL PROFESIONAL --- */}
             <div className="min-vh-100 fondo pb-5" style={{ paddingTop: "150px" }}>
 
-                <div className="container">
+                <div className="container" styles={{ backgroundColor: 'red' }}>
                     <div className="row justify-content-center">
                         <div className="col-12 col-md-8 col-lg-6">
-
-                            {/* Tarjeta de Perfil */}
-                            <div className="card shadow-lg border-0 rounded-4 overflow-hidden">
-
-                                {/* Cabecera con color corporativo */}
+                            <div className="tabla-card">
                                 <div
                                     className="card-header text-center py-5 position-relative"
-                                    style={{
-                                        backgroundColor: primaryColor,
-                                        color: 'white',
-                                        borderBottom: '5px solid rgba(0,0,0,0.1)'
-                                    }}
                                 >
                                     {/* Avatar Circular */}
-                                    <div
-                                        className="d-flex justify-content-center align-items-center mx-auto shadow"
-                                        style={{
-                                            width: "100px",
-                                            height: "100px",
-                                            backgroundColor: "white",
-                                            color: primaryColor,
-                                            borderRadius: "50%",
-                                            fontSize: "2.5rem",
-                                            fontWeight: "bold",
-                                            marginBottom: "10px"
-                                        }}
-                                    >
+                                    <div className="avatar-circle">
                                         {getInicial()}
                                     </div>
 
                                     <h3 className="fw-bold mb-0 text-uppercase">
                                         {rol === "cliente" ? razonSocial : nombre}
                                     </h3>
-                                    <span className="badge bg-white text-primary mt-2 px-3 rounded-pill text-uppercase">
+                                    <span className="role-badge">
                                         {rol}
                                     </span>
                                 </div>
@@ -95,27 +74,27 @@ export default function Perfil() {
                                     <div className="row g-3">
                                         {/* Nombre de Usuario */}
                                         <div className="col-12 col-md-6">
-                                            <div className="p-3 bg-light rounded-3 h-100 border-start border-4 border-primary">
+                                            <div className="custom-box">
                                                 <small className="text-uppercase text-muted fw-bold" style={{ fontSize: '0.7rem' }}>Usuario</small>
-                                                <p className="mb-0 fw-bold text-dark fs-5">{nombre}</p>
+                                                <p className="mb-0 fw-bold fs-5">{nombre}</p>
                                             </div>
                                         </div>
 
                                         {/* Email */}
                                         <div className="col-12 col-md-6">
-                                            <div className="p-3 bg-light rounded-3 h-100 border-start border-4 border-primary">
+                                            <div className="custom-box">
                                                 <small className="text-uppercase text-muted fw-bold" style={{ fontSize: '0.7rem' }}>Email</small>
-                                                <p className="mb-0 fw-bold text-dark text-break">{email}</p>
+                                                <p className="mb-0 fw-bold">{email}</p>
                                             </div>
                                         </div>
 
                                         {/* Dato condicional (Razón social o Nombre empleado) */}
                                         <div className="col-12">
-                                            <div className="p-3 bg-light rounded-3 border-start border-4 border-primary">
+                                            <div className="custom-box">
                                                 <small className="text-uppercase text-muted fw-bold" style={{ fontSize: '0.7rem' }}>
                                                     {rol === "cliente" ? "Razón Social / Empresa" : "Nombre del Empleado"}
                                                 </small>
-                                                <p className="mb-0 fw-bold text-dark fs-5">
+                                                <p className="mb-0 fw-bold">
                                                     {razonSocial}
                                                 </p>
                                             </div>
@@ -125,15 +104,14 @@ export default function Perfil() {
                                     {/* Sección de Seguridad */}
                                     <div className="mt-5">
                                         <h5 className="text-muted mb-3 border-bottom pb-2">Seguridad</h5>
-                                        <div className="d-flex justify-content-between align-items-center bg-white border rounded p-3">
+                                        <div className="d-flex justify-content-between align-items-center custom-box">
                                             <div>
-                                                <p className="mb-0 fw-bold text-dark">Contraseña</p>
+                                                <p className="mb-0 fw-bold">Contraseña</p>
                                                 <small className="text-muted">••••••••</small>
                                             </div>
                                             <button
-                                                className="btn btn-outline-primary rounded-pill px-4"
+                                                className="btn boton-cambiar"
                                                 onClick={handleContraseña}
-                                                style={{ borderColor: primaryColor, color: primaryColor }}
                                                 onMouseOver={(e) => {
                                                     e.target.style.backgroundColor = primaryColor;
                                                     e.target.style.color = 'white';

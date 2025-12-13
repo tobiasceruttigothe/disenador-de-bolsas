@@ -18,12 +18,12 @@ export default function MenuPincel({ activarModoDibujo }) {
     };
 
     return (
-        <div className="p-4 bg-white shadow-sm h-100 overflow-auto" style={{ borderRight: "1px solid #dee2e6" }}>
+        <div className="p-4 card-diseno  shadow-sm h-100 overflow-auto">
 
             <h4 className="mb-4 text-primary fw-bold">Pincel</h4>
 
             {/* SECCIÓN DE COLOR CON PALETA */}
-            <div className="mb-4 bg-light p-3 rounded border">
+            <div className="mb-4 fondo-menu">
                 <label className="form-label text-muted small fw-bold mb-2">COLOR DEL PINCEL</label>
                 <div className="d-flex align-items-center gap-2 mb-3">
                     <div className="d-flex align-items-center bg-white p-1 rounded border flex-grow-1">
@@ -93,7 +93,7 @@ export default function MenuPincel({ activarModoDibujo }) {
             </button>
 
             {/* VISTA PREVIA */}
-            <div className="p-3 bg-light rounded border text-center">
+            <div className="fondo-menu">
                 <small className="text-muted d-block mb-2 text-uppercase fw-bold" style={{ fontSize: '0.7rem' }}>Vista previa</small>
                 <div className="d-flex justify-content-center align-items-center bg-white rounded border" style={{ height: "60px" }}>
                     <div style={{ width: grosor, height: grosor, borderRadius: "50%", backgroundColor: color, boxShadow: "0 2px 4px rgba(0,0,0,0.2)" }} />

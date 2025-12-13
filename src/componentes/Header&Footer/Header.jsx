@@ -4,11 +4,10 @@ import Cookies from 'js-cookie';
 import logo from '../../assets/pack designer blanco.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiLogOut, FiUser, FiMenu } from 'react-icons/fi';
+import DarkModeSwitch from './DarkModeSwitch';
 
 export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }) {
   const navigate = useNavigate();
-
-  // 🔥 Dark mode
   const [darkMode, setDarkMode] = useState(false);
 
   useEffect(() => {
@@ -17,7 +16,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
 
   useEffect(() => {
     setNombre(Cookies.get('nombre') || "");
-  }, [nombre]);
+  }, []);
 
   const cerrarSesion = (e) => {
     e.preventDefault();
@@ -26,18 +25,12 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
     Cookies.remove('rol');
     Cookies.remove('nombre');
     Cookies.remove('mail');
-    document.body.classList.toggle("dark", false);
+    document.body.classList.remove("dark");
     setLogeado(false);
-
   };
 
   const MenuItem = ({ to, label }) => (
-    <NavDropdown.Item 
-      as={Link} 
-      to={to} 
-      className="py-2 px-3"
-      style={{ fontSize: '0.95rem', color: '#495057' }}
-    >
+    <NavDropdown.Item as={Link} to={to} className="py-2 px-3">
       {label}
     </NavDropdown.Item>
   );
@@ -51,8 +44,9 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
             <MenuItem to="/disenos" label="Mis diseños" />
             <MenuItem to="/nuevoDiseno" label="Nuevo diseño" />
             <MenuItem to="/logos" label="Mis logos" />
-            <NavDropdown.Divider />
+            <div className="borde-arriba" />
             <MenuItem to="/perfil" label="Mi Perfil" />
+
           </>
         );
       case "disenador":
@@ -61,7 +55,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
             <MenuItem to="/" label="Inicio" />
             <MenuItem to="/verClientes" label="Ver Clientes" />
             <MenuItem to="/nuevoDiseno" label="Nuevo diseño" />
-            <NavDropdown.Divider />
+            <div className="borde-arriba" />
             <MenuItem to="/perfil" label="Mi Perfil" />
           </>
         );
@@ -73,7 +67,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
             <MenuItem to="/clientes" label="Clientes" />
             <MenuItem to="/admins" label="Administradores" />
             <MenuItem to="/productos" label="Productos" />
-            <NavDropdown.Divider />
+            <div className="borde-arriba" />
             <MenuItem to="/perfil" label="Mi Perfil" />
           </>
         );
@@ -84,102 +78,94 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
 
   return (
     <Navbar
-      expand="lg"
       fixed="top"
       className="shadow"
       style={{
         background: darkMode
           ? "linear-gradient(90deg, #0f172a 0%, #1e293b 100%)"
           : "linear-gradient(90deg, #016add 0%, #015bbd 100%)",
-        padding: "0.6rem 0",
         zIndex: 1030
       }}
     >
-      <Container fluid className="px-4">
+      <Container fluid className="px-4 d-flex align-items-center">
 
-        {/* IZQUIERDA: Menú */}
-        <Nav className="me-auto">
+        {/* IZQUIERDA */}
+        <Nav className="flex-grow-1">
           <NavDropdown
-            title={<FiMenu size={28} color="white" />}
-            id="nav-dropdown"
-            menuVariant="light"
+            title={<FiMenu size={26} color="white" />}
+            id="menu-dropdown"
             className="no-arrow-dropdown"
-            style={{ marginLeft: '-10px' }}
           >
-            <div className="px-3 py-2 text-muted small fw-bold text-uppercase bg-light border-bottom mb-2">
+            <div className="px-3 py-2 text-muted small fw-bold text-uppercase">
               Navegación
             </div>
+            <div className="borde-arriba" />
             {renderMenuItems()}
           </NavDropdown>
         </Nav>
 
-        {/* CENTRO: Logo */}
-        <div 
-          className="position-absolute start-50 translate-middle-x d-flex align-items-center"
-          style={{ cursor: "pointer" }} 
+        {/* CENTRO */}
+        <div
+          className="flex-grow-1 d-flex align-items-center justify-content-center"
+          style={{ cursor: "pointer" }}
           onClick={() => navigate("/inicio")}
         >
-          <img
-            src={logo}
-            alt="Pack Designer Logo"
-            height="40"
-            className="me-2"
-            style={{ filter: "drop-shadow(0px 2px 2px rgba(0,0,0,0.1))" }}
-          />
-          <h5 style={{color:"white"}} className="m-0 fw-bold d-none d-sm-block">
+          <img src={logo} alt="Logo" height="38" className="me-2" />
+          <h5 className="text-white m-0 fw-bold d-none d-sm-block">
             Pack Designer
           </h5>
         </div>
 
-        {/* DERECHA: Perfil + DarkMode */}
-        <Nav className="ms-auto align-items-center">
+        {/* DERECHA */}
+        <Nav className="flex-grow-1 d-flex justify-content-end align-items-center gap-3">
+          <div className="d-flex align-items-center" style={{ position: "absolute", top: "0px", right: "160px"}}>
+            <DarkModeSwitch darkMode={darkMode} setDarkMode={setDarkMode} />
+          </div>
 
-          {/* Switch Dark Mode */}
-          <label className="me-3 d-flex align-items-center" style={{ cursor: "pointer", color: "white" }}>
-            <input 
-              type="checkbox" 
-              checked={darkMode}
-              onChange={() => setDarkMode(!darkMode)}
-              style={{ marginRight: "6px" }}
-            />
-            <span className="small">Oscuro</span>
-          </label>
-
-          <span className="text-white me-2 d-none d-md-block small opacity-75">
+          <span className="text-white small opacity-75 d-none d-md-block">
             {nombre || "Usuario"}
           </span>
 
           <NavDropdown
             align="end"
             title={
-              <div className="d-flex align-items-center bg-white bg-opacity-25 rounded-circle p-2 hover-effect">
-                <FiUser size={20} color="white" />
+              <div className="bg-white bg-opacity-25 rounded-circle p-2">
+                <FiUser size={25} color="white" />
               </div>
             }
             id="user-dropdown"
-            menuVariant="light"
           >
-            <div className="px-4 py-2 text-center border-bottom mb-2">
+            <div className="px-4 py-2 text-center header-dropdown">
               <strong className="d-block text-primary">{nombre}</strong>
-              <small className="text-uppercase" style={{fontSize: '0.7rem', color: "black"}}>{tipoUsuario == "admin" ? "adm. gerencial" : tipoUsuario}</small>
+              <small className="text-muted text-uppercase">
+                {tipoUsuario === "admin" ? "Gerente" : tipoUsuario}
+              </small>
             </div>
 
             <MenuItem to="/perfil" label="Mi Perfil" />
+            <div className="borde-arriba" />
 
-            <NavDropdown.Divider />
-
-            <NavDropdown.Item onClick={cerrarSesion} className="text-danger py-2 px-3 fw-bold">
-              <FiLogOut className="me-2" /> Salir
+            <NavDropdown.Item
+              onClick={cerrarSesion}
+              className="text-danger fw-bold"
+            >
+              <FiLogOut className="me-2" />
+              Salir
             </NavDropdown.Item>
           </NavDropdown>
         </Nav>
+
 
       </Container>
 
       <style>{`
         .dropdown-toggle::after { display: none !important; }
-        .hover-effect:hover { background-color: rgba(255,255,255,0.4) !important; transition: 0.3s; }
-        .dropdown-menu { border: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.15); border-radius: 12px; overflow: hidden; margin-top: 12px; }
+        .dropdown-menu {
+          border: 0;
+          box-shadow: 0 10px 30px rgba(0,0,0,.15);
+          border-radius: 12px;
+          margin-top: 10px;
+        }
       `}</style>
     </Navbar>
   );

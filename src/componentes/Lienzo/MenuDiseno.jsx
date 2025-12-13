@@ -23,15 +23,15 @@ export default function MenuDiseno({
   const [opcion, setOpcion] = useState("imagen");
 
   return (
-    <div className="card shadow-sm mt-3" style={{ height: "100%", maxHeight: "800px", overflow: "hidden" }}>
-      <div className="card-header bg-white py-3">
+    <div className="card-diseño shadow-sm mt-3" style={{ height: "100%", maxHeight: "800px", overflow: "hidden" }}>
+      <div className="card-header card-menu py-3">
         <h5 className="mb-0 fw-bold text-primary">Menú de Diseño</h5>
       </div>
       
       <div className="d-flex" style={{ height: "100%" }}>
         {/* Sidebar Navigation */}
         <div 
-          className="d-flex flex-column bg-light border-end"
+          className="d-flex flex-column card-opciones"
           style={{ 
             width: "100px", 
             minWidth: "100px",
@@ -79,7 +79,7 @@ export default function MenuDiseno({
         </div>
 
         {/* Content Area - This is where sub-menus render */}
-        <div className="flex-grow-1 bg-white" style={{ overflowY: "auto", position: "relative" }}>
+        <div className="flex-grow-1" style={{ overflowY: "auto", position: "relative" }}>
           {opcion === "imagen" && <MenuImagen agregarFoto={agregarFoto} />}
           
           {opcion === "texto" && (
