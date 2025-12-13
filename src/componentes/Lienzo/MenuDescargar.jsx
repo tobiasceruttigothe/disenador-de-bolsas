@@ -59,9 +59,9 @@ export default function MenuDescargar({ setModalDescargar, disenoClick, setDisen
 
     const handlePDF = async () => {
         crearPDF(
-            base, 
-            disenoClick.nombre, 
-            disenoClick.descripcion, 
+            base,
+            disenoClick.nombre,
+            disenoClick.descripcion,
             disenoClick.plantillaNombre,
             material,
             tipoBolsa,
@@ -114,15 +114,16 @@ export default function MenuDescargar({ setModalDescargar, disenoClick, setDisen
             </div>
 
             {/* Botón volver */}
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                <button
-                    className="boton-2 w-25 mt-3 me-3"
-                    onClick={() => { setModalDescargar(false); setDisenoClick() }}
-                    type="submit"
-                >
-                    Volver
-                </button>
-            </div>
+            <button
+                className="boton-2 w-25 mt-3 ms-3"
+                onClick={() => {
+                    setModalDescargar(false);
+                    setDisenoClick();
+                }}
+                type="button"
+            >
+                Volver
+            </button>
         </div>
     )
 }

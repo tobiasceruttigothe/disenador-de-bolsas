@@ -11,9 +11,10 @@ import MenuVer from "./MenuVer";
 import MenuDescargar from "./MenuDescargar";
 import Menu3d from "./Menu3d";
 import Modal from "./ModalConfirmacion";
+import MenuEstado from "./MenuEstado";
 
 // Estilos e Imágenes
-import bolsa from '../../assets/pack designer final.png'; 
+import bolsa from '../../assets/pack designer final.png';
 import "../../index.css";
 import "../../styles/main.css";
 
@@ -28,6 +29,9 @@ export default function SelectorDiseno() {
   const [modalDescargar, setModalDescargar] = useState(false);
   const [modal3d, setModal3d] = useState(false);
   const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null });
+  const [modalEstado, setModalEstado] = useState(false);
+
+  const [verEstados, setVerEstados] = useState(false);
 
   // --- LÓGICA DE CARGA ---
   const fetchDisenos = async () => {
@@ -68,6 +72,11 @@ export default function SelectorDiseno() {
   const handleEliminarClick = (id) => {
     setModalEliminar({ visible: true, id });
   };
+
+  const handleEstado = (diseno) => {
+    setDisenoClick(diseno);
+    setModalEstado(true);
+  }
 
   const confirmarEliminar = async () => {
     const id = modalEliminar.id;
@@ -119,9 +128,9 @@ export default function SelectorDiseno() {
 
       {/* Contenedor con FONDO DE CÍRCULOS (clase 'fondo') */}
       <div className="min-vh-100 fondo" style={{ paddingTop: "100px", paddingBottom: "80px" }}>
-        
+
         <div className="container">
-          
+
           {/* Encabezado */}
           <div className="d-flex justify-content-between align-items-center mb-5">
             <div>
@@ -130,46 +139,66 @@ export default function SelectorDiseno() {
             </div>
           </div>
 
+          <div className="mb-5 d-flex">
+              <label className="switch-toggle">
+                <input
+                  type="checkbox"
+                  checked={verEstados}
+                  onChange={() => { setVerEstados(!verEstados); }}
+                />
+                <span className="switch-slider"></span>
+              </label>
+              <h5 className="ms-3">Ver estados de los diseños</h5>
+          </div>
           {/* Grid de Diseños */}
           <div className="row g-4">
             
+
+
             {/* LISTA DE DISEÑOS EXISTENTES */}
             {disenos.length > 0 ? (
               disenos.map((diseno) => (
                 <div key={diseno.id} className="col-12 col-md-6 col-lg-4">
-                  <div className="card-opcion h-100 shadow-sm overflow-hidden" style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
-                    
-                    {/* --- CORRECCIÓN IMAGEN DEL DISEÑO --- */}
-                    <div 
-                      className="position-relative bg-white border-bottom d-flex align-items-center justify-content-center"
-                      style={{ 
-                        height: "240px", // Altura fija para el contenedor
-                        width: "100%",   // Ancho total
-                        cursor: "pointer", 
-                        overflow: "hidden",// Fondo gris muy suave por si la imagen tiene transparencia
+
+                  <div className={`${verEstados ? `borde-estado-${diseno.status}` : "card-opcion"} h-100 shadow-sm overflow-hidden`} style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
+                    <div
+                      className="position-relative border-bottom d-flex align-items-center justify-content-center"
+                      style={{
+                        height: "240px",
+                        width: "100%",
+                        cursor: "pointer",
+                        overflow: "hidden",
                       }}
                       onClick={() => handleClick(diseno)}
                     >
-                      <img 
-                        // FIX: Quité el espacio después de "base64,". Esto suele romper imágenes generadas.
-                        src={`data:image/png;base64,${diseno.base64Preview}`} 
-                        alt={diseno.nombre} 
+                      <img
+                        src={`data:image/png;base64,${diseno.base64Preview}`}
+                        alt={diseno.nombre}
                         className="img-fluid"
-                        style={{ 
-                          width: "100%", 
-                          height: "100%", 
-                          objectFit: "contain", // Asegura que la imagen entera se vea sin recortes
-                          transition: "transform 0.3s" 
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "contain",
+                          transition: "transform 0.3s",
+                          zIndex: 1,
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
                         onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                       />
+                      {verEstados && (
+                        <span
+                          className={`position-absolute top-0 end-0 cuadro-estado-${diseno.status}`}
+                          style={{ fontSize: "1rem", zIndex: 10, borderRadius: "0 0 0 8px" }}
+                        >
+                          {diseno.status}
+                        </span>
+                      )}
                     </div>
 
                     <div className="card-body p-4">
                       <div className="d-flex justify-content-between align-items-start mb-2">
                         <h5 className="card-title fw-bold text-dark mb-0 text-truncate" title={diseno.nombre}>{diseno.nombre}</h5>
-                        
+
                         {/* Menú de 3 puntos */}
                         <div className="dropdown">
                           <button className="btn btn-sm" type="button" data-bs-toggle="dropdown">
@@ -179,7 +208,8 @@ export default function SelectorDiseno() {
                             <li><button className="texto-menu dropdown-item" onClick={() => handleVer(diseno)}><i className="fa fa-eye me-2 text-primary"></i> Ver detalles</button></li>
                             <li><button className="texto-menu dropdown-item" onClick={() => handleDescargar(diseno)}><i className="fa fa-download me-2 text-success"></i> Descargar</button></li>
                             <li><button className="texto-menu dropdown-item" onClick={() => handleGenerar(diseno)}><i className="fa fa-cube me-2 text-warning"></i> Vista 3D</button></li>
-                            <li><hr className="divider-menu"/></li>
+                            <li><button className="texto-menu dropdown-item" onClick={() => handleEstado(diseno)}><i className="fa fa-toggle-on me-2 text-secondary"></i> Gestionar Estado</button></li>
+                            <li><hr className="divider-menu" /></li>
                             <li><button className="dropdown-item text-danger" onClick={() => handleEliminarClick(diseno.id)}><i className="fa fa-trash me-2"></i> Eliminar</button></li>
                           </ul>
                         </div>
@@ -191,8 +221,8 @@ export default function SelectorDiseno() {
 
                       {/* Botones de acción rápida */}
                       <div className="d-grid gap-2">
-                        <button 
-                          className="btn boton-cambiar" 
+                        <button
+                          className="btn boton-cambiar"
                           onClick={() => handleClick(diseno)}
                         >
                           <i className="fa fa-edit me-2"></i> Editar
@@ -214,27 +244,27 @@ export default function SelectorDiseno() {
             {/* TARJETA DE "CREAR NUEVO" (DISEÑO MEJORADO CON LOGO) */}
             <div className="col-12 col-md-6 col-lg-4">
               <Link to="/nuevoDiseno" style={{ textDecoration: 'none' }}>
-                <div 
+                <div
                   className="card-opcion h-100 d-flex align-items-center justify-content-center text-center p-5 position-relative overflow-hidden"
 
                 >
                   <div>
-                    <div className="d-flex align-items-center justify-content-center mx-auto mb-4" 
-                         style={{ width: "100px", height: "100px" }}>
-                      <img 
-                        src={bolsa} 
-                        alt="Nuevo Diseño" 
-                        style={{ width: "70px", height: "70px", objectFit: "contain" }} 
+                    <div className="d-flex align-items-center justify-content-center mx-auto mb-4"
+                      style={{ width: "100px", height: "100px" }}>
+                      <img
+                        src={bolsa}
+                        alt="Nuevo Diseño"
+                        style={{ width: "70px", height: "70px", objectFit: "contain" }}
                       />
                     </div>
-                    
+
                     <h4 className="fw-bold mb-2" style={{ color: primaryColor }}>
                       Crear Nuevo Diseño
                     </h4>
                     <p className="text-muted small mb-0">
                       Comenzar desde una plantilla en blanco
                     </p>
-                    
+
                     <div className="mt-4 text-primary opacity-50">
                       <i className="fa fa-plus-circle fa-2x"></i>
                     </div>
@@ -250,14 +280,26 @@ export default function SelectorDiseno() {
         <Modal isVisible={modalVer} onClose={() => { setModalVer(false); setDisenoClick() }}>
           <MenuVer setModalVer={setModalVer} disenoClick={disenoClick} setDisenoClick={setDisenoClick} />
         </Modal>
-        
+
         <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
           <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick} />
         </Modal>
-        
+
         <Modal isVisible={modal3d} onClose={() => { setModal3d(false); setDisenoClick() }}>
           <Menu3d
             setModal3d={setModal3d}
+            disenoClick={disenoClick}
+            setDisenoClick={setDisenoClick}
+            onSuccess={mostrarExito}
+            onError={mostrarError}
+            onUpdateDisenos={fetchDisenos}
+          />
+        </Modal>
+
+        {/* CAMBIAR */}
+        <Modal isVisible={modalEstado} onClose={() => { setModalEstado(false); setDisenoClick() }}>
+          <MenuEstado
+            setModalEstado={setModalEstado}
             disenoClick={disenoClick}
             setDisenoClick={setDisenoClick}
             onSuccess={mostrarExito}

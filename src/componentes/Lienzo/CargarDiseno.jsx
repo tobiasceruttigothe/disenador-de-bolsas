@@ -11,6 +11,7 @@ import ModalLogos from "./ModalLogos.jsx";
 import Modal from "./ModalConfirmacion.jsx"
 
 
+
 export default function CargarDiseno() {
     const canvasRef = useRef(null);
     const canvasInstance = useRef(null);

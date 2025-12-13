@@ -10,7 +10,7 @@ import ModalConfirmacion from '../ModalConfirmacion';
 import MenuVer from "./MenuVer";
 import MenuDescargar from "./MenuDescargar";
 import Modal from "./ModalConfirmacion";
-
+import MenuEstado from "./MenuEstado";
 // Estilos
 import bolsa from '../../assets/pack designer final.png';
 import "../../index.css";
@@ -29,8 +29,10 @@ export default function VerDisenosCliente() {
   const [modalVer, setModalVer] = useState(false);
   const [modalDescargar, setModalDescargar] = useState(false);
   const [modalEliminar, setModalEliminar] = useState({ visible: false, id: null });
+  const [modalEstado, setModalEstado] = useState(false);
 
-  // --- LÓGICA DE CARGA ---
+  const [verEstados, setVerEstados] = useState(false);
+
   useEffect(() => {
     if (!id) return;
 
@@ -74,11 +76,14 @@ export default function VerDisenosCliente() {
     console.log("Generar 3D", diseno);
   };
 
-
-
   const handleEliminarClick = (id) => {
     setModalEliminar({ visible: true, id });
   };
+
+  const handleEstado = (diseno) => {
+    setDisenoClick(diseno);
+    setModalEstado(true);
+  }
 
   const confirmarEliminar = async () => {
     const id = modalEliminar.id;
@@ -130,7 +135,17 @@ export default function VerDisenosCliente() {
               <p className="text-muted mb-0">Gestiona y edita tus creaciones guardadas</p>
             </div>
           </div>
-
+          <div className="mb-5 d-flex">
+            <label className="switch-toggle">
+              <input
+                type="checkbox"
+                checked={verEstados}
+                onChange={() => { setVerEstados(!verEstados); }}
+              />
+              <span className="switch-slider"></span>
+            </label>
+            <h5 className="ms-3">Ver estados de los diseños</h5>
+          </div>
           {/* Grid de Diseños */}
           <div className="row g-4">
 
@@ -138,32 +153,40 @@ export default function VerDisenosCliente() {
             {disenos.length > 0 ? (
               disenos.map((diseno) => (
                 <div key={diseno.id} className="col-12 col-md-6 col-lg-4">
-                  <div className="card-opcion h-100 shadow-sm overflow-hidden" style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
-
-                    {/* --- CORRECCIÓN IMAGEN DEL DISEÑO --- */}
+                  <div className={`${verEstados ? `borde-estado-${diseno.status}` : "card-opcion"} h-100 shadow-sm overflow-hidden`} style={{ borderRadius: "16px", transition: "transform 0.2s" }}>
                     <div
-                      className="position-relative d-flex align-items-center justify-content-center"
+                      className="position-relative border-bottom d-flex align-items-center justify-content-center"
                       style={{
-                        height: "240px", // Altura fija para el contenedor
-                        width: "100%",   // Ancho total
+                        height: "240px",
+                        width: "100%",
                         cursor: "pointer",
-                        overflow: "hidden", // Padding para que la imagen respire
-                        backgroundColor: "transparent" // Fondo gris muy suave por si la imagen tiene transparencia
+                        overflow: "hidden",
                       }}
                       onClick={() => handleClick(diseno)}
                     >
                       <img
-                        // FIX: Quité el espacio después de "base64,". Esto suele romper imágenes generadas.
                         src={`data:image/png;base64,${diseno.base64Preview}`}
                         alt={diseno.nombre}
+                        className="img-fluid"
                         style={{
                           width: "100%",
-                          height: "100%",  // Asegura que la imagen entera se vea sin recortes
-                          transition: "transform 0.3s"
+                          height: "100%",
+                          objectFit: "contain",
+                          transition: "transform 0.3s",
+                          zIndex: 1,
                         }}
                         onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.05)"}
                         onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
                       />
+                      {/* CAMBIAR */}
+                      {verEstados && (
+                        <span
+                          className={`position-absolute top-0 end-0 cuadro-estado-${diseno.status}`}
+                          style={{ fontSize: "1rem", zIndex: 10, borderRadius: "0 0 0 8px" }}
+                        >
+                          {diseno.status}
+                        </span>
+                      )}
                     </div>
 
                     <div className="card-body p-4">
@@ -179,6 +202,7 @@ export default function VerDisenosCliente() {
                             <li><button className="texto-menu dropdown-item" onClick={() => handleVer(diseno)}><i className="fa fa-eye me-2 text-primary"></i> Ver detalles</button></li>
                             <li><button className="texto-menu dropdown-item" onClick={() => handleDescargar(diseno)}><i className="fa fa-download me-2 text-success"></i> Descargar</button></li>
                             <li><button className="texto-menu dropdown-item" onClick={() => handleGenerar(diseno)}><i className="fa fa-cube me-2 text-warning"></i> Vista 3D</button></li>
+                            <li><button className="texto-menu dropdown-item" onClick={() => handleEstado(diseno)}><i className="fa fa-toggle-on me-2 text-secondary"></i> Gestionar Estado</button></li>
                             <li><hr className="divider-menu" /></li>
                             <li><button className="dropdown-item text-danger" onClick={() => handleEliminarClick(diseno.id)}><i className="fa fa-trash me-2"></i> Eliminar</button></li>
                           </ul>
@@ -253,6 +277,16 @@ export default function VerDisenosCliente() {
 
         <Modal isVisible={modalDescargar} onClose={() => { setModalDescargar(false); setDisenoClick() }}>
           <MenuDescargar setModalDescargar={setModalDescargar} disenoClick={disenoClick} setDisenoClick={setDisenoClick} />
+        </Modal>
+
+        <Modal isVisible={modalEstado} onClose={() => { setModalEstado(false); setDisenoClick() }}>
+          <MenuEstado
+            setModalEstado={setModalEstado}
+            disenoClick={disenoClick}
+            setDisenoClick={setDisenoClick}
+            onSuccess={mostrarExito}
+            onError={mostrarError}
+          />
         </Modal>
 
         <ModalConfirmacion

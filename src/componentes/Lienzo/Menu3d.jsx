@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { crearPDF } from '../../services/crearPDF'
 import { apiClient } from "../../config/axios";
 import Cookies from "js-cookie"
@@ -40,7 +40,7 @@ export default function Menu3d({ setModal3d, disenoClick, setDisenoClick, onSucc
                 if (!isMountedRef.current) return;
 
                 // --- AL TERMINAR LOS 15 SEGUNDOS ---
-                
+
                 setIsLoading(false);
                 setModal3d(false);      // 1. Cerrar el modal
                 setDisenoClick();       // 2. Limpiar selección
@@ -77,28 +77,28 @@ export default function Menu3d({ setModal3d, disenoClick, setDisenoClick, onSucc
                     // --- VISTA INICIAL (LIMPIA) ---
                     <div>
                         <h5 className="mb-4">Si lo desea, puede generar una vista 3D del diseño creado.</h5>
-                        
+
                         {/* El botón ahora es el protagonista */}
                         <button onClick={handle3d} className="boton-1 w-100">
                             Generar imagen 3D
                         </button>
 
                         <p className="mt-4 text-muted" style={{ fontSize: "0.8rem" }}>
-                            <i className="fa fa-info-circle"></i> La imagen es generada por inteligencia artificial. 
+                            <i className="fa fa-info-circle"></i> La imagen es generada por inteligencia artificial.
                             Paper SRL se desentiende del resultado conseguido.
                         </p>
                     </div>
                 ) : (
                     // --- VISTA DE CARGA ---
                     <div className="text-center py-5">
-                        <div className="spinner-border text-primary mb-4" style={{width: "3rem", height: "3rem"}} role="status">
+                        <div className="spinner-border text-primary mb-4" style={{ width: "3rem", height: "3rem" }} role="status">
                             <span className="visually-hidden">Cargando...</span>
                         </div>
-                        
+
                         <h4 className="fw-bold mb-2">Creando visualización...</h4>
-                        
+
                         <p className="text-muted small">
-                            Estamos procesando tu diseño. <br/>
+                            Estamos procesando tu diseño. <br />
                             Esto tomará unos momentos.
                         </p>
                     </div>
@@ -107,18 +107,16 @@ export default function Menu3d({ setModal3d, disenoClick, setDisenoClick, onSucc
 
             {/* Botón Volver (Solo visible si NO está cargando) */}
             {!isLoading && (
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <button
-                        className="boton-2 w-25 mt-3 me-3"
-                        onClick={() => {
-                            setModal3d(false);
-                            setDisenoClick();
-                        }}
-                        type="button"
-                    >
-                        Volver
-                    </button>
-                </div>
+                <button
+                    className="boton-2 w-25 mt-3 ms-3"
+                    onClick={() => {
+                        setModal3d(false);
+                        setDisenoClick();
+                    }}
+                    type="button"
+                >
+                    Volver
+                </button>
             )}
         </div>
     )

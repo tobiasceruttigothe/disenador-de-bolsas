@@ -156,20 +156,7 @@ body.dark .card-opcion.hovered {
   border: 1px solid #4c8ed6;
 }
 
-.card-opcion img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  transition: all 0.3s ease;
-}
 
-.card-opcion.hovered img {
-  filter: brightness(1.1);
-}
-
-/* ------------------------------ */
-/* NAVBAR */
-/* ------------------------------ */
 
 .mi-navbar {
   background-color: #f5f5f5 !important;
@@ -790,4 +777,81 @@ body.dark .fondo-:hover {
 
 body.dark .border-end1 {
   border-right: 1px solid #273b4e;
+}
+
+
+.borde-estado-PROGRESO{
+  border: 4px double rgb(21, 182, 21);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 16px;
+  background-color: #FCFCFC;
+}
+
+.borde-estado-CANCELADO{
+  border: 4px double rgb(223, 23, 23);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 16px;
+  background-color: #FCFCFC;
+}
+
+.borde-estado-TERMINADO{
+  border: 4px double #016add;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 16px;
+  background-color: #FCFCFC;
+}
+
+.cuadro-estado-PROGRESO{
+  background-color: rgb(21, 182, 21);
+  color: white;
+  padding: 0.1rem 0.6rem;
+}
+
+.cuadro-estado-CANCELADO{
+  background-color: rgb(223, 23, 23);
+  padding: 0.1rem 0.6rem;
+  color: white
+}
+
+.cuadro-estado-TERMINADO{
+  background-color: #016add;
+  padding: 0.1rem 0.6rem;
+  color: white
+}
+
+body.dark .borde-estado-PROGRESO, body.dark .borde-estado-CANCELADO, body.dark .borde-estado-TERMINADO{
+  background-color: #1e1e1e;
+}
+
+.borde-estado-PROGRESO:hover{
+  transform: translateY(-8px);
+  border: 4px double rgb(21, 182, 21);
+}
+
+.borde-estado-CANCELADO:hover{
+  transform: translateY(-8px);
+  border: 4px double rgb(223, 23, 23);
+}
+
+.borde-estado-TERMINADO:hover{
+  transform: translateY(-8px);
+  border: 4px double #016add;
+}
+
+body.dark .borde-estado-PROGRESO:hover{
+  transform: translateY(-8px);
+  border: 4px double rgb(21, 182, 21);
+}
+
+body.dark .borde-estado-CANCELADO:hover{
+  transform: translateY(-8px);
+  border: 4px double rgb(223, 23, 23);
+}
+
+body.dark .borde-estado-TERMINADO:hover{
+  transform: translateY(-8px);
+  border: 4px double #016add;
 }
