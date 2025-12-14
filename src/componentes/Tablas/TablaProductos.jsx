@@ -20,12 +20,16 @@ export default function TablaProductos() {
     { id: 3, nombre: "Tipos de Producto", ruta: "/productos/tiposbolsa", imagen: tipoBolsa },
   ];
 
+  const handleVolver = () => {
+    navigate("/inicio", { state: { vistaSistema: true } });
+  };
+
   return (
     <>
       {/* BOTÓN VOLVER */}
       <button
         className="boton-atras d-flex align-items-center justify-content-center"
-        onClick={() => navigate("/inicio")}
+        onClick={handleVolver}
       >
         ←
       </button>

@@ -99,7 +99,7 @@ export default function Menu3d({ setModal3d, disenoClick, setDisenoClick, onSucc
 
                         <p className="text-muted small">
                             Estamos procesando tu diseño. <br />
-                            Esto tomará unos momentos.
+                            Esto tomará un momento.
                         </p>
                     </div>
                 )}

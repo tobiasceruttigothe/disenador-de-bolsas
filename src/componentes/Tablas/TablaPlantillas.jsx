@@ -123,7 +123,7 @@ export default function TablaPlantillas() {
                           <th className="py-3 text-muted small fw-bold text-uppercase">Tipo</th>
                           <th className="py-3 text-muted small fw-bold text-uppercase text-center">Ancho</th>
                           <th className="py-3 text-muted small fw-bold text-uppercase text-center">Alto</th>
-                          <th className="py-3 text-muted small fw-bold text-uppercase text-center">Prof.</th>
+                          <th className="py-3 text-muted small fw-bold text-uppercase text-center">Profundidad</th>
                           <th className="py-3 pe-4 text-end text-muted small fw-bold text-uppercase">Acciones</th>
                         </tr>
                       </thead>
@@ -154,6 +154,7 @@ export default function TablaPlantillas() {
                                     color: "#016add",
                                     backgroundColor: "transparent"
                                   }}
+                                  title="Ver imagen de la plantilla en otra pestaña"
                                 >
                                   <i className="fa fa-eye"></i>
                                 </button>
@@ -174,6 +175,7 @@ export default function TablaPlantillas() {
                                     color: "#dc3545",
                                     backgroundColor: "transparent"
                                   }}
+                                  title="Eliminar plantilla"
                                 >
                                   <i className="fa fa-trash-alt"></i>
                                 </button>

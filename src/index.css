@@ -621,7 +621,7 @@ body.dark .switch-slider::before {
 }
 
 .switch-toggle input:checked + .switch-slider {
-  background: "#4c8ed6";
+  background: #b7c2ff;
 }
 
 .switch-toggle input:checked + .switch-slider::before {

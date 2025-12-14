@@ -186,7 +186,7 @@ export default function FormularioCliente() {
                   { required: "Debe seleccionar un diseñador" }
                 )}
               >
-                <option value="">Seleccione un diseñador asignado</option>
+                <option value="">Seleccione un diseñador</option>
                 {diseñadores.map((disenador) => (
                   <option key={disenador.id} value={disenador.id}>
                     {disenador.razonSocial} ({disenador.email})

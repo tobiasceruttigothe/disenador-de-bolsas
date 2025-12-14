@@ -31,6 +31,8 @@ import Perfil from "./componentes/Tablas/Perfil.jsx";
 import ConsultaCliente from "./componentes/Tablas/ConsultaClientes.jsx";
 import AdministrarPlantillas from "./componentes/Tablas/AdministrarPlantillas.jsx";
 import VerDisenosCliente from "./componentes/Lienzo/VerDisenosCliente.jsx"
+import SeguimientoDisenos from "./componentes/Tablas/SeguimientoDisenos.jsx"
+import VerClientesDisenador from "./componentes/Tablas/VerClientesDisenador.jsx"
 
 import RecuperarCuenta from "./componentes/Log/RecuperarCuenta";
 import ResetPassword from "./componentes/Log/ResetPassword";
@@ -59,7 +61,7 @@ function App() {
 
     return children;
   }
-  
+
 
   return (
     <BrowserRouter>
@@ -254,7 +256,7 @@ function App() {
           }
         />
 
-        <Route 
+        <Route
           path="/disenos"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente", "disenador"]}>
@@ -263,26 +265,26 @@ function App() {
           }
         />
 
-        <Route 
+        <Route
           path="/disenos/:id"
           element={
-            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente", "disenador"]}>
-              <CargarDiseno/>
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["disenador", "cliente"]}>
+              <CargarDiseno />
             </RutaPrivadaConRol>
           }
         />
 
-        <Route 
+        <Route
           path="/disenos/cliente/:id"
           element={
-            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["disenador"]}>
-              <VerDisenosCliente/>
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["disenador", "admin"]}>
+              <VerDisenosCliente />
             </RutaPrivadaConRol>
           }
         />
-        
-        <Route 
-          path= "/logos"
+
+        <Route
+          path="/logos"
           element={
             <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["cliente"]}>
               <TablaLogos />
@@ -290,6 +292,23 @@ function App() {
           }
         />
 
+        <Route
+          path="/seguimiento"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
+              <SeguimientoDisenos />
+            </RutaPrivadaConRol>
+          }
+        />
+
+        <Route
+          path="/clientes/:idDisenador"
+          element={
+            <RutaPrivadaConRol logeado={logeado} tipoUsuario={tipoUsuario} rolesPermitidos={["admin"]}>
+              <VerClientesDisenador />
+            </RutaPrivadaConRol>
+          }
+        />
 
         <Route
           path="/perfil"
@@ -306,16 +325,13 @@ function App() {
           </RutaPrivada>
         } />
 
-        {/* --- Recuperación de cuenta y verificación --- */}
         <Route path="/recuperar-contraseña" element={<RecuperarCuenta />} />
         <Route path="/reset-password" element={<ResetPassword />} />
 
-        {/* REVISA ESTOS GASPI, DEBERIAS ELIMINAR EL DE VERIFY-EMAIL*/}
-        {/* ✅ NUEVA RUTA: Activar cuenta */}
         <Route path="/activate-account" element={<ActivateAccount />} />
-        {/* ✅ NUEVA RUTA: Reenviar activación */}
+
         <Route path="/resend-activation" element={<ResendActivation />} />
-        
+
 
         {/* --- Ruta por defecto --- */}
         <Route path="*" element={<Navigate to="/" />} />

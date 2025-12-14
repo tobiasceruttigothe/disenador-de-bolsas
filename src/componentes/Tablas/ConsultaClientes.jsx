@@ -3,22 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { apiClient } from "../../config/axios";
 import { useNotificacion } from "../../hooks/useNotificacion";
 import Notificacion from "../Notificaciones/Notificacion";
+import Cookies from 'js-cookie'
 
 // Importa estilos
 import "../../index.css";
 import "../../styles/main.css";
 
 export default function ConsultaClientes() {
-  const [clientes, setClientes] = useState([]);
+  const [clientesPropios, setClientesPropios] = useState([])
+  const [clientesTodos, setClientesTodos] = useState([]);
+  const [clientes, setClientes] = useState([])
   const [clientesFiltrados, setClientesFiltrados] = useState([]);
   const [filtro, setFiltro] = useState("");
   const navigate = useNavigate();
   const { notificacion, mostrarError, ocultarNotificacion } = useNotificacion();
 
+  const [verPropios, setVerPropios] = useState(false)
   const primaryColor = "#016add";
 
   useEffect(() => {
     fetchClientes();
+    fetchClientesPropios();
   }, []);
 
   useEffect(() => {
@@ -36,12 +41,32 @@ export default function ConsultaClientes() {
   const fetchClientes = async () => {
     try {
       const res = await apiClient.get("/usuarios/list/users/clients");
-      setClientes(res.data);
+      setClientesTodos(res.data);
     } catch (e) {
       console.error("Error al cargar clientes:", e);
       mostrarError("No se pudieron cargar los clientes. Intente nuevamente más tarde.");
     }
   };
+
+  const fetchClientesPropios = async () => {
+    try {
+      const id = Cookies.get("usuarioId")
+      const res = await apiClient.get("/usuarios/clientes-asignados?disenadorId=" + id);
+      setClientesPropios(res.data);
+    } catch (e) {
+      console.error("Error al cargar clientes:", e);
+      mostrarError("No se pudieron cargar los clientes. Intente nuevamente más tarde.");
+    }
+  };
+
+  useEffect(() => {
+  if (verPropios) {
+    setClientes(clientesPropios);
+  } else {
+    setClientes(clientesTodos);
+  }
+}, [verPropios, clientesPropios, clientesTodos]);
+
 
   const handleClick = (id) => () => {
     // Redirige a la lista de diseños de este cliente específico
@@ -91,6 +116,18 @@ export default function ConsultaClientes() {
 
                 {/* Tabla Estilizada */}
                 <div className="card-body p-0">
+                  <div className="d-flex ms-5 mb-3">
+                    <h6 className="me-3 fw-bold">Ver clientes asignados</h6>
+                    <label className="switch-toggle">
+                      <input
+                        type="checkbox"
+                        checked={verPropios}
+                        onChange={() => { setVerPropios(!verPropios); }}
+                        style = {{width:""}}
+                      />
+                      <span className="switch-slider"></span>
+                    </label>
+                  </div>
                   <div className="table-responsive">
                     <table className="table table-hover align-middle mb-0" style={{ minWidth: "800px" }}>
                       <thead className="bg-light">

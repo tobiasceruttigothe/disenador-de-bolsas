@@ -14,52 +14,67 @@ export default function InicioAdmin() {
   const [hovered, setHovered] = useState(null);
 
   const [mostrarUsuarios, setMostrarUsuarios] = useState(location.state?.vistaUsuarios || false);
+  const [mostrarSistema, setMostrarSistema] = useState(location.state?.vistaSistema || false);
+
   const primaryColor = "#016add";
 
   useEffect(() => {
     if (location.state?.vistaUsuarios) {
       setMostrarUsuarios(true);
     }
+    if (location.state?.vistaSistema) {
+      setMostrarSistema(true);
+    }
   }, [location]);
 
   const opcionesPrincipales = [
     {
-      id: 'productos',
-      nombre: "Administrar Productos",
-      ruta: "/productos",
+      id: 'sistema',
+      nombre: "Panel de Sistema",
       imagen: bolsa,
-      esGrupo: false
+      esGrupo: "sistema"
     },
     {
       id: 'usuarios',
-      nombre: "Administrar Usuarios",
+      nombre: "Panel de Usuarios",
       imagen: grupoUsuarios,
-      esGrupo: true
+      esGrupo: "usuarios"
     }
   ];
 
   const opcionesUsuarios = [
     { id: 1, nombre: "Diseñadores", ruta: "/disenadores", imagen: disenador },
     { id: 2, nombre: "Clientes", ruta: "/clientes", imagen: cliente },
-    { id: 3, nombre: "Adm. gerenciales", ruta: "/admins", imagen: admin },
+    { id: 3, nombre: "Gerente", ruta: "/admins", imagen: admin },
   ];
 
+  const opcionesSistema = [
+    { id: 1, nombre: "Productos", ruta: "/productos", imagen: bolsa },
+    { id: 2, nombre: "Seguimiento de diseños", ruta: "/seguimiento", imagen: disenador },
+  ]
+
   const handleNavigation = (opcion) => {
-    if (opcion.esGrupo) {
+    if (opcion.esGrupo === "usuarios") {
       setMostrarUsuarios(true);
-    } else {
+      setMostrarSistema(false)
+    } else if (opcion.esGrupo === "sistema") {
+      setMostrarSistema(true);
+      setMostrarUsuarios(false);
+    }
+    else {
       navigate(opcion.ruta);
     }
   };
 
   const volverAlMenuPrincipal = () => {
     setMostrarUsuarios(false);
+    setMostrarSistema(false)
     navigate(".", { state: {} });
   };
 
   return (
     <>
-      {mostrarUsuarios && (
+      {(mostrarUsuarios || mostrarSistema) && (
         <button
           className="boton-atras d-flex align-items-center justify-content-center"
           onClick={volverAlMenuPrincipal}
@@ -73,7 +88,11 @@ export default function InicioAdmin() {
 
           <div className="text-center mb-5">
             <h2 className="fw-bold text-dark">
-              {mostrarUsuarios ? "Panel de Usuarios" : "Panel de Administración"}
+              {mostrarUsuarios
+                ? "Panel de Usuarios"
+                : mostrarSistema
+                  ? "Panel de Sistema"
+                  : "Panel de Administración"}
             </h2>
             <div
               className="mx-auto"
@@ -89,7 +108,7 @@ export default function InicioAdmin() {
           <div className="row justify-content-center g-4 animate-fade-in">
 
             {/* OPCIONES PRINCIPALES */}
-            {!mostrarUsuarios && opcionesPrincipales.map((accion) => (
+            {!mostrarUsuarios && !mostrarSistema && opcionesPrincipales.map((accion) => (
               <div key={accion.id} className="col-12 col-md-5 col-lg-4">
                 <div
                   onClick={() => handleNavigation(accion)}
@@ -121,7 +140,43 @@ export default function InicioAdmin() {
               </div>
             ))}
 
-            {/* OPCIONES DE USUARIOS */}
+            {mostrarSistema && opcionesSistema.map((accion) => (
+              <div key={accion.id} className="col-12 col-sm-6 col-lg-3">
+                <Link to={accion.ruta} style={{ textDecoration: 'none' }}>
+                  <div
+                    className={`card h-100 text-center py-4 px-2 card-opcion ${hovered === accion.id ? "hovered" : ""}`}
+                    onMouseEnter={() => setHovered(accion.id)}
+                    onMouseLeave={() => setHovered(null)}
+                    onClick={() => navigate(accion)}
+                  >
+                    <div className="card-body d-flex flex-column align-items-center justify-content-center">
+                      <div className="mb-3 d-flex align-items-center justify-content-center" style={{ height: "90px" }}>
+                        <img
+                          src={accion.imagen}
+                          alt={accion.nombre}
+                          className="img-fluid"
+                          style={{
+                            width: "80px",
+                            height: "80px",
+                            objectFit: "contain",
+                            filter: hovered === accion.id ? "brightness(1.1)" : "none", // 🔥 SIN DROP-SHADOW
+                            transition: "all 0.3s ease"
+                          }}
+                        />
+                      </div>
+                      <h3 className="fw-bold mb-3 px-2" style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}>
+                        {accion.nombre}
+                      </h3>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
+
             {mostrarUsuarios && opcionesUsuarios.map((accion) => (
               <div key={accion.id} className="col-12 col-sm-6 col-lg-3">
                 <Link to={accion.ruta} style={{ textDecoration: 'none' }}>
