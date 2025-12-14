@@ -11,10 +11,7 @@ import MenuVer from "./MenuVer";
 import MenuDescargar from "./MenuDescargar";
 import Modal from "./ModalConfirmacion";
 import MenuEstado from "./MenuEstado";
-// Estilos
-import bolsa from '../../assets/pack designer final.png';
-import "../../index.css";
-import "../../styles/main.css";
+
 
 export default function VerDisenosCliente() {
   const [disenos, setDisenos] = useState([]);
@@ -32,6 +29,8 @@ export default function VerDisenosCliente() {
   const [modalEstado, setModalEstado] = useState(false);
 
   const [verEstados, setVerEstados] = useState(false);
+
+  const [rol, setRol] = useState(Cookies.get("rol"))
 
   useEffect(() => {
     if (!id) return;
@@ -78,7 +77,7 @@ export default function VerDisenosCliente() {
   const handleDuplicar = async (diseno) => {
     try {
       const payload = {
-        usuarioId: Cookies.get("usuarioId"), // OJO: ¿Duplicas para ti o para el cliente? Revisar lógica de negocio.
+        usuarioId: Cookies.get("usuarioId"),
         plantillaId: diseno.plantillaId,
         nombre: `Duplicado de ${diseno.nombre}`,
         descripcion: diseno.descripcion,
@@ -87,8 +86,6 @@ export default function VerDisenosCliente() {
       };
       await apiClient.post("/disenos", payload);
       mostrarExito("Diseño duplicado correctamente.");
-      // Recargar diseños para ver el nuevo
-      // fetchDisenos(); 
     } catch (error) {
       console.error("Error al duplicar:", error);
       mostrarError("Error al duplicar el diseño.");
@@ -132,21 +129,23 @@ export default function VerDisenosCliente() {
           {/* Encabezado */}
           <div className="d-flex justify-content-between align-items-center mb-5">
             <div>
-              <h2 className="fw-bold text-dark mb-1">Mis Diseños</h2>
-              <p className="text-muted mb-0">Gestiona y edita tus creaciones guardadas</p>
+              <h2 className="fw-bold text-dark mb-1">{`Diseños del usuario ${usuario.razonSocial} (${usuario.username})`}</h2>
+              <p className="text-muted mb-0">Ver y gestionar diseños de clientes</p>
             </div>
           </div>
-          <div className="mb-5 d-flex">
-            <label className="switch-toggle">
-              <input
-                type="checkbox"
-                checked={verEstados}
-                onChange={() => { setVerEstados(!verEstados); }}
-              />
-              <span className="switch-slider"></span>
-            </label>
-            <h5 className="ms-3">Ver estados de los diseños</h5>
-          </div>
+          {disenos.length > 0 ? (
+            <div className="mb-5 d-flex">
+              <label className="switch-toggle">
+                <input
+                  type="checkbox"
+                  checked={verEstados}
+                  onChange={() => { setVerEstados(!verEstados); }}
+                />
+                <span className="switch-slider"></span>
+              </label>
+              <h5 className="ms-3">Ver estados de los diseños</h5>
+            </div>
+          ) : ""}
           {/* Grid de Diseños */}
           <div className="row g-4">
 
@@ -201,8 +200,12 @@ export default function VerDisenosCliente() {
                           <ul className="menu dropdown-menu dropdown-menu-end shadow border-0">
                             <li><button className="texto-menu dropdown-item" onClick={() => handleVer(diseno)}><i className="fa fa-eye me-2 text-primary"></i> Ver detalles</button></li>
                             <li><button className="texto-menu dropdown-item" onClick={() => handleDescargar(diseno)}><i className="fa fa-download me-2 text-success"></i> Descargar</button></li>
-                            <li><button className="texto-menu dropdown-item" onClick={() => handleDuplicar(diseno)}><i className="fa fa-copy me-2 text-warning"></i> Duplicar</button></li>
-                            <li><button className="texto-menu dropdown-item" onClick={() => handleEstado(diseno)}><i className="fa fa-toggle-on me-2 text-secondary"></i> Estado</button></li>
+                            {rol === "disenador" ?
+                              (<>
+                                <li><button className="texto-menu dropdown-item" onClick={() => handleDuplicar(diseno)}><i className="fa fa-copy me-2 text-warning"></i> Duplicar</button></li>
+                                <li><button className="texto-menu dropdown-item" onClick={() => handleEstado(diseno)}><i className="fa fa-toggle-on me-2 text-secondary"></i> Estado</button></li>
+                              </>
+                              ) : ""}
                             <li><hr className="divider-menu" /></li>
                             <li><button className="dropdown-item text-danger" onClick={() => handleEliminarClick(diseno.id)}><i className="fa fa-trash me-2"></i> Eliminar</button></li>
                           </ul>

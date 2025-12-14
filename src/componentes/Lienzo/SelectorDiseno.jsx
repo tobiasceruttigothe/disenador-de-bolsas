@@ -125,7 +125,7 @@ export default function SelectorDiseno() {
               <p className="text-muted mb-0">Gestiona y edita tus creaciones guardadas</p>
             </div>
           </div>
-
+          {disenos.length > 0 ? (
           <div className="mb-5 d-flex">
             <label className="switch-toggle">
               <input
@@ -137,7 +137,7 @@ export default function SelectorDiseno() {
             </label>
             <h5 className="ms-3">Ver estados de los diseños</h5>
           </div>
-          {/* Grid de Diseños */}
+        ) : ""}
           <div className="row g-4">
 
 

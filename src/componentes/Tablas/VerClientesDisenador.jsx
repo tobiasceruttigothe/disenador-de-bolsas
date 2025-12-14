@@ -20,6 +20,7 @@ export default function TablaClientes() {
 
     useEffect(() => {
         fetchClientes();
+        fetchNombreDisenador(idDisenador)
     }, []);
 
     useEffect(() => {
@@ -39,6 +40,15 @@ export default function TablaClientes() {
             mostrarError("No se pudieron cargar los clientes.");
         }
     };
+
+    const fetchNombreDisenador = async(idDisenador) =>{
+        try {
+            const res = await apiClient.get("/usuarios/list/users/disenadores");
+            setDisenadorNombre((res.data.find(d => d.id === idDisenador))?.razonSocial || "")
+        } catch (e) {
+            console.error("Error al cargar diseñador:", e);
+        }
+    }
 
     return (
         <>

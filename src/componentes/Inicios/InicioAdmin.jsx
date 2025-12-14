@@ -7,6 +7,8 @@ import disenador from "../../assets/iconos_inicio/Reg_disenador.png";
 import admin from "../../assets/iconos_inicio/Reg_adm_gerencial.png";
 import cliente from "../../assets/iconos_inicio/Reg_cliente.png";
 import grupoUsuarios from "../../assets/iconos_inicio/Reg_adm_gerencial.png";
+import seguimiento from "../../assets/iconos_inicio/Seguimiento.png"
+import panel_sistema from "../../assets/iconos_inicio/panel_de_sistema.png"
 
 export default function InicioAdmin() {
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ export default function InicioAdmin() {
     {
       id: 'sistema',
       nombre: "Panel de Sistema",
-      imagen: bolsa,
+      imagen: panel_sistema,
       esGrupo: "sistema"
     },
     {
@@ -50,7 +52,7 @@ export default function InicioAdmin() {
 
   const opcionesSistema = [
     { id: 1, nombre: "Productos", ruta: "/productos", imagen: bolsa },
-    { id: 2, nombre: "Seguimiento de diseños", ruta: "/seguimiento", imagen: disenador },
+    { id: 2, nombre: "Seguimiento de diseños", ruta: "/seguimiento", imagen: seguimiento },
   ]
 
   const handleNavigation = (opcion) => {
@@ -149,26 +151,30 @@ export default function InicioAdmin() {
                     onMouseLeave={() => setHovered(null)}
                     onClick={() => navigate(accion)}
                   >
-                    <div className="card-body d-flex flex-column align-items-center justify-content-center">
-                      <div className="mb-3 d-flex align-items-center justify-content-center" style={{ height: "90px" }}>
+                    <div className="card-body d-flex flex-column align-items-center">
+                      <div className="mb-3 d-flex align-items-center" style={{ height: "90px" }}>
                         <img
                           src={accion.imagen}
                           alt={accion.nombre}
                           className="img-fluid"
                           style={{
-                            width: "80px",
-                            height: "80px",
+                            width: "90px",
+                            height: "90px",
                             objectFit: "contain",
-                            filter: hovered === accion.id ? "brightness(1.1)" : "none", // 🔥 SIN DROP-SHADOW
+                            filter: hovered === accion.id ? "brightness(1.1)" : "none",
                             transition: "all 0.3s ease"
                           }}
                         />
                       </div>
-                      <h3 className="fw-bold mb-3 px-2" style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center"
-                      }}>
+                      <h3
+                        className="fw-bold mb-3 px-2 text-center"
+                        style={{
+                          minHeight: "65px",   // 👈 reserva espacio
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                      >
                         {accion.nombre}
                       </h3>
                     </div>
@@ -193,8 +199,8 @@ export default function InicioAdmin() {
                           alt={accion.nombre}
                           className="img-fluid"
                           style={{
-                            width: "80px",
-                            height: "80px",
+                            width: "90px",
+                            height: "90px",
                             objectFit: "contain",
                             filter: hovered === accion.id ? "brightness(1.1)" : "none", // 🔥 SIN DROP-SHADOW
                             transition: "all 0.3s ease"
