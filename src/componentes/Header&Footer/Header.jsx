@@ -102,6 +102,9 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
             <div className="borde-arriba" />
             {renderMenuItems()}
           </NavDropdown>
+          <div className="d-flex align-items-center" style={{ position: "absolute", top: "-2px", left: "100px" }}>
+            <DarkModeSwitch darkMode={darkMode} setDarkMode={setDarkMode} />
+          </div>
         </Nav>
 
         {/* CENTRO */}
@@ -118,9 +121,6 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
 
         {/* DERECHA */}
         <Nav className="flex-grow-1 d-flex justify-content-end align-items-center gap-3">
-          <div className="d-flex align-items-center" style={{ position: "absolute", top: "0px", right: "160px"}}>
-            <DarkModeSwitch darkMode={darkMode} setDarkMode={setDarkMode} />
-          </div>
 
           <span className="text-white small opacity-75 d-none d-md-block">
             {nombre || "Usuario"}
