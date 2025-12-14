@@ -51,20 +51,7 @@ export default function ResetPassword() {
     <>
       {/* Botón Volver al Login (Fijo) */}
       <button
-        className="align-items-center d-flex justify-content-center"
-        style={{
-          position: "fixed",
-          top: "9vh",
-          left: "3vw",
-          width: "70px",
-          height: "40px",
-          padding: "10px",
-          backgroundColor: "white",
-          color: primaryColor,
-          border: `1px solid ${primaryColor}`,
-          borderRadius: "7px",
-          zIndex: 1000
-        }}
+        className="boton-atras d-flex align-items-center justify-content-center"
         onClick={() => navigate("/login")}
       >
         ←
