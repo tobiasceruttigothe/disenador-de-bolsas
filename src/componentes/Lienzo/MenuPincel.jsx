@@ -80,8 +80,6 @@ export default function MenuPincel({ activarModoDibujo }) {
                 <label className="form-label text-muted small fw-bold mb-2">ESTILO</label>
                 <select value={pincel} onChange={(e) => setPincel(e.target.value)} className="form-select border-light bg-light py-2" style={{ cursor: "pointer" }}>
                     <option value="PencilBrush">✏️ Lápiz Clásico</option>
-                    <option value="CircleBrush">⚫ Punteado</option>
-                    <option value="SprayBrush">💨 Spray</option>
                     <option value="PatternBrush">▦ Patrón</option>
                 </select>
             </div>

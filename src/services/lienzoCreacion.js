@@ -166,56 +166,119 @@ export async function cargarCanvas(canvasElement, fondo, objetos) {
         flipY: obj.flipY,
         selectable: obj.selectable ?? true,
         evented: obj.evented ?? true,
-        scaleX: 1,
-        scaleY: 1
+        scaleX: obj.scaleY,
+        scaleY: obj.scaleY
       });
 
 
       canvas.add(t);
     }
     if (obj.type == "Path") {
-      const fPath = new fabric.Path(obj.path, {
+      const path = new fabric.Path(obj.path, {
         left: obj.left,
         top: obj.top,
+
+        scaleX: obj.scaleX,
+        scaleY: obj.scaleY,
+        angle: obj.angle,
+
+        originX: obj.originX || "left",
+        originY: obj.originY || "top",
+
+        opacity: obj.opacity,
+        visible: obj.visible,
+
         fill: obj.fill,
-        stroke: obj.stroke,
+
         strokeWidth: obj.strokeWidth,
         strokeLineCap: obj.strokeLineCap,
         strokeLineJoin: obj.strokeLineJoin,
         strokeMiterLimit: obj.strokeMiterLimit,
+        strokeDashArray: obj.strokeDashArray,
+        strokeDashOffset: obj.strokeDashOffset,
         strokeUniform: obj.strokeUniform,
-        opacity: obj.opacity,
-        scaleX: obj.scaleX,
-        scaleY: obj.scaleY,
-        angle: obj.angle,
-        visible: obj.visible
+
+        skewX: obj.skewX || 0,
+        skewY: obj.skewY || 0,
+
+        flipX: obj.flipX || false,
+        flipY: obj.flipY || false,
+
+        globalCompositeOperation: obj.globalCompositeOperation || "source-over",
+
+        selectable: true,
+        evented: true,
+        objectCaching: true
       });
-      canvas.add(fPath);
+
+      // 2️⃣ Reconstruir el stroke
+      // ---- CASO PATTERN ----
+      if (obj.stroke && obj.stroke.type === "pattern") {
+        const img = new Image();
+        img.crossOrigin = obj.stroke.crossOrigin || "anonymous";
+        img.src = obj.stroke.source;
+
+        img.onload = () => {
+          const pattern = new fabric.Pattern({
+            source: img,
+            repeat: obj.stroke.repeat || "repeat",
+            offsetX: obj.stroke.offsetX || 0,
+            offsetY: obj.stroke.offsetY || 0
+          });
+
+          path.set({ stroke: pattern });
+
+          canvas.add(path);
+          path.setCoords();
+          canvas.requestRenderAll();
+        };
+
+        // ---- CASO STROKE NORMAL ----
+      } else {
+        path.set({ stroke: obj.stroke });
+
+        canvas.add(path);
+        path.setCoords();
+        canvas.requestRenderAll();
+      }
     }
+
+
+
 
     if (obj.type == "Rect") {
       const forma = new fabric.Rect({
         left: obj.left, top: obj.top, fill: obj.fill,
         width: obj.width, height: obj.height, angle: obj.angle,
-        flipX: obj.flipX, flipY: obj.flipY
+        flipX: obj.flipX, flipY: obj.flipY, scaleX: obj.scaleX, scaleY: obj.scaleY
       })
       canvas.add(forma)
     }
 
-    if (obj.type == "Circle") {
+    if (obj.type === "Circle") {
       const forma = new fabric.Circle({
-        left: obj.left, top: obj.top, fill: obj.fill,
-        width: obj.width, height: obj.height, angle: obj.angle,
-        flipX: obj.flipX, flipY: obj.flipY
-      })
-      canvas.add(forma)
+        left: obj.left,
+        top: obj.top,
+        fill: obj.fill,
+        angle: obj.angle,
+        flipX: obj.flipX,
+        flipY: obj.flipY,
+        radius: obj.radius,
+        scaleX: obj.scaleX,
+        scaleY: obj.scaleY,
+        originX: obj.originX,
+        originY: obj.originY
+      });
+
+      canvas.add(forma);
     }
+
 
     if (obj.type == "Triangle") {
       const forma = new fabric.Triangle({
         left: obj.left, top: obj.top, fill: obj.fill,
         width: obj.width, height: obj.height, angle: obj.angle,
-        flipX: obj.flipX, flipY: obj.flipY
+        flipX: obj.flipX, flipY: obj.flipY, scaleX: obj.scaleX, scaleY: obj.scaleY
       })
       canvas.add(forma)
     }
@@ -232,7 +295,9 @@ export async function cargarCanvas(canvasElement, fondo, objetos) {
           angle: obj.angle,
           flipX: obj.flipX,
           flipY: obj.flipY,
-          visible: obj.visible
+          visible: obj.visible,
+          scaleX: obj.scaleX,
+          scaleY: obj.scaleY
         }
       );
       canvas.add(forma);
@@ -354,7 +419,6 @@ export function activarModoDibujo(canvas, options = {}) {
     CircleBrush: fabric.CircleBrush,
     SprayBrush: fabric.SprayBrush,
     PatternBrush: fabric.PatternBrush,
-    SquareBrush: fabric.SquareBrush
   };
 
   const BrushClass = brushesMap[brushType] || fabric.PencilBrush;
