@@ -89,6 +89,8 @@ export default function FormularioPlantilla() {
     } catch (error) {
       mostrarError("Ocurrió un error al agregar la plantilla.");
       setEstado("Error");
+    } finally{
+      setSubmitAttempted(false)
     }
   };
 
