@@ -17,10 +17,7 @@ export default function MenuEstado({ setModalEstado, disenoClick, onSuccess, onE
             <hr />
             <div className="p-3">
                 <h3 className="fw-bold">Diseño: {disenoClick.nombre}</h3>
-                <p style={{fontSize: "1rem"}}>Los cambios de estado no afectan en las funcionalidades que se le pueden aplicar al diseño. 
-                    Son meras anotaciones para guías visuales.
-                </p>
-                <p style={{fontSize: "0.9rem"}}>Todas las transiciones entre estados son posibles y revertibles.</p>
+                <p>Todas las transiciones entre estados son posibles y revertibles.</p>
                 <p className="fw-bold">Estado actual: <span className={`cuadro-estado-${disenoClick.status} rounded`}>{disenoClick.status}</span></p>
                 <div className="d-grid gap-2">
                     <button className={`btn ${disenoClick.status === "PROGRESO" ? "disabled" : "boton-1"} w-100`} disabled={disenoClick.status === "PROGRESO"} onClick={() => handleCambio("PROGRESO")}>Marcar como PROGRESO</button>

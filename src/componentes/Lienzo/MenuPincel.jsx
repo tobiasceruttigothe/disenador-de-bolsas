@@ -17,6 +17,11 @@ export default function MenuPincel({ activarModoDibujo }) {
         });
     };
 
+    const borrarColor = (colorABorrar, e) => {
+        e.stopPropagation(); // Evitar que se seleccione al borrar
+        setColoresGuardados(coloresGuardados.filter(c => c !== colorABorrar));
+    };
+
     return (
         <div className="p-4 card-diseno  shadow-sm h-100 overflow-auto">
 
@@ -30,7 +35,7 @@ export default function MenuPincel({ activarModoDibujo }) {
                         <input type="color" value={color} onChange={(e) => setColor(e.target.value)}
                             className="form-control form-control-color border-0 p-0 shadow-none me-2"
                             style={{ width: "35px", height: "35px", cursor: "pointer", backgroundColor: 'transparent' }} />
-                        <span className="text-muted small text-uppercase">{color}</span>
+                        <span className="text-muted text-uppercase">{color}</span>
                     </div>
                     <button className="btn btn-outline-secondary btn-sm" onClick={guardarColorActual} style={{ height: "45px", width: "45px" }}>
                         <i className="fa fa-plus"></i>

@@ -121,6 +121,7 @@ export default function MenuSelectorPlantilla({ plantillas, setPlantillaElegida,
                     <button
                         className="btn boton-2"
                         onClick={handleClick}
+                        disabled={!plantillaSeleccionada}
                     >
                         Confirmar selección
                     </button>

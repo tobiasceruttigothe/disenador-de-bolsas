@@ -61,8 +61,6 @@ export default function MenuImagen({ agregarFoto }) {
                                 maxWidth: "100%", 
                                 maxHeight: "200px", 
                                 objectFit: "contain",
-                                borderRadius: "4px",
-                                boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
                             }} 
                         />
                     </div>

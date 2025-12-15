@@ -14,6 +14,11 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
         if (!coloresGuardados.includes(color)) setColoresGuardados([...coloresGuardados, color]);
     };
 
+    const borrarColor = (colorABorrar, e) => {
+        e.stopPropagation(); // Evitar que se seleccione al borrar
+        setColoresGuardados(coloresGuardados.filter(c => c !== colorABorrar));
+    };
+
     const handleAgregarTexto = () => {
         if (!texto.trim()) return;
         agregarTexto(texto, color, tamaño, fuente);
@@ -25,12 +30,12 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
 
     return (
         <div className="p-4 card-diseno shadow-sm h-100 overflow-auto">
-            
+
             <h4 className="mb-3 text-primary fw-bold">Agregar Texto</h4>
 
             <div className="mb-3">
                 <label className="form-label text-muted small fw-bold mb-1">CONTENIDO</label>
-                <input type="text" className="form-control form-control-sm" placeholder="Escribe aquí..." 
+                <input type="text" className="form-control form-control-sm" placeholder="Escribe aquí..."
                     onChange={(e) => setTexto(e.target.value)} value={texto} ref={inputTextRef} style={{ fontWeight: "500" }} />
             </div>
 
@@ -39,7 +44,7 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
                 <label className="form-label text-muted small fw-bold mb-1">COLOR DEL TEXTO</label>
                 <div className="d-flex align-items-center gap-2 mb-2">
                     <div className="d-flex align-items-center p-1 text-muted borde2 flex-grow-1">
-                        <input type="color" value={color} onChange={(e) => setColor(e.target.value)} 
+                        <input type="color" value={color} onChange={(e) => setColor(e.target.value)}
                             className="form-control form-control-color border-0 p-0 shadow-none me-2"
                             style={{ width: "30px", height: "30px", cursor: "pointer", backgroundColor: 'transparent' }} />
                         <span className="text-muted text-uppercase">{color}</span>
@@ -51,11 +56,16 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
                 <div className="d-flex flex-wrap gap-2">
                     {coloresGuardados.map((c, idx) => (
                         <div key={idx} onClick={() => setColor(c)} className="rounded-circle border"
-                            style={{ width: "20px", height: "20px", backgroundColor: c, cursor: "pointer",
-                            boxShadow: color === c ? "0 0 0 2px white, 0 0 0 3px #016add" : "none" }} />
+                            style={{
+                                width: "20px", height: "20px", backgroundColor: c, cursor: "pointer",
+                                boxShadow: color === c ? "0 0 0 2px white, 0 0 0 3px #016add" : "none"
+                            }}
+                            title={c}
+                            onContextMenu={(e) => { e.preventDefault(); borrarColor(c, e); }} // Click derecho borra
+                        />
                     ))}
                 </div>
-                <small className="text-muted d-block mt-2" style={{fontSize: '0.65rem'}}>* Click para usar, Click derecho para borrar.</small>
+                <small className="text-muted d-block mt-2" style={{ fontSize: '0.65rem' }}>* Click para usar, Click derecho para borrar.</small>
             </div>
 
             <div className="mb-3">
@@ -79,21 +89,21 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
             <div className="mb-3 text-center">
                 <label className="form-label text-muted small fw-bold mb-1">VISTA PREVIA</label>
                 <div className="d-flex justify-content-center align-items-center border rounded bg-white"
-                    style={{ 
+                    style={{
                         height: "80px", // Reducido de 100px a 80px
-                        width: "100%", 
-                        padding: "5px", 
-                        overflow: "hidden", 
-                        backgroundImage: "radial-gradient(#e9ecef 1px, transparent 1px)", 
-                        backgroundSize: "10px 10px" 
+                        width: "100%",
+                        padding: "5px",
+                        overflow: "hidden",
+                        backgroundImage: "radial-gradient(#e9ecef 1px, transparent 1px)",
+                        backgroundSize: "10px 10px"
                     }}>
-                    <p style={{ 
+                    <p style={{
                         fontSize: `${Math.min(tamaño, 36)}px`, // Tope visual de 36px para que no rompa la caja chica
-                        fontFamily: fuente, 
-                        color: color, 
-                        margin: 0, 
-                        lineHeight: 1, 
-                        wordBreak: "break-word", 
+                        fontFamily: fuente,
+                        color: color,
+                        margin: 0,
+                        lineHeight: 1,
+                        wordBreak: "break-word",
                         textAlign: "center",
                         maxWidth: "100%",
                         maxHeight: "100%",
@@ -104,7 +114,7 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
                         {texto || "Abc"}
                     </p>
                 </div>
-                {tamaño > 36 && <small className="text-muted" style={{fontSize: '0.65rem'}}>* Tamaño real mayor al mostrado</small>}
+                {tamaño > 36 && <small className="text-muted" style={{ fontSize: '0.65rem' }}>* Tamaño real mayor al mostrado</small>}
             </div>
 
             <button className="btn btn-primary w-100 py-2 fw-bold shadow-sm" onClick={handleAgregarTexto} disabled={!texto.trim()} style={{ backgroundColor: "#016add", borderColor: "#016add", opacity: !texto.trim() ? 0.6 : 1 }}>

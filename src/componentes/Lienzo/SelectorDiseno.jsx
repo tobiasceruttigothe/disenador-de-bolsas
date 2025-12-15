@@ -207,7 +207,7 @@ export default function SelectorDiseno() {
                       </p>
 
                       {/* Botones de acción rápida */}
-                      {(Cookies.get("rol") === "disenador") ? <div className="d-grid gap-2">
+                      {(Cookies.get("rol") === "disenador" || Cookies.get("rol") === "cliente") ? <div className="d-grid gap-2">
                         <button
                           className="btn boton-cambiar"
                           onClick={() => handleClick(diseno)}

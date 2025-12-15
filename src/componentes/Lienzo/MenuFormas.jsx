@@ -69,7 +69,7 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
               className="form-control form-control-color border-0 p-0 shadow-none me-2"
               style={{ width: "35px", height: "35px", cursor: "pointer", backgroundColor: 'transparent' }}
             />
-            <span className="">{color}</span>
+            <span className="text-muted text-uppercase">{color}</span>
           </div>
           
           <button 
