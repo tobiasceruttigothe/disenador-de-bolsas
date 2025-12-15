@@ -46,7 +46,7 @@ body.dark .boton-1:hover {
 .boton-atras {
     position: fixed;
     top: 13vh;
-    left: 3vw;
+    left: 2vw;
 
     width: 70px;
     height: 40px;
@@ -86,4 +86,9 @@ body.dark .boton-atras {
     background-color: #1e1e1e;
     border: 1px solid #4ea1ff;
     color: #4ea1ff
+}
+
+body.dark .boton-atras:hover {
+    background-color: #4ea1ff;
+    color: #fff;
 }

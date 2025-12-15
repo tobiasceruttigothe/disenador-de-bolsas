@@ -76,16 +76,16 @@ export default function Menu3d({ setModal3d, disenoClick, setDisenoClick, onSucc
                 {!isLoading ? (
                     // --- VISTA INICIAL (LIMPIA) ---
                     <div>
-                        <h5 className="mb-4">Si lo desea, puede generar una vista 3D del diseño creado.</h5>
+                        <h5 className="mb-4">Generar una vista 3D del diseño creado.</h5>
 
                         {/* El botón ahora es el protagonista */}
                         <button onClick={handle3d} className="boton-1 w-100">
-                            Generar imagen 3D
+                            Generar vista 3D
                         </button>
 
                         <p className="mt-4 text-muted" style={{ fontSize: "0.8rem" }}>
                             <i className="fa fa-info-circle"></i> La imagen es generada por inteligencia artificial.
-                            Paper SRL se desentiende del resultado conseguido.
+                            Paper SRL se desliga del resultado conseguido.
                         </p>
                     </div>
                 ) : (

@@ -57,7 +57,7 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
 
       {/* SECCIÓN DE COLOR CON PALETA */}
       <div className="mb-4 fondo-menu">
-        <label className="form-label text-muted small fw-bold mb-2">COLOR DEL BORDE</label>
+        <label className="form-label text-muted small fw-bold mb-2">COLOR DE LA FORMA</label>
         
         {/* Selector y Botón Guardar */}
         <div className="d-flex align-items-center gap-2 mb-3">

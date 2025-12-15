@@ -36,7 +36,7 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
 
             {/* SECCIÓN DE COLOR */}
             <div className="mb-3 fondo-menu">
-                <label className="form-label text-muted small fw-bold mb-1">COLOR</label>
+                <label className="form-label text-muted small fw-bold mb-1">COLOR DEL TEXTO</label>
                 <div className="d-flex align-items-center gap-2 mb-2">
                     <div className="d-flex align-items-center p-1 text-muted borde2 flex-grow-1">
                         <input type="color" value={color} onChange={(e) => setColor(e.target.value)} 
@@ -55,6 +55,7 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
                             boxShadow: color === c ? "0 0 0 2px white, 0 0 0 3px #016add" : "none" }} />
                     ))}
                 </div>
+                <small className="text-muted d-block mt-2" style={{fontSize: '0.65rem'}}>* Click para usar, Click derecho para borrar.</small>
             </div>
 
             <div className="mb-3">

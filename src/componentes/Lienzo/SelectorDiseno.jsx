@@ -126,18 +126,18 @@ export default function SelectorDiseno() {
             </div>
           </div>
           {disenos.length > 0 ? (
-          <div className="mb-5 d-flex">
-            <label className="switch-toggle">
-              <input
-                type="checkbox"
-                checked={verEstados}
-                onChange={() => { setVerEstados(!verEstados); }}
-              />
-              <span className="switch-slider"></span>
-            </label>
-            <h5 className="ms-3">Ver estados de los diseños</h5>
-          </div>
-        ) : ""}
+            <div className="mb-5 d-flex">
+              <label className="switch-toggle">
+                <input
+                  type="checkbox"
+                  checked={verEstados}
+                  onChange={() => { setVerEstados(!verEstados); }}
+                />
+                <span className="switch-slider"></span>
+              </label>
+              <h5 className="ms-3">Ver estados de los diseños</h5>
+            </div>
+          ) : ""}
           <div className="row g-4">
 
 
@@ -207,14 +207,17 @@ export default function SelectorDiseno() {
                       </p>
 
                       {/* Botones de acción rápida */}
-                      <div className="d-grid gap-2">
+                      {(Cookies.get("rol") === "disenador") ? <div className="d-grid gap-2">
                         <button
                           className="btn boton-cambiar"
                           onClick={() => handleClick(diseno)}
+                          disabled={diseno.status === "TERMINADO"}
                         >
                           <i className="fa fa-edit me-2"></i> Editar
                         </button>
-                      </div>
+                        {diseno.status === "TERMINADO" ? <p className="text-muted mt-1 ms-2" style={{ fontSize: "0.8rem" }}>El diseño no se puede editar si está terminado. Para modificarlo, cambiá su estado en la pestaña de Estado</p>
+                          : ""}
+                      </div> : ""}
                     </div>
                   </div>
                 </div>

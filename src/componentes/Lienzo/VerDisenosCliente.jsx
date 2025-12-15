@@ -109,14 +109,20 @@ export default function VerDisenosCliente() {
     setModalEliminar({ visible: false, id: null });
   };
 
-  const primaryColor = "#016add";
+  const handleNavegar = () => {
+    if (Cookies.get("rol") === "admin") {
+      navigate(-1)
+    } else {
+      navigate("/verClientes")
+    }
+  }
 
   return (
     <>
       {/* Botón Volver ORIGINAL (Posición Fija) */}
       <button
         className="boton-atras d-flex align-items-center justify-content-center"
-        onClick={() => navigate("/verClientes")}
+        onClick={() => handleNavegar()}
       >
         ←
       </button>
@@ -129,7 +135,7 @@ export default function VerDisenosCliente() {
           {/* Encabezado */}
           <div className="d-flex justify-content-between align-items-center mb-5">
             <div>
-              <h2 className="fw-bold text-dark mb-1">{`Diseños del usuario ${usuario.razonSocial} (${usuario.username})`}</h2>
+              <h2 className="fw-bold text-dark mb-1">{`Diseños del usuario ${usuario.username} (${usuario.razonSocial || "-"})`}</h2>
               <p className="text-muted mb-0">Ver y gestionar diseños de clientes</p>
             </div>
           </div>
@@ -217,14 +223,17 @@ export default function VerDisenosCliente() {
                       </p>
 
                       {/* Botones de acción rápida */}
-                      <div className="d-grid gap-2">
+                      {(Cookies.get("rol") === "disenador") ? <div className="d-grid gap-2">
                         <button
                           className="btn boton-cambiar"
                           onClick={() => handleClick(diseno)}
+                          disabled={diseno.status === "TERMINADO"}
                         >
                           <i className="fa fa-edit me-2"></i> Editar
                         </button>
-                      </div>
+                        {diseno.status === "TERMINADO" ? <p className="text-muted mt-1 ms-2" style={{fontSize:"0.8rem"}}>El diseño no se puede editar si está terminado. Para modificarlo, cambiá su estado en la pestaña de Estado</p>
+                          : ""}
+                      </div> : ""}
                     </div>
                   </div>
                 </div>
