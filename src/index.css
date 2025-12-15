@@ -714,7 +714,8 @@ body.dark .tarjeta-hover {
 .btn-crear-diseno {
   border: 2px dashed #016add;
   border-radius: 12px;
-  height: 110px;
+  width: 140px;
+  height: 120px;
   background-color: #f8f9fa;
   transition: all 0.2s ease;
   cursor: pointer;
@@ -748,6 +749,15 @@ body.dark .texto-nuevo-logo {
 
 body.dark .borde {
   border: 1px solid #273b4e;
+}
+
+.borde2 {
+  border: 1px solid #959595;
+  border-radius:8px
+}
+
+body.dark .borde2 {
+  border: 1px solid #636363;
 }
 
 .fondo-boton {
@@ -888,4 +898,26 @@ body.dark .input-mail {
   border: 1px solid #3b4252;
   border-radius: 10px;
   border-right: none;
+}
+
+.card-opcion-lienzo {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 16px;
+  width: 140px;
+  height: 120px;
+  background-color: #FCFCFC;
+  border: 2px solid #016add;
+  color: #555555ff
+}
+
+body.dark .card-opcion-lienzo {
+  background-color: #1e1e1e;
+  border: 2px solid #273b4e;
+  color: #FCFCFC
+}
+
+.card-opcion-lienzo:hover {
+  transform: translateY(-8px);
+  border: 1px solid #016add;
 }

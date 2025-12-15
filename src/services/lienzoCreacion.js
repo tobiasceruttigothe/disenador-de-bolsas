@@ -10,8 +10,8 @@ export function initCanvas(canvasElement, imageUrl) {
   imgElement.src = imageUrl;
   imgElement.onload = () => {
 
-    const MAX_W = 1250;
-    const MAX_H = 600;
+    const MAX_W = 1150;
+    const MAX_H = 750;
 
     canvas.setDimensions({
       width: MAX_W,
@@ -103,8 +103,8 @@ export function guardarElementos(canvas) {
 
 export async function cargarCanvas(canvasElement, fondo, objetos) {
 
-  const MAX_W = 1250;
-  const MAX_H = 600;
+  const MAX_W = 1150;
+  const MAX_H = 750;
 
   const canvas = new fabric.Canvas(canvasElement, { width: MAX_W, height: MAX_H });
 

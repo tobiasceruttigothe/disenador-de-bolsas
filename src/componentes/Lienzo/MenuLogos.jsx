@@ -14,7 +14,7 @@ export default function MenuLogos({ agregarFoto, setLogosBool, logos }) {
   };
 
   return (
-    <div className="p-4 card-diseno shadow-sm h-100 overflow-auto">
+    <div style={{ maxHeight: "100%" }} className="p-4 card-diseno shadow-sm h-100 overflow-auto">
 
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h4 className="mb-0 text-primary fw-bold">Mis Logos</h4>
@@ -54,38 +54,18 @@ export default function MenuLogos({ agregarFoto, setLogosBool, logos }) {
           <button
             key={l.id || index}
             onClick={() => handler(l.base64Logo)}
-            className="btn btn-outline-light text-dark p-2 d-flex flex-column align-items-center justify-content-center"
-            style={{
-              border: "1px solid #e9ecef",
-              borderRadius: "12px",
-              height: "110px",
-              backgroundColor: "#fff",
-              boxShadow: "0 2px 4px rgba(0,0,0,0.02)",
-              transition: "all 0.2s ease",
-              overflow: "hidden"
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "translateY(-3px)";
-              e.currentTarget.style.boxShadow = "0 8px 15px rgba(1, 106, 221, 0.15)";
-              e.currentTarget.style.borderColor = "#016add";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "translateY(0)";
-              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.02)";
-              e.currentTarget.style.borderColor = "#e9ecef";
-            }}
+            className="card-opcion-lienzo d-flex flex-column align-items-center justify-content-center p-3"
             title={l.nombre || `Logo ${index + 1}`}
           >
             <div
-              className="d-flex align-items-center justify-content-center mb-2"
-              style={{ width: "100%", height: "60px" }}
+              className="d-flex align-items-center justify-content-center"
             >
               <img
                 src={`data:image/png;base64,${l.base64Logo}`}
                 alt={l.nombre}
                 style={{
-                  maxWidth: "100%",
-                  maxHeight: "100%",
+                  maxWidth: "60px",
+                  maxHeight: "60px",
                   objectFit: "contain"
                 }}
               />
@@ -93,7 +73,7 @@ export default function MenuLogos({ agregarFoto, setLogosBool, logos }) {
 
             <span
               className="text-truncate w-100 text-center"
-              style={{ fontSize: "0.75rem", color: "#6c757d", fontWeight: "500" }}
+              style={{ fontSize: "1rem", fontWeight: "500" }}
             >
               {l.nombre || `Logo ${index + 1}`}
             </span>

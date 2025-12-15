@@ -203,7 +203,7 @@ export default function NuevoDiseno() {
   return (
     <div className="container-fluid fondo" style={{ paddingTop: "60px", paddingBottom: "80px" }}>
       <div className="row">
-        <div className="col-4 border-end1" >
+        <div className="border-end1" style={{ height: "77vh", width: "32vw" }} >
           <MenuDiseno
             agregarFoto={(foto) => agregarFigura("agregarFoto", foto)}
             plantillaElegida={plantillaElegida}
@@ -219,7 +219,7 @@ export default function NuevoDiseno() {
             logos={logos}
           />
         </div>
-        <div className="col-8" style={{ height: "760px", widht: "100%" }}>
+        <div style={{ height: "77vh", width: "66vw" }}>
           <Lienzo canvasRef={canvasRef} />
         </div>
 

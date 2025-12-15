@@ -57,11 +57,11 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
 
       {/* SECCIÓN DE COLOR CON PALETA */}
       <div className="mb-4 fondo-menu">
-        <label className="form-label text-muted small fw-bold mb-2">COLOR DEL TRAZO</label>
+        <label className="form-label text-muted small fw-bold mb-2">COLOR DEL BORDE</label>
         
         {/* Selector y Botón Guardar */}
         <div className="d-flex align-items-center gap-2 mb-3">
-          <div className="d-flex align-items-center bg-white p-1 rounded border flex-grow-1">
+          <div className="d-flex align-items-center p-1 borde2 flex-grow-1">
             <input 
               type="color" 
               value={color}
@@ -69,7 +69,7 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
               className="form-control form-control-color border-0 p-0 shadow-none me-2"
               style={{ width: "35px", height: "35px", cursor: "pointer", backgroundColor: 'transparent' }}
             />
-            <span className="fw-bold text-dark">{color}</span>
+            <span className="">{color}</span>
           </div>
           
           <button 
@@ -116,14 +116,14 @@ export default function MenuForma({ agregarCuadrado, agregarCirculo, agregarTria
       <div style={{
         display: "grid",
         gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
-        gap: "15px",
+        gap: "40px",
         width: "100%"
       }}>
         {formas.map((f) => (
           <button
             key={f.id}
             onClick={f.handler}
-            className="btn tarjeta-hover"
+            className="btn card-opcion-lienzo"
 
           >
             <div className="mb-2 transition-all">

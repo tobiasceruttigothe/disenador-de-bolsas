@@ -30,12 +30,8 @@ export default function MenuInformacion({ plantilla }) {
         cargarPlantilla();
     }, [plantilla]);
 
-    useEffect(() => {
-        if (info) console.log("Plantilla cargada:", info);
-    }, [info]);
-
     if (!info) {
-        return <div className="p-4 text-muted">Cargando información...</div>;
+        return <div className="card-diseno h-100 p-4 text-muted">Cargando información...</div>;
     }
 
     const {
@@ -49,7 +45,7 @@ export default function MenuInformacion({ plantilla }) {
 
 
     return (
-        <div className="p-4 card-diseno shadow-sm h-100 overflow-auto">
+        <div className="p-4 card-diseno h-100 overflow-auto">
             <h4 className="mb-4 text-primary fw-bold">
                 Información sobre la plantilla
             </h4>
@@ -70,7 +66,7 @@ function Info({ label, value }) {
             <span className="text-muted small fw-bold text-uppercase">
                 {label}:
             </span>
-            <span className="ms-2 fw-semibold text-capitalize">
+            <span className="ms-2 text-capitalize">
                 {value}
             </span>
         </div>

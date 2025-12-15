@@ -85,14 +85,14 @@ export default function ModalLogos({ setLogosBool, logos, setLogos }) {
                 className="w-100"
                 style={{ maxWidth: '450px' }}
             >
-                <h2 className="text-center mb-4">Agregar logo</h2>
+                <h2 className="mb-4">Agregar logo</h2>
+                <hr></hr>
 
                 <div className="mb-3">
                     <label htmlFor="nombre" className="form-label">Nombre</label>
                     <input
                         id="nombre"
                         type="text"
-                        accept='.jpg, .jpeg, .png' 
                         placeholder="Ingrese un nombre del logo"
                         className={`form-control ${errors.nombre ? 'is-invalid' : ''}`}
                         {...register("nombre", {
@@ -108,7 +108,7 @@ export default function ModalLogos({ setLogosBool, logos, setLogos }) {
                     <input
                         id="base64Logo"
                         type="file"
-                        accept=".jpg,.png,.pdf,.svg"
+                        accept='.jpg, .jpeg, .png'
                         className={`form-control archivo-input ${!base64Logo && estado === "Error" ? 'is-invalid' : ''}`}
                         onChange={handleFileChange}
                     />
@@ -128,7 +128,7 @@ export default function ModalLogos({ setLogosBool, logos, setLogos }) {
                                 src={`data:image/*;base64,${base64Logo}`}
                                 alt="Vista previa del logo"
                                 className="img-fluid"
-                                style={{ maxHeight: '200px' }}
+                                style={{ maxHeight: '100px' }}
                             />
                         </div>
                     </>
@@ -151,21 +151,21 @@ export default function ModalLogos({ setLogosBool, logos, setLogos }) {
                         {estado === "Cargando" ? "Enviando..." : "Agregar Logo"}
                     </button>
                 </div>
-            </form>
 
-            {estado && (
-                <div
-                    className={`alert ${estado === "Exito"
-                        ? "alert-success"
-                        : estado === "Error"
-                            ? "alert-danger"
-                            : "alert-info"
-                        } position-absolute bottom-0 start-50 translate-middle-x mb-4`}
-                    role="alert"
-                >
-                    {mensaje}
-                </div>
-            )}
+                {estado && (
+                    <div
+                        className={`alert ${estado === "Exito"
+                            ? "alert-success"
+                            : estado === "Error"
+                                ? "alert-danger"
+                                : "alert-info"
+                            } w-25 mt-2 p-3 mx-auto d-flex justify-content-center align-items-center`}
+                        role="alert"
+                    >
+                        {mensaje}
+                    </div>
+                )}
+            </form>
         </div>
     );
 }

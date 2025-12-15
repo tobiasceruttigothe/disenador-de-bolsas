@@ -30,7 +30,7 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
 
             <div className="mb-3">
                 <label className="form-label text-muted small fw-bold mb-1">CONTENIDO</label>
-                <input type="text" className="form-control form-control-sm bg-light " placeholder="Escribe aquí..." 
+                <input type="text" className="form-control form-control-sm" placeholder="Escribe aquí..." 
                     onChange={(e) => setTexto(e.target.value)} value={texto} ref={inputTextRef} style={{ fontWeight: "500" }} />
             </div>
 
@@ -38,11 +38,11 @@ export default function MenuTexto({ agregarTexto, objetoSeleccionado, eliminarOb
             <div className="mb-3 fondo-menu">
                 <label className="form-label text-muted small fw-bold mb-1">COLOR</label>
                 <div className="d-flex align-items-center gap-2 mb-2">
-                    <div className="d-flex align-items-center bg-white p-1 rounded border flex-grow-1">
+                    <div className="d-flex align-items-center p-1 text-muted borde2 flex-grow-1">
                         <input type="color" value={color} onChange={(e) => setColor(e.target.value)} 
                             className="form-control form-control-color border-0 p-0 shadow-none me-2"
                             style={{ width: "30px", height: "30px", cursor: "pointer", backgroundColor: 'transparent' }} />
-                        <span className="text-dark fw-bold text-uppercase">{color}</span>
+                        <span className="text-muted text-uppercase">{color}</span>
                     </div>
                     <button className="btn btn-outline-secondary btn-sm" onClick={guardarColorActual} style={{ height: "38px", width: "38px" }}>
                         <i className="fa fa-plus"></i>

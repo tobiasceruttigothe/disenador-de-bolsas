@@ -26,11 +26,11 @@ export default function MenuPincel({ activarModoDibujo }) {
             <div className="mb-4 fondo-menu">
                 <label className="form-label text-muted small fw-bold mb-2">COLOR DEL PINCEL</label>
                 <div className="d-flex align-items-center gap-2 mb-3">
-                    <div className="d-flex align-items-center bg-white p-1 rounded border flex-grow-1">
+                    <div className="d-flex align-items-center p-1 borde2 flex-grow-1">
                         <input type="color" value={color} onChange={(e) => setColor(e.target.value)}
                             className="form-control form-control-color border-0 p-0 shadow-none me-2"
                             style={{ width: "35px", height: "35px", cursor: "pointer", backgroundColor: 'transparent' }} />
-                        <span className="text-muted small fw-bold text-uppercase">{color}</span>
+                        <span className="text-muted small text-uppercase">{color}</span>
                     </div>
                     <button className="btn btn-outline-secondary btn-sm" onClick={guardarColorActual} style={{ height: "45px", width: "45px" }}>
                         <i className="fa fa-plus"></i>

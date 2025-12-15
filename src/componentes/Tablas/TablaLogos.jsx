@@ -103,7 +103,7 @@ function ModalSubirLogo({ isVisible, onClose, onSuccess, mostrarError }) {
             <label className="form-label text-muted small fw-bold">IMAGEN</label>
             <input
               type="file"
-              accept=".jpg,.png,.jpeg,.svg"
+              accept=".jpg,.png,.jpeg"
               className="form-control archivo-input border-0"
               onChange={handleFileChange}
             />

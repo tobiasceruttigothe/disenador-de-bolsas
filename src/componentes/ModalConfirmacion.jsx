@@ -1,6 +1,5 @@
 import React from 'react';
-import './ModalConfirmacion.css';
-import "../styles/main.css"
+import '../styles/ModalConfirmacion.css';
 
 export default function ModalConfirmacion({ isVisible, onClose, onConfirm, titulo, mensaje, tipo = 'warning' }) {
   if (!isVisible) return null;
