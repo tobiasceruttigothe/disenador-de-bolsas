@@ -45,8 +45,8 @@ export default function InicioAdmin() {
   ];
 
   const opcionesUsuarios = [
-    { id: 1, nombre: "Diseñadores", ruta: "/disenadores", imagen: disenador },
-    { id: 2, nombre: "Clientes", ruta: "/clientes", imagen: cliente },
+    { id: 1, nombre: "Clientes", ruta: "/clientes", imagen: cliente },
+    { id: 2, nombre: "Diseñadores", ruta: "/disenadores", imagen: disenador },
     { id: 3, nombre: "Gerentes", ruta: "/gerentes", imagen: admin },
   ];
 

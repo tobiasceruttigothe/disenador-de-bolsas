@@ -16,8 +16,8 @@ export default function TablaProductos() {
 
   const acciones = [
     { id: 1, nombre: "Materiales", ruta: "/productos/materiales", imagen: materiales },
-    { id: 2, nombre: "Plantillas", ruta: "/productos/plantillas", imagen: plantillas },
-    { id: 3, nombre: "Tipos de Producto", ruta: "/productos/tiposbolsa", imagen: tipoBolsa },
+    { id: 2, nombre: "Tipos de Producto", ruta: "/productos/tiposbolsa", imagen: tipoBolsa },
+    { id: 3, nombre: "Plantillas", ruta: "/productos/plantillas", imagen: plantillas },
   ];
 
   const handleVolver = () => {
