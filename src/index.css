@@ -864,3 +864,28 @@ body.dark .borde-estado-TERMINADO:hover {
   transform: translateY(-8px);
   border: 4px double #016add;
 }
+
+.input-mail {
+  width: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background-color: #fcfcfc;
+  border: 0px solid transparent;
+  border-radius: 10px;
+  font-size: 1rem;
+
+  pointer-events: none;
+}
+
+.input-mail i {
+  line-height: 1;
+}
+
+body.dark .input-mail {
+  background-color: #273b4e;
+  border: 1px solid #3b4252;
+  border-radius: 10px;
+  border-right: none;
+}

@@ -47,12 +47,12 @@ export default function InicioAdmin() {
   const opcionesUsuarios = [
     { id: 1, nombre: "Diseñadores", ruta: "/disenadores", imagen: disenador },
     { id: 2, nombre: "Clientes", ruta: "/clientes", imagen: cliente },
-    { id: 3, nombre: "Gerente", ruta: "/admins", imagen: admin },
+    { id: 3, nombre: "Gerentes", ruta: "/gerentes", imagen: admin },
   ];
 
   const opcionesSistema = [
-    { id: 1, nombre: "Productos", ruta: "/productos", imagen: bolsa },
-    { id: 2, nombre: "Seguimiento de diseños", ruta: "/seguimiento", imagen: seguimiento },
+    { id: 1, nombre: "Panel de Productos", ruta: "/productos", imagen: bolsa },
+    { id: 2, nombre: "Seguimiento de Diseños", ruta: "/seguimiento", imagen: seguimiento },
   ]
 
   const handleNavigation = (opcion) => {

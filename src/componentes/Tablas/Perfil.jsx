@@ -58,7 +58,7 @@ export default function Perfil() {
                                         {rol === "cliente" ? razonSocial : nombre}
                                     </h3>
                                     <span className="role-badge">
-                                        {rol}
+                                        { rol==="admin" ? "Gerente" : rol}
                                     </span>
                                 </div>
 

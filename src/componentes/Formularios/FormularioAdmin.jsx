@@ -39,7 +39,7 @@ export default function FormularioAdmin() {
       mostrarExito("Administrador agregado con éxito");
 
       setTimeout(() => {
-        navigate("/admins");
+        navigate("/gerentes");
       }, 1500);
 
     } catch (error) {
@@ -65,7 +65,7 @@ export default function FormularioAdmin() {
       {/* --- BOTÓN VOLVER (FIJO) --- */}
       <button
         className="boton-atras d-flex align-items-center justify-content-center"
-        onClick={() => navigate("/admins")}
+        onClick={() => navigate("/gerentes")}
       >
         ←
       </button>
@@ -88,7 +88,7 @@ export default function FormularioAdmin() {
                 style={{ width: '70px', height: '70px', objectFit: 'contain' }}
               />
             </div>
-            <h3 className="fw-bold text-dark mb-1">Nuevo Administrador Gerencial</h3>
+            <h3 className="fw-bold text-dark mb-1">Nuevo Gerente</h3>
             <p className="text-muted small">Registrar un nuevo usuario con permisos gerenciales</p>
           </div>
 
@@ -173,7 +173,7 @@ export default function FormularioAdmin() {
                     Guardando...
                   </>
                 ) : (
-                  "Registrar Adm. gerencial"
+                  "Registrar Gerente"
                 )}
               </button>
             </div>

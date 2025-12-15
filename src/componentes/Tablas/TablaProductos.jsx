@@ -39,7 +39,7 @@ export default function TablaProductos() {
         <div className="container">
 
           <div className="text-center mb-5">
-            <h2 className="fw-bold text-dark">Administrar Productos</h2>
+            <h2 className="fw-bold text-dark">Panel de Productos</h2>
             <div
               className="mx-auto"
               style={{

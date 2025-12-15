@@ -65,7 +65,7 @@ export default function Navegador({ nombre, setNombre, setLogeado, tipoUsuario }
             <MenuItem to="/" label="Inicio" />
             <MenuItem to="/disenadores" label="Diseñadores" />
             <MenuItem to="/clientes" label="Clientes" />
-            <MenuItem to="/admins" label="Administradores" />
+            <MenuItem to="/gerentes" label="Gerentes" />
             <MenuItem to="/productos" label="Productos" />
             <div className="borde-arriba" />
             <MenuItem to="/perfil" label="Mi Perfil" />

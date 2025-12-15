@@ -50,13 +50,13 @@ export default function CambiarContraseña() {
       <div className="d-flex justify-content-center align-items-center min-vh-100 fondo" style={{ paddingTop: "60px" }}>
         
         <div 
-          className="card border-0 shadow-lg rounded-4 p-4 p-md-5 bg-white"
+          className="tabla-card border-0 shadow-lg rounded-4 p-4 p-md-5"
           style={{ width: "100%", maxWidth: "450px" }}
         >
           
           {/* Cabecera */}
           <div className="text-center mb-4">
-            <div className="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-3" style={{ width: "80px", height: "80px" }}>
+            <div className="d-inline-flex align-items-center justify-content-center mb-3" style={{ width: "80px", height: "80px" }}>
               <img 
                 src={logo} 
                 alt="Logo" 
@@ -75,12 +75,12 @@ export default function CambiarContraseña() {
             <div className="mb-4">
               <label htmlFor="mail" className="form-label text-muted small fw-bold text-uppercase">Correo Electrónico</label>
               <div className="input-group">
-                <span className="input-group-text bg-light border-0 ps-3 text-muted"><i className="fa fa-envelope"></i></span>
+                <span className="d-flex align-items-center input-mail text-muted"><i className="fa fa-envelope"></i></span>
                 <input
                   id="mail"
                   type="email"
                   placeholder="ejemplo@correo.com"
-                  className="form-control form-control-lg bg-light border-0"
+                  className="form-control form-control-lg border-0"
                   style={{ fontSize: '0.95rem' }}
                   value={mail}
                   onChange={(e) => setMail(e.target.value)}
